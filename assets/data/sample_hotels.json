@@ -1,0 +1,78 @@
+[
+  {
+    "id": "hotel_1",
+    "name": "Grand Palace Hotel",
+    "description": "Luxurious 5-star hotel in the heart of the city with stunning architecture and world-class amenities. Features include spa, rooftop pool, and fine dining restaurants.",
+    "images": [
+      "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800",
+      "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800",
+      "https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=800"
+    ],
+    "location": {
+      "latitude": 40.7589,
+      "longitude": -73.9851,
+      "address": "123 5th Avenue, Manhattan",
+      "city": "New York",
+      "country": "USA"
+    },
+    "rating": 4.8,
+    "reviewCount": 1250,
+    "pricePerNight": 350.00,
+    "currency": "USD",
+    "amenities": ["WiFi", "Pool", "Spa", "Gym", "Restaurant", "Bar", "Concierge", "Valet Parking"],
+    "category": "luxury",
+    "isAvailable": true,
+    "contactPhone": "+1-555-0123",
+    "website": "https://grandpalacehotel.com"
+  },
+  {
+    "id": "hotel_2",
+    "name": "Budget Inn Downtown",
+    "description": "Clean and comfortable budget accommodation perfect for travelers looking for great value. Located within walking distance of major attractions.",
+    "images": [
+      "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800",
+      "https://images.unsplash.com/photo-1596178065887-1198b6148b2b?w=800"
+    ],
+    "location": {
+      "latitude": 40.7505,
+      "longitude": -73.9934,
+      "address": "456 Broadway Street",
+      "city": "New York",
+      "country": "USA"
+    },
+    "rating": 4.2,
+    "reviewCount": 890,
+    "pricePerNight": 89.00,
+    "currency": "USD",
+    "amenities": ["WiFi", "24h Reception", "Laundry", "Luggage Storage"],
+    "category": "budget",
+    "isAvailable": true,
+    "contactPhone": "+1-555-0124",
+    "website": "https://budgetinnnyc.com"
+  },
+  {
+    "id": "hotel_3",
+    "name": "Boutique Central Hotel",
+    "description": "Stylish mid-range hotel featuring modern design and personalized service. Each room is uniquely decorated with local artwork and premium amenities.",
+    "images": [
+      "https://images.unsplash.com/photo-1578774925442-55caa5c96fa8?w=800",
+      "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800"
+    ],
+    "location": {
+      "latitude": 40.7614,
+      "longitude": -73.9776,
+      "address": "789 Madison Avenue",
+      "city": "New York",
+      "country": "USA"
+    },
+    "rating": 4.5,
+    "reviewCount": 567,
+    "pricePerNight": 180.00,
+    "currency": "USD",
+    "amenities": ["WiFi", "Fitness Center", "Business Center", "Pet Friendly", "Room Service"],
+    "category": "mid-range",
+    "isAvailable": true,
+    "contactPhone": "+1-555-0125",
+    "website": "https://boutiquecentralhotel.com"
+  }
+]

@@ -1,0 +1,113 @@
+[
+  {
+    "id": "restaurant_1",
+    "name": "The Golden Spoon",
+    "description": "Fine dining restaurant offering contemporary American cuisine with a focus on locally sourced ingredients. Known for innovative dishes and exceptional wine selection.",
+    "images": [
+      "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800",
+      "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800"
+    ],
+    "location": {
+      "latitude": 40.7580,
+      "longitude": -73.9855,
+      "address": "321 Park Avenue",
+      "city": "New York",
+      "country": "USA"
+    },
+    "rating": 4.7,
+    "reviewCount": 892,
+    "priceRange": "$$$$",
+    "cuisine": "American",
+    "dietaryOptions": ["vegetarian", "gluten-free"],
+    "mealTypes": ["dinner"],
+    "openingHours": "5:30 PM - 10:30 PM",
+    "averageMealPrice": 85.00,
+    "currency": "USD",
+    "isOpen": true,
+    "contactPhone": "+1-555-0201",
+    "website": "https://thegoldenspoon.com"
+  },
+  {
+    "id": "restaurant_2",
+    "name": "Mario's Pizzeria",
+    "description": "Authentic Italian pizzeria serving traditional Neapolitan pizza in a cozy, family-friendly atmosphere. Famous for wood-fired pizzas and homemade pasta.",
+    "images": [
+      "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=800",
+      "https://images.unsplash.com/photo-1571997478779-2adcbbe9ab2f?w=800"
+    ],
+    "location": {
+      "latitude": 40.7505,
+      "longitude": -73.9900,
+      "address": "654 Little Italy Street",
+      "city": "New York",
+      "country": "USA"
+    },
+    "rating": 4.4,
+    "reviewCount": 1456,
+    "priceRange": "$$",
+    "cuisine": "Italian",
+    "dietaryOptions": ["vegetarian", "vegan"],
+    "mealTypes": ["lunch", "dinner"],
+    "openingHours": "11:00 AM - 11:00 PM",
+    "averageMealPrice": 22.00,
+    "currency": "USD",
+    "isOpen": true,
+    "contactPhone": "+1-555-0202",
+    "website": "https://mariospizzeria.com"
+  },
+  {
+    "id": "restaurant_3",
+    "name": "Sakura Sushi Bar",
+    "description": "Premium sushi restaurant featuring fresh fish flown in daily from Japan. Offers both traditional and contemporary sushi in an elegant setting.",
+    "images": [
+      "https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=800",
+      "https://images.unsplash.com/photo-1611599018803-0f2095ac4b8d?w=800"
+    ],
+    "location": {
+      "latitude": 40.7614,
+      "longitude": -73.9750,
+      "address": "987 East Side Avenue",
+      "city": "New York",
+      "country": "USA"
+    },
+    "rating": 4.6,
+    "reviewCount": 723,
+    "priceRange": "$$$",
+    "cuisine": "Japanese",
+    "dietaryOptions": ["gluten-free"],
+    "mealTypes": ["lunch", "dinner"],
+    "openingHours": "12:00 PM - 10:00 PM",
+    "averageMealPrice": 65.00,
+    "currency": "USD",
+    "isOpen": true,
+    "contactPhone": "+1-555-0203",
+    "website": "https://sakurasushibar.com"
+  },
+  {
+    "id": "restaurant_4",
+    "name": "Green Garden Cafe",
+    "description": "Health-focused cafe specializing in organic, plant-based meals. Perfect for breakfast and lunch with fresh smoothies, salads, and vegan options.",
+    "images": [
+      "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800"
+    ],
+    "location": {
+      "latitude": 40.7489,
+      "longitude": -73.9680,
+      "address": "147 Health Street",
+      "city": "New York",
+      "country": "USA"
+    },
+    "rating": 4.3,
+    "reviewCount": 445,
+    "priceRange": "$",
+    "cuisine": "Healthy",
+    "dietaryOptions": ["vegetarian", "vegan", "gluten-free", "dairy-free"],
+    "mealTypes": ["breakfast", "lunch", "snacks"],
+    "openingHours": "7:00 AM - 4:00 PM",
+    "averageMealPrice": 15.00,
+    "currency": "USD",
+    "isOpen": true,
+    "contactPhone": "+1-555-0204",
+    "website": "https://greengardencafe.com"
+  }
+]
