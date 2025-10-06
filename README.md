@@ -34,17 +34,18 @@ A comprehensive Flutter mobile application for travel planning with AI-powered i
 
 1. Clone the repository
 ```bash
-git clone https://github.com/your-username/goplanner.git
-cd goplanner
+git clone https://github.com/AnowarOHossain/GoPlanner.git
+cd GoPlanner
 ```
 
 2. Install dependencies
 ```bash
 flutter pub get
+dart run build_runner build
 ```
 
-3. Configure Firebase (see setup guide below)
-4. Add API keys for Google Maps and Gemini API
+3. Configure API keys in `lib/core/constants/app_constants.dart`
+4. Set up Firebase configuration files
 5. Run the app
 ```bash
 flutter run
@@ -75,18 +76,22 @@ lib/
 └── main.dart           # App entry point
 ```
 
-## Development Guide
+## Development
 
-This project follows Clean Architecture principles with proper separation of concerns. See the detailed development guides in the `/docs` folder for step-by-step implementation instructions.
+This project follows Clean Architecture principles with proper separation of concerns. 
 
-## Contributing
+### Setup Requirements
+- Configure Google Gemini API key
+- Set up Firebase project and add configuration files
+- Enable Google Maps API
 
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
+### Running the Project
+```bash
+flutter pub get
+dart run build_runner build
+flutter run
+```
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License.

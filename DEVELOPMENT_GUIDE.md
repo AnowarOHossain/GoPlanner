@@ -1,53 +1,34 @@
 # GoPlanner Development Guide
 
-## 🚀 Step-by-Step Development Guide
+## 🚀 Development Phases
 
 ### Phase 1: Project Setup ✅ COMPLETED
 - [x] Create Flutter project structure
-- [x] Set up dependencies in pubspec.yaml
-- [x] Configure app constants and colors
+- [x] Set up dependencies and configuration
 - [x] Create data models with JSON serialization
 - [x] Set up Riverpod state management
-- [x] Configure routing with GoRouter
-- [x] Design app theme and text styles
+- [x] Configure routing and app theme
 
-### Phase 2: Core UI Components (In Progress)
-- [ ] Create reusable card widgets
-- [ ] Build search and filter components
-- [ ] Design listing item widgets
-- [ ] Create navigation components
-- [ ] Build rating and review widgets
+### Phase 2: UI Implementation
+- [ ] Create reusable widgets and components
+- [ ] Build listing screens (hotels, restaurants, attractions)
+- [ ] Implement search and filter functionality
+- [ ] Create detail screens for each item type
 
-### Phase 3: Listings Implementation
-- [ ] Hotels browsing screen
-- [ ] Restaurants browsing screen
-- [ ] Attractions browsing screen
-- [ ] Search and filter functionality
-- [ ] Detail screens for each item type
+### Phase 3: Core Features
+- [ ] Cart and budget management system
+- [ ] Favorites functionality
+- [ ] User preferences and settings
 
-### Phase 4: Cart & Budget System
-- [ ] Cart functionality
-- [ ] Budget calculation
-- [ ] Cart summary screen
-- [ ] Checkout process
+### Phase 4: API Integration
+- [ ] Google Gemini API for AI itineraries
+- [ ] Google Maps integration
+- [ ] Firebase Firestore setup
 
-### Phase 5: AI Integration
-- [ ] Gemini API service setup
-- [ ] Itinerary generation logic
-- [ ] AI preferences configuration
-- [ ] Generated itinerary display
-
-### Phase 6: Maps Integration
-- [ ] Google Maps setup
-- [ ] Location display
-- [ ] Navigation features
-- [ ] Map markers and info windows
-
-### Phase 7: Data Persistence
-- [ ] Firebase Firestore configuration
-- [ ] Local storage with Hive
-- [ ] Favorites system
-- [ ] Itinerary saving
+### Phase 5: Polish & Deploy
+- [ ] Testing and optimization
+- [ ] App store preparation
+- [ ] Release builds
 
 ### Phase 8: Deployment
 - [ ] Android build configuration
@@ -68,95 +49,38 @@ flutter doctor
 # - Git
 ```
 
-### Initial Setup
+## 🛠️ Setup Instructions
+
+### Installation
 ```bash
-# 1. Navigate to project directory
+# Navigate to project directory
 cd C:\Users\Anowar\Desktop\GoPlanner
 
-# 2. Install dependencies
+# Install dependencies
 flutter pub get
 
-# 3. Generate code files
+# Generate code files
 dart run build_runner build
 
-# 4. Run the app
+# Run the app
 flutter run
 ```
 
-### API Keys Setup
-Create a `.env` file in the root directory:
-```env
-GEMINI_API_KEY=your_gemini_api_key_here
-GOOGLE_MAPS_API_KEY=your_google_maps_api_key_here
+### API Configuration
+Update `lib/core/constants/app_constants.dart` with your API keys:
+```dart
+static const String geminiApiKey = 'YOUR_GEMINI_API_KEY';
+static const String googleMapsApiKey = 'YOUR_GOOGLE_MAPS_KEY';
 ```
-
-Update `lib/core/constants/app_constants.dart` with your API keys.
 
 ### Firebase Setup
-1. Create a Firebase project at https://console.firebase.google.com
-2. Add Android/iOS apps to your Firebase project
-3. Download configuration files:
-   - `google-services.json` for Android (place in `android/app/`)
-   - `GoogleService-Info.plist` for iOS (place in `ios/Runner/`)
+1. Create Firebase project at https://console.firebase.google.com
+2. Add Android/iOS apps to your project
+3. Download and place configuration files:
+   - `google-services.json` → `android/app/`
+   - `GoogleService-Info.plist` → `ios/Runner/`
 
-## 📱 Recommended Development Flow
-
-### 1. Start with UI Components
-Build reusable components first to ensure consistency across the app.
-
-### 2. Implement Data Flow
-Set up providers and services before building complex screens.
-
-### 3. Test Frequently
-Run the app regularly to catch issues early.
-
-### 4. Use Mock Data
-Start with local JSON data before implementing external APIs.
-
-## 🎯 State Management Best Practices
-
-### Riverpod Recommendations
-- Use `@riverpod` code generation for type safety
-- Keep providers focused on single responsibilities
-- Implement proper error handling in all providers
-- Use `AsyncValue` for async operations
-
-### Example Provider Pattern:
-```dart
-@riverpod
-class DataNotifier extends _$DataNotifier {
-  @override
-  AsyncValue<List<Model>> build() {
-    return const AsyncValue.loading();
-  }
-
-  Future<void> loadData() async {
-    state = const AsyncValue.loading();
-    try {
-      final data = await service.fetchData();
-      state = AsyncValue.data(data);
-    } catch (error, stackTrace) {
-      state = AsyncValue.error(error, stackTrace);
-    }
-  }
-}
-```
-
-## 🎨 UI/UX Guidelines
-
-### Design Principles
-- **Clean & Modern**: Use consistent spacing and colors
-- **Responsive**: Ensure app works on different screen sizes
-- **Accessible**: Include proper semantics and contrast
-- **Intuitive**: Follow platform conventions
-
-### Component Guidelines
-- Use the predefined colors from `AppColors`
-- Follow text styles from `AppTextStyles`
-- Implement consistent padding (8, 16, 24px)
-- Use elevation sparingly (cards, bottom sheets)
-
-## 🔧 Development Commands
+## � Development Commands
 
 ```bash
 # Generate code
@@ -171,34 +95,34 @@ flutter analyze
 # Format code
 dart format lib/
 
-# Build APK
+# Build release
 flutter build apk --release
-
-# Build iOS
-flutter build ios --release
 ```
 
-## 📂 Folder Structure Best Practices
+## 📱 Development Tips
+
+- Use sample JSON data for initial development
+- Test frequently with hot reload
+- Follow Riverpod best practices for state management
+- Implement proper error handling
+- Keep UI components reusable and consistent
+
+## 📂 Project Structure
 
 ```
 lib/
-├── core/                 # App-wide utilities
-│   ├── constants/        # Colors, strings, configs
-│   ├── utils/           # Helper functions
-│   ├── services/        # API services
-│   └── exceptions/      # Custom error classes
-├── data/                # Data layer (models, repositories)
-├── domain/              # Business logic layer
-├── presentation/        # UI layer (screens, widgets, providers)
-└── main.dart           # Entry point
+├── core/                 # App constants, services, utilities
+├── data/                 # Models, repositories, data sources
+├── presentation/         # UI screens, widgets, providers
+└── main.dart            # App entry point
 ```
 
-## 🧪 Testing Strategy
+## 📚 Resources
 
-### Unit Tests
-- Test data models
-- Test utility functions
-- Test provider logic
+- [Flutter Documentation](https://flutter.dev/docs)
+- [Riverpod Documentation](https://riverpod.dev/)
+- [Firebase for Flutter](https://firebase.flutter.dev/)
+- [Google Gemini API](https://ai.google.dev/docs)
 
 ### Widget Tests
 - Test individual widgets
