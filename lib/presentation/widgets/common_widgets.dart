@@ -3,11 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/constants/app_colors.dart';
 import '../../presentation/theme/app_theme.dart';
-import '../../data/models/hotel_model.dart';
-import '../../data/models/restaurant_model.dart';
-import '../../data/models/attraction_model.dart';
 import '../../data/models/cart_item_model.dart';
-import '../providers/cart_provider.dart';
 import '../providers/favorites_provider.dart';
 
 // Generic Item Card Widget
@@ -26,7 +22,7 @@ class ItemCard extends ConsumerWidget {
   final ItemType itemType;
 
   const ItemCard({
-    Key? key,
+    super.key,
     required this.id,
     required this.name,
     required this.imageUrl,
@@ -39,7 +35,7 @@ class ItemCard extends ConsumerWidget {
     required this.itemType,
     this.onTap,
     this.onAddToCart,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -223,11 +219,11 @@ class RatingWidget extends StatelessWidget {
   final double size;
 
   const RatingWidget({
-    Key? key,
+    super.key,
     required this.rating,
     required this.reviewCount,
     this.size = 14,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -266,11 +262,11 @@ class TagChip extends StatelessWidget {
   final Color? textColor;
 
   const TagChip({
-    Key? key,
+    super.key,
     required this.label,
     this.backgroundColor,
     this.textColor,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -299,13 +295,13 @@ class SearchBarWidget extends StatelessWidget {
   final VoidCallback? onClear;
 
   const SearchBarWidget({
-    Key? key,
+    super.key,
     required this.controller,
     this.hintText = 'Search...',
     this.onFilterTap,
     this.onChanged,
     this.onClear,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -362,11 +358,11 @@ class FilterChipRow extends StatelessWidget {
   final ValueChanged<String> onChanged;
 
   const FilterChipRow({
-    Key? key,
+    super.key,
     required this.options,
     required this.selectedValues,
     required this.onChanged,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -411,7 +407,7 @@ class FilterOption {
 class LoadingWidget extends StatelessWidget {
   final String? message;
 
-  const LoadingWidget({Key? key, this.message}) : super(key: key);
+  const LoadingWidget({super.key, this.message});
 
   @override
   Widget build(BuildContext context) {
@@ -440,10 +436,10 @@ class ErrorWidget extends StatelessWidget {
   final VoidCallback? onRetry;
 
   const ErrorWidget({
-    Key? key,
+    super.key,
     required this.message,
     this.onRetry,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -459,7 +455,7 @@ class ErrorWidget extends StatelessWidget {
               color: AppColors.error,
             ),
             const SizedBox(height: 16),
-            Text(
+            const Text(
               'Oops! Something went wrong',
               style: AppTextStyles.heading3,
               textAlign: TextAlign.center,

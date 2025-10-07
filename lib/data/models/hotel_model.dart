@@ -120,5 +120,5 @@ class HotelModel extends Equatable {
   
   bool get isBudget => category.toLowerCase() == 'budget';
   
-  String get formattedPrice => '${currency} ${pricePerNight.toStringAsFixed(2)}';
+  String get formattedPrice => '$currency ${pricePerNight.toStringAsFixed(2)}';
 }

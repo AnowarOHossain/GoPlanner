@@ -108,11 +108,11 @@ class ItineraryModel extends Equatable {
   }
 
   String get formattedTotalBudget {
-    return '${currency} ${totalBudget.toStringAsFixed(2)}';
+    return '$currency ${totalBudget.toStringAsFixed(2)}';
   }
 
   String get formattedCalculatedCost {
-    return '${currency} ${calculatedTotalCost.toStringAsFixed(2)}';
+    return '$currency ${calculatedTotalCost.toStringAsFixed(2)}';
   }
 
   bool get isWithinBudget => calculatedTotalCost <= totalBudget;
@@ -122,7 +122,7 @@ class ItineraryModel extends Equatable {
   String get formattedBudgetRemaining {
     final remaining = budgetRemaining;
     final sign = remaining >= 0 ? '+' : '-';
-    return '$sign${currency} ${remaining.abs().toStringAsFixed(2)}';
+    return '$sign$currency ${remaining.abs().toStringAsFixed(2)}';
   }
 }
 
@@ -167,7 +167,7 @@ class DayPlanModel extends Equatable {
   }
 
   String formattedTotalCost(String currency) {
-    return '${currency} ${totalCost.toStringAsFixed(2)}';
+    return '$currency ${totalCost.toStringAsFixed(2)}';
   }
 }
 

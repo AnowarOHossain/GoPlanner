@@ -102,7 +102,7 @@ class CartItemModel extends Equatable {
   }
 
   String get formattedTotalPrice {
-    return '${currency} ${totalPrice.toStringAsFixed(2)}';
+    return '$currency ${totalPrice.toStringAsFixed(2)}';
   }
 
   String get typeString {

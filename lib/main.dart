@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
 import 'core/constants/app_constants.dart';
 import 'presentation/routes/app_router.dart';
@@ -10,12 +8,6 @@ import 'presentation/theme/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
-  // Initialize Firebase
-  await Firebase.initializeApp();
-  
-  // Initialize Hive for local storage
-  await Hive.initFlutter();
   
   // Set preferred orientations
   await SystemChrome.setPreferredOrientations([
@@ -39,7 +31,7 @@ void main() async {
 }
 
 class GoPlanner extends ConsumerWidget {
-  const GoPlanner({Key? key}) : super(key: key);
+  const GoPlanner({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

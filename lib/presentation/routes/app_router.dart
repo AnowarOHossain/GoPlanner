@@ -1,12 +1,9 @@
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'app_router.g.dart';
-
-@riverpod
-GoRouter appRouter(AppRouterRef ref) {
+// Simple provider without code generation for now
+final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: '/',
     routes: [
@@ -73,25 +70,308 @@ GoRouter appRouter(AppRouterRef ref) {
       error: state.error.toString(),
     ),
   );
-}
+});
 
-// Placeholder screens - these will be implemented in the UI phase
+// Home Screen with proper UI
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('GoPlanner')),
-      body: const Center(
-        child: Text('Home Screen - Coming Soon'),
+      body: CustomScrollView(
+        slivers: [
+          // App Bar
+          SliverAppBar(
+            expandedHeight: 200.0,
+            floating: false,
+            pinned: true,
+            flexibleSpace: FlexibleSpaceBar(
+              title: const Text(
+                'GoPlanner',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              background: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Color(0xFF6366F1),
+                      Color(0xFF8B5CF6),
+                      Color(0xFFA855F7),
+                    ],
+                  ),
+                ),
+                child: const Center(
+                  child: Icon(
+                    Icons.travel_explore,
+                    size: 80,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          
+          // Content
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Welcome Section
+                  const SizedBox(height: 20),
+                  const Text(
+                    'Plan Your Perfect Trip',
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Discover amazing places, create itineraries, and manage your travel budget all in one place.',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  
+                  // Quick Actions Grid
+                  const Text(
+                    'Quick Actions',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  GridView.count(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                    childAspectRatio: 1.2,
+                    children: [
+                      _buildQuickActionCard(
+                        context,
+                        'Hotels',
+                        Icons.hotel,
+                        const Color(0xFF3B82F6),
+                        '/hotels',
+                      ),
+                      _buildQuickActionCard(
+                        context,
+                        'Restaurants',
+                        Icons.restaurant,
+                        const Color(0xFFEF4444),
+                        '/restaurants',
+                      ),
+                      _buildQuickActionCard(
+                        context,
+                        'Attractions',
+                        Icons.attractions,
+                        const Color(0xFF10B981),
+                        '/attractions',
+                      ),
+                      _buildQuickActionCard(
+                        context,
+                        'AI Itinerary',
+                        Icons.auto_awesome,
+                        const Color(0xFFF59E0B),
+                        '/itinerary-generator',
+                      ),
+                    ],
+                  ),
+                  
+                  const SizedBox(height: 30),
+                  
+                  // Features Section
+                  const Text(
+                    'Features',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  _buildFeatureCard(
+                    'Trip Cart & Budget',
+                    'Add items to your cart and track your budget',
+                    Icons.shopping_cart,
+                    () => context.go('/cart'),
+                  ),
+                  const SizedBox(height: 12),
+                  _buildFeatureCard(
+                    'Favorites',
+                    'Save your favorite places and experiences',
+                    Icons.favorite,
+                    () => context.go('/favorites'),
+                  ),
+                  const SizedBox(height: 12),
+                  _buildFeatureCard(
+                    'Maps & Navigation',
+                    'Explore locations with interactive maps',
+                    Icons.map,
+                    () => context.go('/map'),
+                  ),
+                  
+                  const SizedBox(height: 40),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+      
+      // Floating Action Button for Quick Itinerary
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => context.go('/itinerary-generator'),
+        backgroundColor: const Color(0xFF6366F1),
+        icon: const Icon(Icons.auto_awesome),
+        label: const Text('Generate Itinerary'),
+      ),
+      
+      // Bottom Navigation
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: const Color(0xFF6366F1),
+        unselectedItemColor: Colors.grey,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: 'Explore',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_cart),
+            label: 'Cart',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+        onTap: (index) {
+          switch (index) {
+            case 0:
+              context.go('/');
+              break;
+            case 1:
+              context.go('/attractions');
+              break;
+            case 2:
+              context.go('/cart');
+              break;
+            case 3:
+              context.go('/profile');
+              break;
+          }
+        },
+      ),
+    );
+  }
+  
+  Widget _buildQuickActionCard(
+    BuildContext context,
+    String title,
+    IconData icon,
+    Color color,
+    String route,
+  ) {
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: InkWell(
+        onTap: () => context.go(route),
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                color.withOpacity(0.8),
+                color,
+              ],
+            ),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                icon,
+                size: 40,
+                color: Colors.white,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+  
+  Widget _buildFeatureCard(
+    String title,
+    String description,
+    IconData icon,
+    VoidCallback onTap,
+  ) {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: ListTile(
+        onTap: onTap,
+        leading: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: const Color(0xFF6366F1).withOpacity(0.1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Icon(
+            icon,
+            color: const Color(0xFF6366F1),
+          ),
+        ),
+        title: Text(
+          title,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        subtitle: Text(description),
+        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
       ),
     );
   }
 }
 
 class HotelsScreen extends StatelessWidget {
-  const HotelsScreen({Key? key}) : super(key: key);
+  const HotelsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +385,7 @@ class HotelsScreen extends StatelessWidget {
 }
 
 class RestaurantsScreen extends StatelessWidget {
-  const RestaurantsScreen({Key? key}) : super(key: key);
+  const RestaurantsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -119,7 +399,7 @@ class RestaurantsScreen extends StatelessWidget {
 }
 
 class AttractionsScreen extends StatelessWidget {
-  const AttractionsScreen({Key? key}) : super(key: key);
+  const AttractionsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -133,7 +413,7 @@ class AttractionsScreen extends StatelessWidget {
 }
 
 class CartScreen extends StatelessWidget {
-  const CartScreen({Key? key}) : super(key: key);
+  const CartScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -147,7 +427,7 @@ class CartScreen extends StatelessWidget {
 }
 
 class FavoritesScreen extends StatelessWidget {
-  const FavoritesScreen({Key? key}) : super(key: key);
+  const FavoritesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -161,7 +441,7 @@ class FavoritesScreen extends StatelessWidget {
 }
 
 class ItineraryGeneratorScreen extends StatelessWidget {
-  const ItineraryGeneratorScreen({Key? key}) : super(key: key);
+  const ItineraryGeneratorScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -178,9 +458,9 @@ class ItineraryDetailScreen extends StatelessWidget {
   final String itineraryId;
   
   const ItineraryDetailScreen({
-    Key? key,
+    super.key,
     required this.itineraryId,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -194,7 +474,7 @@ class ItineraryDetailScreen extends StatelessWidget {
 }
 
 class MapScreen extends StatelessWidget {
-  const MapScreen({Key? key}) : super(key: key);
+  const MapScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -208,7 +488,7 @@ class MapScreen extends StatelessWidget {
 }
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -222,7 +502,7 @@ class ProfileScreen extends StatelessWidget {
 }
 
 class SettingsScreen extends StatelessWidget {
-  const SettingsScreen({Key? key}) : super(key: key);
+  const SettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -239,9 +519,9 @@ class ErrorScreen extends StatelessWidget {
   final String error;
   
   const ErrorScreen({
-    Key? key,
+    super.key,
     required this.error,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

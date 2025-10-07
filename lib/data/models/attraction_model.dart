@@ -142,7 +142,7 @@ class AttractionModel extends Equatable {
     if (isFree || entryFee == null || entryFee == 0) {
       return 'Free';
     }
-    return '${currency} ${entryFee!.toStringAsFixed(2)}';
+    return '$currency ${entryFee!.toStringAsFixed(2)}';
   }
   
   double get actualEntryFee => isFree ? 0.0 : (entryFee ?? 0.0);

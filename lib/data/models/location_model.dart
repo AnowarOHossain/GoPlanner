@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -56,17 +57,17 @@ class LocationModel extends Equatable {
 
   double distanceTo(LocationModel other) {
     const double earthRadius = 6371; // km
-    final double lat1Rad = latitude * (3.14159 / 180);
-    final double lat2Rad = other.latitude * (3.14159 / 180);
-    final double deltaLatRad = (other.latitude - latitude) * (3.14159 / 180);
-    final double deltaLonRad = (other.longitude - longitude) * (3.14159 / 180);
+    final double lat1Rad = latitude * (pi / 180);
+    final double lat2Rad = other.latitude * (pi / 180);
+    final double deltaLatRad = (other.latitude - latitude) * (pi / 180);
+    final double deltaLonRad = (other.longitude - longitude) * (pi / 180);
 
-    final double a = (deltaLatRad / 2).sin() * (deltaLatRad / 2).sin() +
-        lat1Rad.cos() *
-            lat2Rad.cos() *
-            (deltaLonRad / 2).sin() *
-            (deltaLonRad / 2).sin();
-    final double c = 2 * a.sqrt().asin();
+    final double a = sin(deltaLatRad / 2) * sin(deltaLatRad / 2) +
+        cos(lat1Rad) *
+            cos(lat2Rad) *
+            sin(deltaLonRad / 2) *
+            sin(deltaLonRad / 2);
+    final double c = 2 * asin(sqrt(a));
 
     return earthRadius * c;
   }

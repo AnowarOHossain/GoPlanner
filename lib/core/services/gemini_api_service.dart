@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../../core/constants/app_constants.dart';
-import '../models/itinerary_model.dart';
-import '../models/user_preferences_model.dart';
-import '../models/location_model.dart';
+import '../../data/models/itinerary_model.dart';
+import '../../data/models/user_preferences_model.dart';
+import '../../data/models/location_model.dart';
 
 class GeminiApiService {
   static const String _baseUrl = AppConstants.geminiApiBaseUrl;
@@ -137,7 +137,7 @@ class GeminiApiService {
     final responseData = jsonDecode(response.body);
     
     if (responseData['candidates'] == null || responseData['candidates'].isEmpty) {
-      throw GeminiApiException('No response from Gemini API');
+      throw const GeminiApiException('No response from Gemini API');
     }
 
     return responseData['candidates'][0]['content']['parts'][0]['text'];
@@ -155,7 +155,7 @@ class GeminiApiService {
     final duration = endDate.difference(startDate).inDays + 1;
     
     return '''
-Create a detailed ${duration}-day travel itinerary for ${destination.city}, ${destination.country}.
+Create a detailed $duration-day travel itinerary for ${destination.city}, ${destination.country}.
 
 TRIP DETAILS:
 - Dates: ${startDate.toIso8601String().split('T')[0]} to ${endDate.toIso8601String().split('T')[0]}

@@ -125,11 +125,11 @@ class RestaurantModel extends Equatable {
   
   bool get hasVeganOptions => dietaryOptions.contains('vegan');
   
-  String get formattedPrice => '${currency} ${averageMealPrice.toStringAsFixed(2)}';
+  String get formattedPrice => '$currency ${averageMealPrice.toStringAsFixed(2)}';
   
-  bool servesBreakfast => mealTypes.contains('breakfast');
+  bool get servesBreakfast => mealTypes.contains('breakfast');
   
-  bool servesLunch => mealTypes.contains('lunch');
+  bool get servesLunch => mealTypes.contains('lunch');
   
-  bool servesDinner => mealTypes.contains('dinner');
+  bool get servesDinner => mealTypes.contains('dinner');
 }
