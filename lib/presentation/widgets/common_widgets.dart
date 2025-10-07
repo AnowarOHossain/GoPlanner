@@ -82,7 +82,7 @@ class ItemCard extends ConsumerWidget {
                   top: 8,
                   right: 8,
                   child: CircleAvatar(
-                    backgroundColor: Colors.white.withOpacity(0.9),
+                    backgroundColor: Colors.white.withValues(alpha: 0.9),
                     radius: 20,
                     child: IconButton(
                       icon: Icon(

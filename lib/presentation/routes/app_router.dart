@@ -304,7 +304,7 @@ class HomeScreen extends StatelessWidget {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                color.withOpacity(0.8),
+                color.withValues(alpha: 0.8),
                 color,
               ],
             ),
@@ -349,7 +349,7 @@ class HomeScreen extends StatelessWidget {
         leading: Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: const Color(0xFF6366F1).withOpacity(0.1),
+            color: const Color(0xFF6366F1).withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(
