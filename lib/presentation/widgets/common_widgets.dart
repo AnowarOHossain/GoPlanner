@@ -158,7 +158,7 @@ class ItemCard extends ConsumerWidget {
                       children: tags.take(3).map((tag) => TagChip(label: tag)).toList(),
                     ),
                   const SizedBox(height: 12),
-                  // Price and add to cart
+                  // Price and add to budget
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -169,8 +169,8 @@ class ItemCard extends ConsumerWidget {
                       if (onAddToCart != null)
                         ElevatedButton.icon(
                           onPressed: onAddToCart,
-                          icon: const Icon(Icons.add_shopping_cart, size: 16),
-                          label: const Text('Add'),
+                          icon: const Icon(Icons.analytics, size: 16),
+                          label: const Text('Add to Budget'),
                           style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                             minimumSize: Size.zero,

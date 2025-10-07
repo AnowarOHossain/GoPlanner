@@ -1,12 +1,12 @@
 # GoPlanner - AI-Powered Travel Planning App
 
-A comprehensive Flutter mobile application for travel planning with AI-powered itinerary generation, budget management, and location services.
+A comprehensive Flutter mobile application for travel planning with smart travel guide, budget management, and location services.
 
 ## ✨ Features
 
 - **Browse & Discover**: Hotels, restaurants, and attractions with images, ratings, and pricing
 - **Smart Budget Management**: Add items to cart and calculate total trip costs
-- **AI-Powered Planning**: Generate personalized day-by-day itineraries using Google Gemini API
+- **Smart Travel Guide**: Get personalized travel recommendations and planning assistance
 - **Advanced Search & Filters**: Filter by category, price range, ratings, and location
 - **Favorites & Save**: Save favorite places and itineraries for future trips
 - **Interactive Maps**: Google Maps integration for location display and navigation

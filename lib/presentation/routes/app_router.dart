@@ -40,7 +40,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/itinerary-generator',
         name: 'itinerary_generator',
-        builder: (context, state) => const ItineraryGeneratorScreen(),
+        builder: (context, state) => const TravelGuideScreen(),
       ),
       GoRoute(
         path: '/itinerary/:id',
@@ -183,7 +183,7 @@ class HomeScreen extends StatelessWidget {
                       ),
                       _buildQuickActionCard(
                         context,
-                        'AI Itinerary',
+                        'Travel Guide',
                         Icons.auto_awesome,
                         const Color(0xFFF59E0B),
                         '/itinerary-generator',
@@ -203,9 +203,9 @@ class HomeScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   _buildFeatureCard(
-                    'Trip Cart & Budget',
-                    'Add items to your cart and track your budget',
-                    Icons.shopping_cart,
+                    'Budget Analysis',
+                    'Analyze your travel expenses and budget breakdown',
+                    Icons.analytics,
                     () => context.go('/cart'),
                   ),
                   const SizedBox(height: 12),
@@ -236,7 +236,7 @@ class HomeScreen extends StatelessWidget {
         onPressed: () => context.go('/itinerary-generator'),
         backgroundColor: const Color(0xFF6366F1),
         icon: const Icon(Icons.auto_awesome),
-        label: const Text('Generate Itinerary'),
+        label: const Text('Travel Guide'),
       ),
       
       // Bottom Navigation
@@ -254,8 +254,8 @@ class HomeScreen extends StatelessWidget {
             label: 'Explore',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart),
-            label: 'Cart',
+            icon: Icon(Icons.analytics),
+            label: 'Budget',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
@@ -418,9 +418,25 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Cart')),
+      appBar: AppBar(title: const Text('Budget Analysis')),
       body: const Center(
-        child: Text('Cart Screen - Coming Soon'),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.analytics, size: 80, color: Color(0xFF6366F1)),
+            SizedBox(height: 16),
+            Text(
+              'Budget Analysis',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Track your travel expenses and analyze your budget',
+              style: TextStyle(fontSize: 16, color: Colors.grey),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -440,15 +456,15 @@ class FavoritesScreen extends StatelessWidget {
   }
 }
 
-class ItineraryGeneratorScreen extends StatelessWidget {
-  const ItineraryGeneratorScreen({super.key});
+class TravelGuideScreen extends StatelessWidget {
+  const TravelGuideScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('AI Itinerary Generator')),
+      appBar: AppBar(title: const Text('Travel Guide')),
       body: const Center(
-        child: Text('Itinerary Generator - Coming Soon'),
+        child: Text('Travel Guide - Coming Soon'),
       ),
     );
   }
