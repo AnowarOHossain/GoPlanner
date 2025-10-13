@@ -1,4 +1,4 @@
-package com.example.goplanner
+package com.goplanner.app
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:firebase_core/firebase_core.dart';
+// import 'package:firebase_core/firebase_core.dart'; // Temporarily disabled
 
 import 'core/constants/app_constants.dart';
 import 'presentation/routes/app_router.dart';
@@ -11,7 +11,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
   // Initialize Firebase
-  await Firebase.initializeApp();
+  // await Firebase.initializeApp(); // Temporarily disabled
   
   // Set preferred orientations
   await SystemChrome.setPreferredOrientations([
