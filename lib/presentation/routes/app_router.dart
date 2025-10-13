@@ -2032,39 +2032,36 @@ class _AttractionsScreenState extends ConsumerState<AttractionsScreen> {
                         const SizedBox(width: 2),
                         Expanded(
                           child: Text(
-                            attraction.location.city,
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: Colors.grey[600],
-                            ),
+                            '${attraction.location.city}, ${attraction.division}',
+                            style: TextStyle(fontSize: 11, color: Colors.grey[600]),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ],
                     ),
-                    const Spacer(),
+                    const SizedBox(height: 4),
                     
                     // Rating and Entry Fee
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Row(
-                          children: [
-                            const Icon(Icons.star, color: Colors.amber, size: 14),
-                            const SizedBox(width: 2),
-                            Text(
-                              attraction.rating.toStringAsFixed(1),
-                              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-                            ),
-                          ],
+                        const Icon(Icons.star, size: 12, color: Colors.amber),
+                        const SizedBox(width: 2),
+                        Text(
+                          attraction.rating.toStringAsFixed(1),
+                          style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600),
                         ),
                         Text(
-                          attraction.formattedEntryFee,
-                          style: const TextStyle(
-                            fontSize: 12,
+                          ' (${attraction.reviewCount})',
+                          style: const TextStyle(fontSize: 10, color: Colors.grey),
+                        ),
+                        const Spacer(),
+                        Text(
+                          attraction.isFree ? 'Free' : '৳${attraction.entryFee!.toStringAsFixed(0)}',
+                          style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF2E7D5A),
+                            color: attraction.isFree ? Colors.green : const Color(0xFF2E7D5A),
+                            fontSize: 12,
                           ),
                         ),
                       ],
