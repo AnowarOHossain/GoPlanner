@@ -3242,7 +3242,7 @@ class AttractionDetailScreen extends ConsumerWidget {
                                     color: isFavorite ? Colors.red : Colors.grey[600],
                                   ),
                                   label: Text(
-                                    isFavorite ? 'Saved' : 'Save',
+                                    isFavorite ? 'Added to Favorite' : 'Add to Favorite',
                                     style: TextStyle(
                                       color: isFavorite ? Colors.red : Colors.grey[800],
                                       fontWeight: FontWeight.w600,
@@ -3958,7 +3958,7 @@ class _HotelDetailScreenState extends ConsumerState<HotelDetailScreen> with Tick
                                     color: isFavorite ? Colors.red : Colors.grey[600],
                                   ),
                                   label: Text(
-                                    isFavorite ? 'Saved' : 'Save',
+                                    isFavorite ? 'Added to Favorite' : 'Add to Favorite',
                                     style: TextStyle(
                                       color: isFavorite ? Colors.red : Colors.grey[800],
                                       fontWeight: FontWeight.w600,
@@ -4089,7 +4089,7 @@ class _HotelDetailScreenState extends ConsumerState<HotelDetailScreen> with Tick
                           isFavorite ? Icons.favorite : Icons.favorite_border,
                           color: isFavorite ? Colors.red : null,
                         ),
-                        label: Text(isFavorite ? 'Saved' : 'Save'),
+                        label: Text(isFavorite ? 'Added to Favorite' : 'Add to Favorite'),
                         style: OutlinedButton.styleFrom(
                           side: BorderSide(
                             color: isFavorite ? Colors.red : Colors.grey,
@@ -5196,7 +5196,7 @@ class RestaurantDetailScreen extends ConsumerWidget {
                                     color: isFavorite ? Colors.red : Colors.grey[600],
                                   ),
                                   label: Text(
-                                    isFavorite ? 'Saved' : 'Save',
+                                    isFavorite ? 'Added to Favorite' : 'Add to Favorite',
                                     style: TextStyle(
                                       color: isFavorite ? Colors.red : Colors.grey[800],
                                       fontWeight: FontWeight.w600,
@@ -5322,7 +5322,7 @@ class RestaurantDetailScreen extends ConsumerWidget {
                           isFavorite ? Icons.favorite : Icons.favorite_border,
                           color: isFavorite ? Colors.red : null,
                         ),
-                        label: Text(isFavorite ? 'Favorited' : 'Favorite'),
+                        label: Text(isFavorite ? 'Added to Favorite' : 'Add to Favorite'),
                         style: OutlinedButton.styleFrom(
                           side: BorderSide(
                             color: isFavorite ? Colors.red : Colors.grey,
