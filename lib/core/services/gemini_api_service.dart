@@ -160,8 +160,9 @@ Create a detailed $duration-day travel itinerary for ${destination.city}, ${dest
 TRIP DETAILS:
 - Dates: ${startDate.toIso8601String().split('T')[0]} to ${endDate.toIso8601String().split('T')[0]}
 - Budget: $currency $budget
-- Group: ${preferences.travelStyle.groupType} (${preferences.travelStyle.groupSize ?? 1} person(s))
-- Travel Style: ${preferences.travelStyle.style}
+- Group: ${preferences.travelStyle.preferGroupTravel ? 'Group' : 'Solo'} travel
+- Adventure Level: ${preferences.travelStyle.adventureLevel}
+- Budget Level: ${preferences.travelStyle.budgetLevel}
 - Pace: ${preferences.travelStyle.pace}
 - Interests: ${preferences.travelStyle.interests.join(', ')}
 
@@ -225,8 +226,9 @@ IMPORTANT: Return ONLY the JSON object, no additional text or explanation.
 Provide 10 personalized travel recommendations for ${destination.city}, ${destination.country}.
 
 TRAVELER PROFILE:
-- Travel Style: ${travelStyle.style}
-- Group Type: ${travelStyle.groupType}
+- Adventure Level: ${travelStyle.adventureLevel}
+- Budget Level: ${travelStyle.budgetLevel}
+- Group Preference: ${travelStyle.preferGroupTravel ? 'Group' : 'Solo'}
 - Interests: ${interests.join(', ')}
 - Pace: ${travelStyle.pace}
 
@@ -258,7 +260,8 @@ USER FEEDBACK:
 $feedback
 
 PREFERENCES:
-- Travel Style: ${preferences.travelStyle.style}
+- Adventure Level: ${preferences.travelStyle.adventureLevel}
+- Budget Level: ${preferences.travelStyle.budgetLevel}
 - Interests: ${preferences.travelStyle.interests.join(', ')}
 - Dietary Restrictions: ${preferences.dietaryRestrictions.join(', ')}
 
@@ -302,7 +305,7 @@ Return ONLY the JSON object, no additional text.
         tags: List<String>.from(jsonData['tags'] ?? []),
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
-        isAiGenerated: true,
+
       );
     } catch (e) {
       throw GeminiApiException('Failed to parse itinerary response: ${e.toString()}');

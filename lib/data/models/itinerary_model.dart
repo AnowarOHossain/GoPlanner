@@ -1,11 +1,9 @@
 import 'package:equatable/equatable.dart';
-import 'package:json_annotation/json_annotation.dart';
 import 'cart_item_model.dart';
 import 'location_model.dart';
 
-part 'itinerary_model.g.dart';
+// Simplified models for future Gemini API integration
 
-@JsonSerializable()
 class ItineraryModel extends Equatable {
   final String id;
   final String title;
@@ -19,9 +17,6 @@ class ItineraryModel extends Equatable {
   final List<String> tags;
   final DateTime createdAt;
   final DateTime updatedAt;
-  final bool isAiGenerated;
-  final String? userId;
-  final Map<String, dynamic>? preferences;
 
   const ItineraryModel({
     required this.id,
@@ -36,15 +31,41 @@ class ItineraryModel extends Equatable {
     required this.tags,
     required this.createdAt,
     required this.updatedAt,
-    this.isAiGenerated = false,
-    this.userId,
-    this.preferences,
   });
 
-  factory ItineraryModel.fromJson(Map<String, dynamic> json) =>
-      _$ItineraryModelFromJson(json);
+  factory ItineraryModel.fromJson(Map<String, dynamic> json) {
+    return ItineraryModel(
+      id: json['id'] as String,
+      title: json['title'] as String,
+      description: json['description'] as String,
+      destination: LocationModel.fromJson(json['destination'] as Map<String, dynamic>),
+      startDate: DateTime.parse(json['startDate'] as String),
+      endDate: DateTime.parse(json['endDate'] as String),
+      totalBudget: (json['totalBudget'] as num).toDouble(),
+      currency: json['currency'] as String,
+      dayPlans: (json['dayPlans'] as List).map((e) => DayPlanModel.fromJson(e as Map<String, dynamic>)).toList(),
+      tags: List<String>.from(json['tags'] as List),
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      updatedAt: DateTime.parse(json['updatedAt'] as String),
+    );
+  }
 
-  Map<String, dynamic> toJson() => _$ItineraryModelToJson(this);
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'description': description,
+      'destination': destination.toJson(),
+      'startDate': startDate.toIso8601String(),
+      'endDate': endDate.toIso8601String(),
+      'totalBudget': totalBudget,
+      'currency': currency,
+      'dayPlans': dayPlans.map((e) => e.toJson()).toList(),
+      'tags': tags,
+      'createdAt': createdAt.toIso8601String(),
+      'updatedAt': updatedAt.toIso8601String(),
+    };
+  }
 
   @override
   List<Object?> get props => [
@@ -60,9 +81,6 @@ class ItineraryModel extends Equatable {
         tags,
         createdAt,
         updatedAt,
-        isAiGenerated,
-        userId,
-        preferences,
       ];
 
   ItineraryModel copyWith({
@@ -78,9 +96,6 @@ class ItineraryModel extends Equatable {
     List<String>? tags,
     DateTime? createdAt,
     DateTime? updatedAt,
-    bool? isAiGenerated,
-    String? userId,
-    Map<String, dynamic>? preferences,
   }) {
     return ItineraryModel(
       id: id ?? this.id,
@@ -95,155 +110,188 @@ class ItineraryModel extends Equatable {
       tags: tags ?? this.tags,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
-      isAiGenerated: isAiGenerated ?? this.isAiGenerated,
-      userId: userId ?? this.userId,
-      preferences: preferences ?? this.preferences,
     );
   }
 
-  int get numberOfDays => endDate.difference(startDate).inDays + 1;
-
-  double get calculatedTotalCost {
-    return dayPlans.fold(0.0, (total, day) => total + day.totalCost);
-  }
-
-  String get formattedTotalBudget {
-    return '$currency ${totalBudget.toStringAsFixed(2)}';
-  }
-
-  String get formattedCalculatedCost {
-    return '$currency ${calculatedTotalCost.toStringAsFixed(2)}';
-  }
-
-  bool get isWithinBudget => calculatedTotalCost <= totalBudget;
-
-  double get budgetRemaining => totalBudget - calculatedTotalCost;
-
-  String get formattedBudgetRemaining {
-    final remaining = budgetRemaining;
-    final sign = remaining >= 0 ? '+' : '-';
-    return '$sign$currency ${remaining.abs().toStringAsFixed(2)}';
-  }
+  int get totalDays => endDate.difference(startDate).inDays + 1;
+  
+  bool get isMultiDay => totalDays > 1;
+  
+  bool get isActive => DateTime.now().isBefore(endDate);
 }
 
-@JsonSerializable()
 class DayPlanModel extends Equatable {
+  final String id;
   final int dayNumber;
   final DateTime date;
-  final List<ItineraryItemModel> activities;
+  final List<ItineraryItemModel> items;
   final String? notes;
+  final double dailyBudget;
 
   const DayPlanModel({
+    required this.id,
     required this.dayNumber,
     required this.date,
-    required this.activities,
+    required this.items,
     this.notes,
+    required this.dailyBudget,
   });
 
-  factory DayPlanModel.fromJson(Map<String, dynamic> json) =>
-      _$DayPlanModelFromJson(json);
-
-  Map<String, dynamic> toJson() => _$DayPlanModelToJson(this);
-
-  @override
-  List<Object?> get props => [dayNumber, date, activities, notes];
-
-  DayPlanModel copyWith({
-    int? dayNumber,
-    DateTime? date,
-    List<ItineraryItemModel>? activities,
-    String? notes,
-  }) {
+  factory DayPlanModel.fromJson(Map<String, dynamic> json) {
     return DayPlanModel(
-      dayNumber: dayNumber ?? this.dayNumber,
-      date: date ?? this.date,
-      activities: activities ?? this.activities,
-      notes: notes ?? this.notes,
+      id: json['id'] as String,
+      dayNumber: json['dayNumber'] as int,
+      date: DateTime.parse(json['date'] as String),
+      items: (json['items'] as List).map((e) => ItineraryItemModel.fromJson(e as Map<String, dynamic>)).toList(),
+      notes: json['notes'] as String?,
+      dailyBudget: (json['dailyBudget'] as num).toDouble(),
     );
   }
 
-  double get totalCost {
-    return activities.fold(0.0, (total, activity) => total + activity.cost);
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'dayNumber': dayNumber,
+      'date': date.toIso8601String(),
+      'items': items.map((e) => e.toJson()).toList(),
+      'notes': notes,
+      'dailyBudget': dailyBudget,
+    };
   }
 
-  String formattedTotalCost(String currency) {
-    return '$currency ${totalCost.toStringAsFixed(2)}';
+  @override
+  List<Object?> get props => [id, dayNumber, date, items, notes, dailyBudget];
+
+  DayPlanModel copyWith({
+    String? id,
+    int? dayNumber,
+    DateTime? date,
+    List<ItineraryItemModel>? items,
+    String? notes,
+    double? dailyBudget,
+  }) {
+    return DayPlanModel(
+      id: id ?? this.id,
+      dayNumber: dayNumber ?? this.dayNumber,
+      date: date ?? this.date,
+      items: items ?? this.items,
+      notes: notes ?? this.notes,
+      dailyBudget: dailyBudget ?? this.dailyBudget,
+    );
   }
+
+  double get totalSpent => items.fold(0.0, (sum, item) => sum + item.estimatedCost);
 }
 
-@JsonSerializable()
 class ItineraryItemModel extends Equatable {
   final String id;
-  final String name;
+  final String itemId;
   final ItemType type;
-  final String startTime;
-  final String? endTime;
-  final double cost;
-  final LocationModel? location;
-  final String? description;
-  final String? imageUrl;
-  final int? duration; // in minutes
+  final String name;
+  final LocationModel location;
+  final DateTime startTime;
+  final DateTime endTime;
+  final double estimatedCost;
+  final String currency;
+  final String? notes;
   final bool isBooked;
 
   const ItineraryItemModel({
     required this.id,
-    required this.name,
+    required this.itemId,
     required this.type,
+    required this.name,
+    required this.location,
     required this.startTime,
-    required this.cost,
-    this.endTime,
-    this.location,
-    this.description,
-    this.imageUrl,
-    this.duration,
+    required this.endTime,
+    required this.estimatedCost,
+    required this.currency,
+    this.notes,
     this.isBooked = false,
   });
 
-  factory ItineraryItemModel.fromJson(Map<String, dynamic> json) =>
-      _$ItineraryItemModelFromJson(json);
+  factory ItineraryItemModel.fromJson(Map<String, dynamic> json) {
+    return ItineraryItemModel(
+      id: json['id'] as String,
+      itemId: json['itemId'] as String,
+      type: ItemType.values.firstWhere((e) => e.name == json['type'] as String),
+      name: json['name'] as String,
+      location: LocationModel.fromJson(json['location'] as Map<String, dynamic>),
+      startTime: DateTime.parse(json['startTime'] as String),
+      endTime: DateTime.parse(json['endTime'] as String),
+      estimatedCost: (json['estimatedCost'] as num).toDouble(),
+      currency: json['currency'] as String,
+      notes: json['notes'] as String?,
+      isBooked: json['isBooked'] as bool? ?? false,
+    );
+  }
 
-  Map<String, dynamic> toJson() => _$ItineraryItemModelToJson(this);
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'itemId': itemId,
+      'type': type.name,
+      'name': name,
+      'location': location.toJson(),
+      'startTime': startTime.toIso8601String(),
+      'endTime': endTime.toIso8601String(),
+      'estimatedCost': estimatedCost,
+      'currency': currency,
+      'notes': notes,
+      'isBooked': isBooked,
+    };
+  }
 
   @override
   List<Object?> get props => [
         id,
-        name,
+        itemId,
         type,
+        name,
+        location,
         startTime,
         endTime,
-        cost,
-        location,
-        description,
-        imageUrl,
-        duration,
+        estimatedCost,
+        currency,
+        notes,
         isBooked,
       ];
 
   ItineraryItemModel copyWith({
     String? id,
-    String? name,
+    String? itemId,
     ItemType? type,
-    String? startTime,
-    String? endTime,
-    double? cost,
+    String? name,
     LocationModel? location,
-    String? description,
-    String? imageUrl,
-    int? duration,
+    DateTime? startTime,
+    DateTime? endTime,
+    double? estimatedCost,
+    String? currency,
+    String? notes,
     bool? isBooked,
   }) {
     return ItineraryItemModel(
       id: id ?? this.id,
-      name: name ?? this.name,
+      itemId: itemId ?? this.itemId,
       type: type ?? this.type,
+      name: name ?? this.name,
+      location: location ?? this.location,
       startTime: startTime ?? this.startTime,
       endTime: endTime ?? this.endTime,
-      cost: cost ?? this.cost,
-      location: location ?? this.location,
-      description: description ?? this.description,
-      imageUrl: imageUrl ?? this.imageUrl,
-      duration: duration ?? this.duration,
+      estimatedCost: estimatedCost ?? this.estimatedCost,
+      currency: currency ?? this.currency,
+      notes: notes ?? this.notes,
       isBooked: isBooked ?? this.isBooked,
     );
+  }
+
+  Duration get duration => endTime.difference(startTime);
+  
+  String get formattedDuration {
+    final hours = duration.inHours;
+    final minutes = duration.inMinutes % 60;
+    if (hours == 0) return '${minutes}min';
+    if (minutes == 0) return '${hours}h';
+    return '${hours}h ${minutes}min';
   }
 }

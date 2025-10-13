@@ -1,10 +1,6 @@
 import 'dart:math';
 import 'package:equatable/equatable.dart';
-import 'package:json_annotation/json_annotation.dart';
 
-part 'location_model.g.dart';
-
-@JsonSerializable()
 class LocationModel extends Equatable {
   final double latitude;
   final double longitude;
@@ -22,10 +18,27 @@ class LocationModel extends Equatable {
     this.postalCode,
   });
 
-  factory LocationModel.fromJson(Map<String, dynamic> json) =>
-      _$LocationModelFromJson(json);
+  factory LocationModel.fromJson(Map<String, dynamic> json) {
+    return LocationModel(
+      latitude: (json['latitude'] as num).toDouble(),
+      longitude: (json['longitude'] as num).toDouble(),
+      address: json['address'] as String,
+      city: json['city'] as String,
+      country: json['country'] as String,
+      postalCode: json['postalCode'] as String?,
+    );
+  }
 
-  Map<String, dynamic> toJson() => _$LocationModelToJson(this);
+  Map<String, dynamic> toJson() {
+    return {
+      'latitude': latitude,
+      'longitude': longitude,
+      'address': address,
+      'city': city,
+      'country': country,
+      'postalCode': postalCode,
+    };
+  }
 
   @override
   List<Object?> get props => [

@@ -1,7 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:json_annotation/json_annotation.dart';
-
-part 'cart_item_model.g.dart';
 
 enum ItemType {
   hotel,
@@ -9,7 +6,6 @@ enum ItemType {
   attraction,
 }
 
-@JsonSerializable()
 class CartItemModel extends Equatable {
   final String id;
   final String itemId;
@@ -39,10 +35,39 @@ class CartItemModel extends Equatable {
     this.additionalData,
   });
 
-  factory CartItemModel.fromJson(Map<String, dynamic> json) =>
-      _$CartItemModelFromJson(json);
+  factory CartItemModel.fromJson(Map<String, dynamic> json) {
+    return CartItemModel(
+      id: json['id'] as String,
+      itemId: json['itemId'] as String,
+      name: json['name'] as String,
+      type: ItemType.values.firstWhere((e) => e.name == json['type'] as String),
+      price: (json['price'] as num).toDouble(),
+      currency: json['currency'] as String,
+      quantity: json['quantity'] as int? ?? 1,
+      selectedDate: json['selectedDate'] != null ? DateTime.parse(json['selectedDate'] as String) : null,
+      nights: json['nights'] as int?,
+      persons: json['persons'] as int?,
+      imageUrl: json['imageUrl'] as String?,
+      additionalData: json['additionalData'] as Map<String, dynamic>?,
+    );
+  }
 
-  Map<String, dynamic> toJson() => _$CartItemModelToJson(this);
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'itemId': itemId,
+      'name': name,
+      'type': type.name,
+      'price': price,
+      'currency': currency,
+      'quantity': quantity,
+      'selectedDate': selectedDate?.toIso8601String(),
+      'nights': nights,
+      'persons': persons,
+      'imageUrl': imageUrl,
+      'additionalData': additionalData,
+    };
+  }
 
   @override
   List<Object?> get props => [
