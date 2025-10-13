@@ -3923,6 +3923,120 @@ class _HotelDetailScreenState extends ConsumerState<HotelDetailScreen> with Tick
                           ],
                         ),
                       ),
+                      const SizedBox(height: 24),
+                      
+                      // Action Buttons
+                      Row(
+                        children: [
+                          // Save to Favorites Button
+                          Expanded(
+                            child: Consumer(
+                              builder: (context, ref, child) {
+                                final favoriteHotelIds = ref.watch(favoriteHotelsProvider);
+                                final isFavorite = favoriteHotelIds.contains(hotel.id);
+                                return ElevatedButton.icon(
+                                  onPressed: () {
+                                    print('🏨 Hotel Save button tapped: ${hotel.name}, isFavorite: $isFavorite');
+                                    if (isFavorite) {
+                                      ref.read(favoriteHotelsProvider.notifier).state = 
+                                        {...favoriteHotelIds}..remove(hotel.id);
+                                      print('🏨 Removed hotel from favorites: ${hotel.id}');
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(content: Text('Removed from favorites')),
+                                      );
+                                    } else {
+                                      ref.read(favoriteHotelsProvider.notifier).state = 
+                                        {...favoriteHotelIds, hotel.id};
+                                      print('🏨 Added hotel to favorites: ${hotel.id}');
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(content: Text('Saved to favorites!')),
+                                      );
+                                    }
+                                  },
+                                  icon: Icon(
+                                    isFavorite ? Icons.favorite : Icons.favorite_border,
+                                    color: isFavorite ? Colors.red : Colors.grey[600],
+                                  ),
+                                  label: Text(
+                                    isFavorite ? 'Saved' : 'Save',
+                                    style: TextStyle(
+                                      color: isFavorite ? Colors.red : Colors.grey[800],
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: isFavorite ? Colors.red.withValues(alpha: 0.1) : Colors.grey[100],
+                                    elevation: 0,
+                                    side: BorderSide(
+                                      color: isFavorite ? Colors.red : Colors.grey[300]!,
+                                    ),
+                                    padding: const EdgeInsets.symmetric(vertical: 12),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          
+                          // Add to Budget Button
+                          Expanded(
+                            child: Consumer(
+                              builder: (context, ref, child) {
+                                final budgetItems = ref.watch(budgetItemsProvider);
+                                final isInBudget = budgetItems.any((item) => 
+                                  item.type == 'hotel' && item.id == hotel.id);
+                                return ElevatedButton.icon(
+                                  onPressed: () {
+                                    print('🏨 Hotel Budget button tapped: ${hotel.name}, isInBudget: $isInBudget');
+                                    if (isInBudget) {
+                                      ref.read(budgetItemsProvider.notifier).state = 
+                                        budgetItems.where((item) => 
+                                          !(item.type == 'hotel' && item.id == hotel.id)).toList();
+                                      print('🏨 Removed hotel from budget: ${hotel.id}');
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(content: Text('Removed from budget')),
+                                      );
+                                    } else {
+                                      final newItem = BudgetItem(
+                                        id: hotel.id,
+                                        type: 'hotel',
+                                        name: hotel.name,
+                                        price: hotel.pricePerNight,
+                                        currency: '৳',
+                                        imageUrl: hotel.images.first,
+                                        location: '${hotel.location.city}, ${hotel.division}',
+                                        quantity: 1,
+                                      );
+                                      ref.read(budgetItemsProvider.notifier).state = 
+                                        [...budgetItems, newItem];
+                                      print('🏨 Added hotel to budget: ${hotel.id}');
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(content: Text('Added to budget!')),
+                                      );
+                                    }
+                                  },
+                                  icon: Icon(
+                                    isInBudget ? Icons.shopping_cart : Icons.shopping_cart_outlined,
+                                    color: Colors.white,
+                                  ),
+                                  label: Text(
+                                    isInBudget ? 'In Budget' : 'Add to Budget',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: isInBudget ? Colors.green : const Color(0xFF2E7D5A),
+                                    elevation: 0,
+                                    padding: const EdgeInsets.symmetric(vertical: 12),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),
@@ -4988,6 +5102,119 @@ class RestaurantDetailScreen extends ConsumerWidget {
                       ],
                       
                       const SizedBox(height: 32),
+                      
+                      // Action Buttons
+                      Row(
+                        children: [
+                          // Save to Favorites Button
+                          Expanded(
+                            child: Consumer(
+                              builder: (context, ref, child) {
+                                final favoriteRestaurantIds = ref.watch(favoriteRestaurantsProvider);
+                                final isFavorite = favoriteRestaurantIds.contains(restaurant.id);
+                                return ElevatedButton.icon(
+                                  onPressed: () {
+                                    print('🍽️ Restaurant Save button tapped: ${restaurant.name}, isFavorite: $isFavorite');
+                                    if (isFavorite) {
+                                      ref.read(favoriteRestaurantsProvider.notifier).state = 
+                                        {...favoriteRestaurantIds}..remove(restaurant.id);
+                                      print('🍽️ Removed restaurant from favorites: ${restaurant.id}');
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(content: Text('Removed from favorites')),
+                                      );
+                                    } else {
+                                      ref.read(favoriteRestaurantsProvider.notifier).state = 
+                                        {...favoriteRestaurantIds, restaurant.id};
+                                      print('🍽️ Added restaurant to favorites: ${restaurant.id}');
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(content: Text('Saved to favorites!')),
+                                      );
+                                    }
+                                  },
+                                  icon: Icon(
+                                    isFavorite ? Icons.favorite : Icons.favorite_border,
+                                    color: isFavorite ? Colors.red : Colors.grey[600],
+                                  ),
+                                  label: Text(
+                                    isFavorite ? 'Saved' : 'Save',
+                                    style: TextStyle(
+                                      color: isFavorite ? Colors.red : Colors.grey[800],
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: isFavorite ? Colors.red.withValues(alpha: 0.1) : Colors.grey[100],
+                                    elevation: 0,
+                                    side: BorderSide(
+                                      color: isFavorite ? Colors.red : Colors.grey[300]!,
+                                    ),
+                                    padding: const EdgeInsets.symmetric(vertical: 12),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          
+                          // Add to Budget Button
+                          Expanded(
+                            child: Consumer(
+                              builder: (context, ref, child) {
+                                final budgetItems = ref.watch(budgetItemsProvider);
+                                final isInBudget = budgetItems.any((item) => 
+                                  item.type == 'restaurant' && item.id == restaurant.id);
+                                return ElevatedButton.icon(
+                                  onPressed: () {
+                                    print('🍽️ Restaurant Budget button tapped: ${restaurant.name}, isInBudget: $isInBudget');
+                                    if (isInBudget) {
+                                      ref.read(budgetItemsProvider.notifier).state = 
+                                        budgetItems.where((item) => 
+                                          !(item.type == 'restaurant' && item.id == restaurant.id)).toList();
+                                      print('🍽️ Removed restaurant from budget: ${restaurant.id}');
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(content: Text('Removed from budget')),
+                                      );
+                                    } else {
+                                      final newItem = BudgetItem(
+                                        id: restaurant.id,
+                                        type: 'restaurant',
+                                        name: restaurant.name,
+                                        price: restaurant.averageCostForTwo,
+                                        currency: '৳',
+                                        imageUrl: restaurant.images.first,
+                                        location: '${restaurant.location.city}, ${restaurant.division}',
+                                        quantity: 1,
+                                      );
+                                      ref.read(budgetItemsProvider.notifier).state = 
+                                        [...budgetItems, newItem];
+                                      print('🍽️ Added restaurant to budget: ${restaurant.id}');
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(content: Text('Added to budget!')),
+                                      );
+                                    }
+                                  },
+                                  icon: Icon(
+                                    isInBudget ? Icons.shopping_cart : Icons.shopping_cart_outlined,
+                                    color: Colors.white,
+                                  ),
+                                  label: Text(
+                                    isInBudget ? 'In Budget' : 'Add to Budget',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: isInBudget ? Colors.green : const Color(0xFF2E7D5A),
+                                    elevation: 0,
+                                    padding: const EdgeInsets.symmetric(vertical: 12),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),
@@ -5011,31 +5238,83 @@ class RestaurantDetailScreen extends ConsumerWidget {
             child: Row(
               children: [
                 Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Added to favorites!')),
+                  child: Consumer(
+                    builder: (context, ref, child) {
+                      final favoriteRestaurantIds = ref.watch(favoriteRestaurantsProvider);
+                      final isFavorite = favoriteRestaurantIds.contains(restaurant.id);
+                      return OutlinedButton.icon(
+                        onPressed: () {
+                          if (isFavorite) {
+                            ref.read(favoriteRestaurantsProvider.notifier).state = 
+                              {...favoriteRestaurantIds}..remove(restaurant.id);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Removed from favorites')),
+                            );
+                          } else {
+                            ref.read(favoriteRestaurantsProvider.notifier).state = 
+                              {...favoriteRestaurantIds, restaurant.id};
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Added to favorites!')),
+                            );
+                          }
+                        },
+                        icon: Icon(
+                          isFavorite ? Icons.favorite : Icons.favorite_border,
+                          color: isFavorite ? Colors.red : null,
+                        ),
+                        label: Text(isFavorite ? 'Favorited' : 'Favorite'),
+                        style: OutlinedButton.styleFrom(
+                          side: BorderSide(
+                            color: isFavorite ? Colors.red : Colors.grey,
+                          ),
+                        ),
                       );
                     },
-                    icon: const Icon(Icons.favorite_border),
-                    label: const Text('Favorite'),
                   ),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
                   flex: 2,
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Added to budget!')),
+                  child: Consumer(
+                    builder: (context, ref, child) {
+                      final budgetItems = ref.watch(budgetItemsProvider);
+                      final isInBudget = budgetItems.any((item) => 
+                        item.type == 'restaurant' && item.id == restaurant.id);
+                      return ElevatedButton.icon(
+                        onPressed: () {
+                          if (isInBudget) {
+                            ref.read(budgetItemsProvider.notifier).state = 
+                              budgetItems.where((item) => 
+                                !(item.type == 'restaurant' && item.id == restaurant.id)).toList();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Removed from budget')),
+                            );
+                          } else {
+                            final newItem = BudgetItem(
+                              id: restaurant.id,
+                              type: 'restaurant',
+                              name: restaurant.name,
+                              price: restaurant.averageCostForTwo,
+                              currency: '৳',
+                              imageUrl: restaurant.images.first,
+                              location: '${restaurant.location.city}, ${restaurant.division}',
+                              quantity: 1,
+                            );
+                            ref.read(budgetItemsProvider.notifier).state = 
+                              [...budgetItems, newItem];
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Added to budget!')),
+                            );
+                          }
+                        },
+                        icon: Icon(isInBudget ? Icons.shopping_cart : Icons.add_shopping_cart),
+                        label: Text(isInBudget ? 'In Budget' : 'Add to Budget'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: isInBudget ? Colors.green : const Color(0xFF2E7D5A),
+                          foregroundColor: Colors.white,
+                        ),
                       );
                     },
-                    icon: const Icon(Icons.add_shopping_cart),
-                    label: const Text('Add to Budget'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF2E7D5A),
-                      foregroundColor: Colors.white,
-                    ),
                   ),
                 ),
               ],
