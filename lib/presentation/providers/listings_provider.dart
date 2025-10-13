@@ -337,3 +337,91 @@ final historicalPeriodsProvider = Provider<List<String>>((ref) {
     error: (_, __) => [],
   );
 });
+
+// Favorites Providers
+final favoriteHotelsProvider = StateProvider<Set<String>>((ref) => <String>{});
+final favoriteRestaurantsProvider = StateProvider<Set<String>>((ref) => <String>{});
+final favoriteAttractionsProvider = StateProvider<Set<String>>((ref) => <String>{});
+
+// Budget/Cart Providers
+class BudgetItem {
+  final String id;
+  final String name;
+  final String type; // hotel, restaurant, attraction
+  final double price;
+  final String currency;
+  final String imageUrl;
+  final String location;
+  final int quantity;
+
+  const BudgetItem({
+    required this.id,
+    required this.name,
+    required this.type,
+    required this.price,
+    required this.currency,
+    required this.imageUrl,
+    required this.location,
+    this.quantity = 1,
+  });
+
+  BudgetItem copyWith({
+    String? id,
+    String? name,
+    String? type,
+    double? price,
+    String? currency,
+    String? imageUrl,
+    String? location,
+    int? quantity,
+  }) {
+    return BudgetItem(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      type: type ?? this.type,
+      price: price ?? this.price,
+      currency: currency ?? this.currency,
+      imageUrl: imageUrl ?? this.imageUrl,
+      location: location ?? this.location,
+      quantity: quantity ?? this.quantity,
+    );
+  }
+}
+
+final budgetItemsProvider = StateProvider<List<BudgetItem>>((ref) => []);
+
+final totalBudgetProvider = Provider<double>((ref) {
+  final items = ref.watch(budgetItemsProvider);
+  return items.fold(0.0, (total, item) => total + (item.price * item.quantity));
+});
+
+// Helper providers for combined favorites
+final allFavoritesProvider = Provider<Map<String, List<dynamic>>>((ref) {
+  final favoriteHotelIds = ref.watch(favoriteHotelsProvider);
+  final favoriteRestaurantIds = ref.watch(favoriteRestaurantsProvider);
+  final favoriteAttractionIds = ref.watch(favoriteAttractionsProvider);
+  
+  final hotelsAsync = ref.watch(bangladeshHotelsProvider);
+  final restaurantsAsync = ref.watch(bangladeshRestaurantsProvider);
+  final attractionsAsync = ref.watch(bangladeshAttractionsProvider);
+  
+  final Map<String, List<dynamic>> favorites = {
+    'hotels': [],
+    'restaurants': [],
+    'attractions': [],
+  };
+  
+  hotelsAsync.whenData((hotels) {
+    favorites['hotels'] = hotels.where((hotel) => favoriteHotelIds.contains(hotel.id)).toList();
+  });
+  
+  restaurantsAsync.whenData((restaurants) {
+    favorites['restaurants'] = restaurants.where((restaurant) => favoriteRestaurantIds.contains(restaurant.id)).toList();
+  });
+  
+  attractionsAsync.whenData((attractions) {
+    favorites['attractions'] = attractions.where((attraction) => favoriteAttractionIds.contains(attraction.id)).toList();
+  });
+  
+  return favorites;
+});

@@ -634,6 +634,86 @@ class _HotelsScreenState extends ConsumerState<HotelsScreen> {
                       ),
                     ),
                   ),
+                  // Favorite and Budget buttons
+                  Positioned(
+                    top: 8,
+                    left: 8,
+                    child: Row(
+                      children: [
+                        Consumer(
+                          builder: (context, ref, child) {
+                            final favoriteHotelIds = ref.watch(favoriteHotelsProvider);
+                            final isFavorite = favoriteHotelIds.contains(hotel.id);
+                            return GestureDetector(
+                              onTap: () {
+                                if (isFavorite) {
+                                  ref.read(favoriteHotelsProvider.notifier).state = 
+                                    {...favoriteHotelIds}..remove(hotel.id);
+                                } else {
+                                  ref.read(favoriteHotelsProvider.notifier).state = 
+                                    {...favoriteHotelIds, hotel.id};
+                                }
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(6),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.9),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  isFavorite ? Icons.favorite : Icons.favorite_border,
+                                  color: isFavorite ? Colors.red : Colors.grey,
+                                  size: 16,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                        const SizedBox(width: 8),
+                        Consumer(
+                          builder: (context, ref, child) {
+                            final budgetItems = ref.watch(budgetItemsProvider);
+                            final isInBudget = budgetItems.any((item) => 
+                              item.type == 'hotel' && item.id == hotel.id);
+                            return GestureDetector(
+                              onTap: () {
+                                if (isInBudget) {
+                                  ref.read(budgetItemsProvider.notifier).state = 
+                                    budgetItems.where((item) => 
+                                      !(item.type == 'hotel' && item.id == hotel.id)).toList();
+                                } else {
+                                  final newItem = BudgetItem(
+                                    id: hotel.id,
+                                    type: 'hotel',
+                                    name: hotel.name,
+                                    price: hotel.pricePerNight,
+                                    currency: '৳',
+                                    imageUrl: hotel.images.first,
+                                    location: '${hotel.location.city}, ${hotel.division}',
+                                    quantity: 1,
+                                  );
+                                  ref.read(budgetItemsProvider.notifier).state = 
+                                    [...budgetItems, newItem];
+                                }
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(6),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.9),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  isInBudget ? Icons.shopping_cart : Icons.shopping_cart_outlined,
+                                  color: isInBudget ? const Color(0xFF2E7D5A) : Colors.grey,
+                                  size: 16,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -1166,6 +1246,86 @@ class _RestaurantsScreenState extends ConsumerState<RestaurantsScreen> {
                           size: 20,
                         ),
                       ),
+                    // Favorite and Budget buttons
+                    Positioned(
+                      bottom: 8,
+                      left: 8,
+                      child: Row(
+                        children: [
+                          Consumer(
+                            builder: (context, ref, child) {
+                              final favoriteRestaurantIds = ref.watch(favoriteRestaurantsProvider);
+                              final isFavorite = favoriteRestaurantIds.contains(restaurant.id);
+                              return GestureDetector(
+                                onTap: () {
+                                  if (isFavorite) {
+                                    ref.read(favoriteRestaurantsProvider.notifier).state = 
+                                      {...favoriteRestaurantIds}..remove(restaurant.id);
+                                  } else {
+                                    ref.read(favoriteRestaurantsProvider.notifier).state = 
+                                      {...favoriteRestaurantIds, restaurant.id};
+                                  }
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(6),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.9),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    isFavorite ? Icons.favorite : Icons.favorite_border,
+                                    color: isFavorite ? Colors.red : Colors.grey,
+                                    size: 16,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                          const SizedBox(width: 8),
+                          Consumer(
+                            builder: (context, ref, child) {
+                              final budgetItems = ref.watch(budgetItemsProvider);
+                              final isInBudget = budgetItems.any((item) => 
+                                item.type == 'restaurant' && item.id == restaurant.id);
+                              return GestureDetector(
+                                onTap: () {
+                                  if (isInBudget) {
+                                    ref.read(budgetItemsProvider.notifier).state = 
+                                      budgetItems.where((item) => 
+                                        !(item.type == 'restaurant' && item.id == restaurant.id)).toList();
+                                  } else {
+                                    final newItem = BudgetItem(
+                                      id: restaurant.id,
+                                      type: 'restaurant',
+                                      name: restaurant.name,
+                                      price: restaurant.averageCostForTwo,
+                                      currency: '৳',
+                                      imageUrl: restaurant.images.first,
+                                      location: '${restaurant.location.city}, ${restaurant.division}',
+                                      quantity: 1,
+                                    );
+                                    ref.read(budgetItemsProvider.notifier).state = 
+                                      [...budgetItems, newItem];
+                                  }
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(6),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.9),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    isInBudget ? Icons.shopping_cart : Icons.shopping_cart_outlined,
+                                    color: isInBudget ? const Color(0xFF2E7D5A) : Colors.grey,
+                                    size: 16,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -1760,6 +1920,86 @@ class _AttractionsScreenState extends ConsumerState<AttractionsScreen> {
                           size: 20,
                         ),
                       ),
+                    // Favorite and Budget buttons
+                    Positioned(
+                      bottom: 8,
+                      left: 8,
+                      child: Row(
+                        children: [
+                          Consumer(
+                            builder: (context, ref, child) {
+                              final favoriteAttractionIds = ref.watch(favoriteAttractionsProvider);
+                              final isFavorite = favoriteAttractionIds.contains(attraction.id);
+                              return GestureDetector(
+                                onTap: () {
+                                  if (isFavorite) {
+                                    ref.read(favoriteAttractionsProvider.notifier).state = 
+                                      {...favoriteAttractionIds}..remove(attraction.id);
+                                  } else {
+                                    ref.read(favoriteAttractionsProvider.notifier).state = 
+                                      {...favoriteAttractionIds, attraction.id};
+                                  }
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(6),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.9),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    isFavorite ? Icons.favorite : Icons.favorite_border,
+                                    color: isFavorite ? Colors.red : Colors.grey,
+                                    size: 16,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                          const SizedBox(width: 8),
+                          Consumer(
+                            builder: (context, ref, child) {
+                              final budgetItems = ref.watch(budgetItemsProvider);
+                              final isInBudget = budgetItems.any((item) => 
+                                item.type == 'attraction' && item.id == attraction.id);
+                              return GestureDetector(
+                                onTap: () {
+                                  if (isInBudget) {
+                                    ref.read(budgetItemsProvider.notifier).state = 
+                                      budgetItems.where((item) => 
+                                        !(item.type == 'attraction' && item.id == attraction.id)).toList();
+                                  } else {
+                                    final newItem = BudgetItem(
+                                      id: attraction.id,
+                                      type: 'attraction',
+                                      name: attraction.name,
+                                      price: attraction.entryFee ?? 0.0,
+                                      currency: '৳',
+                                      imageUrl: attraction.images.first,
+                                      location: '${attraction.location.city}, ${attraction.division}',
+                                      quantity: 1,
+                                    );
+                                    ref.read(budgetItemsProvider.notifier).state = 
+                                      [...budgetItems, newItem];
+                                  }
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(6),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.9),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    isInBudget ? Icons.shopping_cart : Icons.shopping_cart_outlined,
+                                    color: isInBudget ? const Color(0xFF2E7D5A) : Colors.grey,
+                                    size: 16,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -2096,47 +2336,617 @@ class _AttractionsScreenState extends ConsumerState<AttractionsScreen> {
   }
 }
 
-class CartScreen extends StatelessWidget {
+class CartScreen extends ConsumerWidget {
   const CartScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final budgetItems = ref.watch(budgetItemsProvider);
+    final totalBudget = ref.watch(totalBudgetProvider);
+    
     return Scaffold(
-      appBar: AppBar(title: const Text('Budget Analysis')),
-      body: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+      appBar: AppBar(
+        title: const Text('Budget Analysis'),
+        backgroundColor: const Color(0xFF2E7D5A),
+        foregroundColor: Colors.white,
+        actions: [
+          if (budgetItems.isNotEmpty)
+            TextButton(
+              onPressed: () {
+                ref.read(budgetItemsProvider.notifier).state = [];
+              },
+              child: const Text(
+                'Clear All',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+        ],
+      ),
+      body: budgetItems.isEmpty
+          ? _buildEmptyState()
+          : Column(
+              children: [
+                // Budget Summary
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        const Color(0xFF2E7D5A),
+                        const Color(0xFF2E7D5A).withOpacity(0.8),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      const Text(
+                        'Total Budget',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white70,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        '৳${totalBudget.toStringAsFixed(0)}',
+                        style: const TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        '${budgetItems.length} items in budget',
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.white70,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                
+                // Budget Items List
+                Expanded(
+                  child: ListView.builder(
+                    padding: const EdgeInsets.all(16),
+                    itemCount: budgetItems.length,
+                    itemBuilder: (context, index) {
+                      final item = budgetItems[index];
+                      return _buildBudgetItem(item, ref, index);
+                    },
+                  ),
+                ),
+                
+                // Budget Breakdown
+                _buildBudgetBreakdown(budgetItems, totalBudget),
+              ],
+            ),
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return const Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.analytics,
+            size: 80,
+            color: Color(0xFF6366F1),
+          ),
+          SizedBox(height: 16),
+          Text(
+            'No Budget Items',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 8),
+          Text(
+            'Add hotels, restaurants, or attractions to start planning your budget',
+            style: TextStyle(fontSize: 16, color: Colors.grey),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBudgetItem(BudgetItem item, WidgetRef ref, int index) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      child: Card(
+        elevation: 2,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              // Item Image
+              Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  image: DecorationImage(
+                    image: NetworkImage(item.imageUrl),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 16),
+              
+              // Item Details
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      item.name,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: _getTypeColor(item.type),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Text(
+                            item.type.toUpperCase(),
+                            style: const TextStyle(
+                              fontSize: 10,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            item.location,
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey[600],
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Text(
+                          '${item.currency}${item.price.toStringAsFixed(0)}',
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF2E7D5A),
+                          ),
+                        ),
+                        if (item.quantity > 1) ...[
+                          const SizedBox(width: 8),
+                          Text(
+                            'x${item.quantity}',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                        ],
+                        const Spacer(),
+                        Text(
+                          '${item.currency}${(item.price * item.quantity).toStringAsFixed(0)}',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              
+              // Quantity Controls and Remove
+              Column(
+                children: [
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        onPressed: () => _updateQuantity(item, -1, ref),
+                        icon: const Icon(Icons.remove_circle_outline),
+                        constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                      ),
+                      Text(
+                        '${item.quantity}',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      IconButton(
+                        onPressed: () => _updateQuantity(item, 1, ref),
+                        icon: const Icon(Icons.add_circle_outline),
+                        constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                      ),
+                    ],
+                  ),
+                  IconButton(
+                    onPressed: () => _removeItem(index, ref),
+                    icon: const Icon(Icons.delete, color: Colors.red),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBudgetBreakdown(List<BudgetItem> items, double total) {
+    final Map<String, double> breakdown = {};
+    for (final item in items) {
+      breakdown[item.type] = (breakdown[item.type] ?? 0) + (item.price * item.quantity);
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.grey[50],
+        border: Border(top: BorderSide(color: Colors.grey[300]!)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Budget Breakdown',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 12),
+          ...breakdown.entries.map((entry) {
+            final percentage = (entry.value / total * 100);
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(
+                children: [
+                  Container(
+                    width: 12,
+                    height: 12,
+                    decoration: BoxDecoration(
+                      color: _getTypeColor(entry.key),
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    entry.key.toUpperCase(),
+                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                  ),
+                  const Spacer(),
+                  Text(
+                    '৳${entry.value.toStringAsFixed(0)}',
+                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    '(${percentage.toStringAsFixed(1)}%)',
+                    style: TextStyle(fontSize: 10, color: Colors.grey[600]),
+                  ),
+                ],
+              ),
+            );
+          }).toList(),
+        ],
+      ),
+    );
+  }
+
+  Color _getTypeColor(String type) {
+    switch (type.toLowerCase()) {
+      case 'hotels':
+        return Colors.blue;
+      case 'restaurants':
+        return Colors.orange;
+      case 'attractions':
+        return Colors.green;
+      default:
+        return Colors.grey;
+    }
+  }
+
+  void _updateQuantity(BudgetItem item, int delta, WidgetRef ref) {
+    final items = ref.read(budgetItemsProvider);
+    final index = items.indexWhere((i) => i.id == item.id);
+    if (index != -1) {
+      final newQuantity = (items[index].quantity + delta).clamp(1, 99);
+      final updatedItems = [...items];
+      updatedItems[index] = items[index].copyWith(quantity: newQuantity);
+      ref.read(budgetItemsProvider.notifier).state = updatedItems;
+    }
+  }
+
+  void _removeItem(int index, WidgetRef ref) {
+    final items = ref.read(budgetItemsProvider);
+    final updatedItems = [...items];
+    updatedItems.removeAt(index);
+    ref.read(budgetItemsProvider.notifier).state = updatedItems;
+  }
+}
+
+class FavoritesScreen extends ConsumerWidget {
+  const FavoritesScreen({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final favorites = ref.watch(allFavoritesProvider);
+    
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Favorites'),
+          backgroundColor: const Color(0xFF2E7D5A),
+          foregroundColor: Colors.white,
+          bottom: const TabBar(
+            labelColor: Colors.white,
+            unselectedLabelColor: Colors.white70,
+            indicatorColor: Colors.white,
+            tabs: [
+              Tab(text: 'Hotels', icon: Icon(Icons.hotel)),
+              Tab(text: 'Restaurants', icon: Icon(Icons.restaurant)),
+              Tab(text: 'Attractions', icon: Icon(Icons.attractions)),
+            ],
+          ),
+        ),
+        body: TabBarView(
           children: [
-            Icon(Icons.analytics, size: 80, color: Color(0xFF6366F1)),
-            SizedBox(height: 16),
-            Text(
-              'Budget Analysis',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 8),
-            Text(
-              'Track your travel expenses and analyze your budget',
-              style: TextStyle(fontSize: 16, color: Colors.grey),
-              textAlign: TextAlign.center,
-            ),
+            _buildFavoritesList(favorites['hotels'] ?? [], 'hotels', ref),
+            _buildFavoritesList(favorites['restaurants'] ?? [], 'restaurants', ref),
+            _buildFavoritesList(favorites['attractions'] ?? [], 'attractions', ref),
           ],
         ),
       ),
     );
   }
-}
 
-class FavoritesScreen extends StatelessWidget {
-  const FavoritesScreen({super.key});
+  Widget _buildFavoritesList(List<dynamic> items, String type, WidgetRef ref) {
+    if (items.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              _getTypeIcon(type),
+              size: 64,
+              color: Colors.grey[400],
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'No favorite ${type} yet',
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.grey[600],
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Add ${type} to favorites to see them here',
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey[500],
+              ),
+            ),
+          ],
+        ),
+      );
+    }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Favorites')),
-      body: const Center(
-        child: Text('Favorites Screen - Coming Soon'),
+    return ListView.builder(
+      padding: const EdgeInsets.all(16),
+      itemCount: items.length,
+      itemBuilder: (context, index) {
+        final item = items[index];
+        return _buildFavoriteItem(item, type, ref);
+      },
+    );
+  }
+
+  Widget _buildFavoriteItem(dynamic item, String type, WidgetRef ref) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      child: Card(
+        elevation: 2,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              // Item Image
+              Container(
+                width: 80,
+                height: 80,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  image: DecorationImage(
+                    image: NetworkImage(item.images.first),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 16),
+              
+              // Item Details
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      item.name,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        Icon(Icons.location_on, size: 14, color: Colors.grey[600]),
+                        const SizedBox(width: 4),
+                        Expanded(
+                          child: Text(
+                            '${item.location.city}, ${type == 'hotels' ? item.division : type == 'restaurants' ? item.division : item.division}',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey[600],
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        const Icon(Icons.star, color: Colors.amber, size: 16),
+                        const SizedBox(width: 2),
+                        Text(
+                          item.rating.toStringAsFixed(1),
+                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                        ),
+                        const Spacer(),
+                        Text(
+                          _getItemPrice(item, type),
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF2E7D5A),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              
+              // Action Buttons
+              Column(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.favorite, color: Colors.red),
+                    onPressed: () => _removeFromFavorites(item.id, type, ref),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.add_shopping_cart, color: Color(0xFF2E7D5A)),
+                    onPressed: () => _addToBudget(item, type, ref),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
     );
+  }
+
+  IconData _getTypeIcon(String type) {
+    switch (type) {
+      case 'hotels':
+        return Icons.hotel;
+      case 'restaurants':
+        return Icons.restaurant;
+      case 'attractions':
+        return Icons.attractions;
+      default:
+        return Icons.favorite;
+    }
+  }
+
+  String _getItemPrice(dynamic item, String type) {
+    switch (type) {
+      case 'hotels':
+        return '৳${item.pricePerNight.toStringAsFixed(0)}/night';
+      case 'restaurants':
+        return '৳${item.averageCostForTwo.toStringAsFixed(0)} for two';
+      case 'attractions':
+        return item.entryFee != null && item.entryFee > 0 
+            ? '৳${item.entryFee.toStringAsFixed(0)}' 
+            : 'Free';
+      default:
+        return '';
+    }
+  }
+
+  void _removeFromFavorites(String itemId, String type, WidgetRef ref) {
+    switch (type) {
+      case 'hotels':
+        final favorites = ref.read(favoriteHotelsProvider);
+        ref.read(favoriteHotelsProvider.notifier).state = {...favorites}..remove(itemId);
+        break;
+      case 'restaurants':
+        final favorites = ref.read(favoriteRestaurantsProvider);
+        ref.read(favoriteRestaurantsProvider.notifier).state = {...favorites}..remove(itemId);
+        break;
+      case 'attractions':
+        final favorites = ref.read(favoriteAttractionsProvider);
+        ref.read(favoriteAttractionsProvider.notifier).state = {...favorites}..remove(itemId);
+        break;
+    }
+  }
+
+  void _addToBudget(dynamic item, String type, WidgetRef ref) {
+    final budgetItems = ref.read(budgetItemsProvider);
+    final newItem = BudgetItem(
+      id: item.id,
+      name: item.name,
+      type: type,
+      price: _getItemPriceValue(item, type),
+      currency: '৳',
+      imageUrl: item.images.first,
+      location: '${item.location.city}, ${item.division}',
+    );
+    
+    // Check if item already exists in budget
+    final existingIndex = budgetItems.indexWhere((budgetItem) => budgetItem.id == item.id);
+    if (existingIndex != -1) {
+      // Update quantity if item exists
+      final updatedItems = [...budgetItems];
+      updatedItems[existingIndex] = budgetItems[existingIndex].copyWith(
+        quantity: budgetItems[existingIndex].quantity + 1,
+      );
+      ref.read(budgetItemsProvider.notifier).state = updatedItems;
+    } else {
+      // Add new item
+      ref.read(budgetItemsProvider.notifier).state = [...budgetItems, newItem];
+    }
+  }
+
+  double _getItemPriceValue(dynamic item, String type) {
+    switch (type) {
+      case 'hotels':
+        return item.pricePerNight.toDouble();
+      case 'restaurants':
+        return item.averageCostForTwo.toDouble();
+      case 'attractions':
+        return item.entryFee?.toDouble() ?? 0.0;
+      default:
+        return 0.0;
+    }
   }
 }
 
