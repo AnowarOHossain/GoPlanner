@@ -422,6 +422,11 @@ class _HotelsScreenState extends ConsumerState<HotelsScreen> {
         title: const Text('Hotels in Bangladesh'),
         actions: [
           IconButton(
+            icon: const Icon(Icons.home),
+            onPressed: () => context.go('/'),
+            tooltip: 'Go to Home',
+          ),
+          IconButton(
             icon: Icon(_isGridView ? Icons.list : Icons.grid_view),
             onPressed: () => setState(() => _isGridView = !_isGridView),
           ),
@@ -1020,6 +1025,11 @@ class _RestaurantsScreenState extends ConsumerState<RestaurantsScreen> {
         backgroundColor: const Color(0xFF2E7D5A),
         foregroundColor: Colors.white,
         actions: [
+          IconButton(
+            icon: const Icon(Icons.home),
+            onPressed: () => context.go('/'),
+            tooltip: 'Go to Home',
+          ),
           IconButton(
             icon: Icon(_isGridView ? Icons.list : Icons.grid_view),
             onPressed: () {
@@ -1701,6 +1711,11 @@ class _AttractionsScreenState extends ConsumerState<AttractionsScreen> {
         foregroundColor: Colors.white,
         actions: [
           IconButton(
+            icon: const Icon(Icons.home),
+            onPressed: () => context.go('/'),
+            tooltip: 'Go to Home',
+          ),
+          IconButton(
             icon: Icon(_isGridView ? Icons.list : Icons.grid_view),
             onPressed: () {
               setState(() {
@@ -2353,6 +2368,11 @@ class CartScreen extends ConsumerWidget {
         backgroundColor: const Color(0xFF2E7D5A),
         foregroundColor: Colors.white,
         actions: [
+          IconButton(
+            icon: const Icon(Icons.home),
+            onPressed: () => context.go('/'),
+            tooltip: 'Go to Home',
+          ),
           if (budgetItems.isNotEmpty)
             TextButton(
               onPressed: () {
@@ -2702,6 +2722,13 @@ class FavoritesScreen extends ConsumerWidget {
           title: const Text('Favorites'),
           backgroundColor: const Color(0xFF2E7D5A),
           foregroundColor: Colors.white,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.home),
+              onPressed: () => context.go('/'),
+              tooltip: 'Go to Home',
+            ),
+          ],
           bottom: const TabBar(
             labelColor: Colors.white,
             unselectedLabelColor: Colors.white70,
@@ -2964,7 +2991,16 @@ class ItineraryDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Itinerary Details')),
+      appBar: AppBar(
+        title: const Text('Itinerary Details'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.home),
+            onPressed: () => context.go('/'),
+            tooltip: 'Go to Home',
+          ),
+        ],
+      ),
       body: Center(
         child: Text('Itinerary Details for ID: $itineraryId'),
       ),
@@ -2978,7 +3014,16 @@ class MapScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Map')),
+      appBar: AppBar(
+        title: const Text('Map'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.home),
+            onPressed: () => context.go('/'),
+            tooltip: 'Go to Home',
+          ),
+        ],
+      ),
       body: const Center(
         child: Text('Map Screen - Coming Soon'),
       ),
@@ -3008,6 +3053,11 @@ class AttractionDetailScreen extends ConsumerWidget {
             backgroundColor: const Color(0xFF2E7D5A),
             foregroundColor: Colors.white,
             actions: [
+              IconButton(
+                icon: const Icon(Icons.home),
+                onPressed: () => context.go('/'),
+                tooltip: 'Go to Home',
+              ),
               // Favorite Button
               Consumer(
                 builder: (context, ref, child) {
@@ -3578,6 +3628,11 @@ class _HotelDetailScreenState extends ConsumerState<HotelDetailScreen> with Tick
                 expandedHeight: 300.0,
                 pinned: true,
                 actions: [
+                  IconButton(
+                    icon: const Icon(Icons.home),
+                    onPressed: () => context.go('/'),
+                    tooltip: 'Go to Home',
+                  ),
                   // Favorite Button
                   Consumer(
                     builder: (context, ref, child) {
@@ -4720,6 +4775,11 @@ class RestaurantDetailScreen extends ConsumerWidget {
                 expandedHeight: 250.0,
                 pinned: true,
                 actions: [
+                  IconButton(
+                    icon: const Icon(Icons.home),
+                    onPressed: () => context.go('/'),
+                    tooltip: 'Go to Home',
+                  ),
                   // Favorite Button
                   Consumer(
                     builder: (context, ref, child) {

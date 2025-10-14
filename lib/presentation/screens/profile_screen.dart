@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../providers/listings_provider.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
@@ -24,6 +25,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         foregroundColor: Colors.white,
         elevation: 0,
         actions: [
+          IconButton(
+            icon: const Icon(Icons.home),
+            onPressed: () => context.go('/'),
+            tooltip: 'Go to Home',
+          ),
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () {
@@ -679,6 +685,13 @@ class SettingsScreen extends StatelessWidget {
         title: const Text('Settings'),
         backgroundColor: const Color(0xFF2E7D5A),
         foregroundColor: Colors.white,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.home),
+            onPressed: () => context.go('/'),
+            tooltip: 'Go to Home',
+          ),
+        ],
       ),
       body: ListView(
         padding: const EdgeInsets.all(16.0),
