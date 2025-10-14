@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../providers/listings_provider.dart';
+import '../providers/favorites_provider.dart';
 
 class TravelGuideScreen extends ConsumerStatefulWidget {
   const TravelGuideScreen({super.key});
@@ -682,6 +682,76 @@ class _TravelGuideScreenState extends ConsumerState<TravelGuideScreen>
     );
   }
 
+  Widget _buildRecommendationCard(
+    String title,
+    String description,
+    IconData icon,
+    Color color,
+    List<String> highlights,
+  ) {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(icon, color: color, size: 24),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.arrow_forward_ios, size: 16),
+                  onPressed: () => Navigator.pushNamed(context, '/attractions'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(
+              description,
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey[600],
+              ),
+            ),
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 6,
+              runSpacing: 4,
+              children: highlights.take(3).map((highlight) {
+                return Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: color.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    highlight,
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: color,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   // Dialog Methods
   void _showAIDialog(BuildContext context) {
     showDialog(
@@ -936,268 +1006,8 @@ class _TravelGuideScreenState extends ConsumerState<TravelGuideScreen>
     );
   }
 
-  Widget _buildDestinationsTab() {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Popular Destinations
-          _buildPopularDestinationsSection(),
-          const SizedBox(height: 24),
 
-          // Recommendations
-          _buildRecommendationsSection(),
-        ],
-      ),
-    );
-  }
 
-  Widget _buildPopularDestinationsSection() {
-    final popularDestinations = [
-      {
-        'name': 'Cox\'s Bazar',
-        'type': 'Beach Paradise',
-        'image': '🏖️',
-        'rating': 4.8,
-        'description': 'World\'s longest natural sea beach'
-      },
-      {
-        'name': 'Sundarbans',
-        'type': 'Mangrove Forest',
-        'image': '🌲',
-        'rating': 4.6,
-        'description': 'UNESCO World Heritage Site'
-      },
-      {
-        'name': 'Srimangal',
-        'type': 'Tea Gardens',
-        'image': '🍃',
-        'rating': 4.7,
-        'description': 'Tea capital of Bangladesh'
-      },
-      {
-        'name': 'Rangamati',
-        'type': 'Hill District',
-        'image': '⛰️',
-        'rating': 4.5,
-        'description': 'Beautiful lakes and hills'
-      },
-    ];
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            const Text(
-              'Popular Destinations',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const Spacer(),
-            TextButton(
-              onPressed: () => Navigator.pushNamed(context, '/attractions'),
-              child: const Text('See All'),
-            ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        GridView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 12,
-            mainAxisSpacing: 12,
-            childAspectRatio: 0.85,
-          ),
-          itemCount: popularDestinations.length,
-          itemBuilder: (context, index) {
-            final destination = popularDestinations[index];
-            return Card(
-              elevation: 3,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: InkWell(
-                onTap: () => _showDestinationDetails(context, destination),
-                borderRadius: BorderRadius.circular(12),
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Center(
-                        child: Text(
-                          destination['image'] as String,
-                          style: const TextStyle(fontSize: 32),
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        destination['name'] as String,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        destination['type'] as String,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.star,
-                            size: 12,
-                            color: Colors.amber,
-                          ),
-                          const SizedBox(width: 2),
-                          Text(
-                            '${destination['rating']}',
-                            style: const TextStyle(fontSize: 11),
-                          ),
-                        ],
-                      ),
-                      const Spacer(),
-                      Text(
-                        destination['description'] as String,
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: Colors.grey[600],
-                        ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
-        ),
-      ],
-    );
-  }
-
-  Widget _buildRecommendationsSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Travel Recommendations',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 12),
-        _buildRecommendationCard(
-          'Cultural Heritage',
-          'Discover Bangladesh\'s rich history and cultural landmarks',
-          Icons.museum,
-          Colors.purple,
-          ['Lalbagh Fort', 'Ahsan Manzil', 'Paharpur', 'Mainamati'],
-        ),
-        const SizedBox(height: 12),
-        _buildRecommendationCard(
-          'Nature & Adventure',
-          'Experience the natural beauty and wildlife of Bangladesh',
-          Icons.nature,
-          Colors.green,
-          ['Sundarbans', 'Lawachara', 'Rangamati', 'Bandarban'],
-        ),
-        const SizedBox(height: 12),
-        _buildRecommendationCard(
-          'Food & Culture',
-          'Taste authentic Bengali cuisine and local delicacies',
-          Icons.restaurant,
-          Colors.orange,
-          ['Old Dhaka Food', 'Chittagong Seafood', 'Sylhet Tea'],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildRecommendationCard(
-    String title,
-    String description,
-    IconData icon,
-    Color color,
-    List<String> highlights,
-  ) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(icon, color: color, size: 24),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.arrow_forward_ios, size: 16),
-                  onPressed: () => Navigator.pushNamed(context, '/attractions'),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text(
-              description,
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey[600],
-              ),
-            ),
-            const SizedBox(height: 12),
-            Wrap(
-              spacing: 6,
-              runSpacing: 4,
-              children: highlights.take(3).map((highlight) {
-                return Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: color.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    highlight,
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: color,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                );
-              }).toList(),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
   Widget _buildTipsTab() {
     return SingleChildScrollView(
@@ -1738,8 +1548,6 @@ class _TravelGuideScreenState extends ConsumerState<TravelGuideScreen>
       ),
     );
   }
-
-  // Dialog Methods
 
   void _showDestinationDetails(BuildContext context, Map<String, dynamic> destination) {
     showDialog(

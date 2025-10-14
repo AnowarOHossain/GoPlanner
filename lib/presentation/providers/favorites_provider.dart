@@ -6,6 +6,22 @@ final favoritesNotifierProvider = StateNotifierProvider<FavoritesNotifier, Map<I
   return FavoritesNotifier();
 });
 
+// Individual favorites providers for easier access
+final favoriteHotelsProvider = Provider<Set<String>>((ref) {
+  final favorites = ref.watch(favoritesNotifierProvider);
+  return Set<String>.from(favorites[ItemType.hotel] ?? []);
+});
+
+final favoriteRestaurantsProvider = Provider<Set<String>>((ref) {
+  final favorites = ref.watch(favoritesNotifierProvider);
+  return Set<String>.from(favorites[ItemType.restaurant] ?? []);
+});
+
+final favoriteAttractionsProvider = Provider<Set<String>>((ref) {
+  final favorites = ref.watch(favoritesNotifierProvider);
+  return Set<String>.from(favorites[ItemType.attraction] ?? []);
+});
+
 class FavoritesNotifier extends StateNotifier<Map<ItemType, List<String>>> {
   FavoritesNotifier() : super({});
 
