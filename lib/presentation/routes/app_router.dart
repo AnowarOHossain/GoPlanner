@@ -261,14 +261,6 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
       
-      // Floating Action Button for Quick Itinerary
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => context.go('/itinerary-generator'),
-        backgroundColor: const Color(0xFF6366F1),
-        icon: const Icon(Icons.auto_awesome),
-        label: const Text('Travel Guide'),
-      ),
-      
       // Bottom Navigation
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,

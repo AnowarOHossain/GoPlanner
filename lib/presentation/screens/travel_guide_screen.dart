@@ -16,7 +16,7 @@ class _TravelGuideScreenState extends ConsumerState<TravelGuideScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
   }
 
   @override
@@ -33,20 +33,13 @@ class _TravelGuideScreenState extends ConsumerState<TravelGuideScreen>
         backgroundColor: const Color(0xFF2E7D5A),
         foregroundColor: Colors.white,
         elevation: 0,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () => _showSearchDialog(context),
-          ),
-        ],
         bottom: TabBar(
           controller: _tabController,
           labelColor: Colors.white,
           unselectedLabelColor: Colors.white70,
           indicatorColor: Colors.white,
           tabs: const [
-            Tab(text: 'AI Guide', icon: Icon(Icons.auto_awesome, size: 16)),
-            Tab(text: 'Itinerary', icon: Icon(Icons.schedule, size: 16)),
+            Tab(text: 'Destinations', icon: Icon(Icons.place, size: 16)),
             Tab(text: 'Tips', icon: Icon(Icons.lightbulb, size: 16)),
             Tab(text: 'Explore', icon: Icon(Icons.explore, size: 16)),
           ],
@@ -55,8 +48,7 @@ class _TravelGuideScreenState extends ConsumerState<TravelGuideScreen>
       body: TabBarView(
         controller: _tabController,
         children: [
-          _buildAIGuideTab(),
-          _buildItineraryTab(),
+          _buildDestinationsTab(),
           _buildTipsTab(),
           _buildExploreTab(),
         ],
@@ -64,206 +56,19 @@ class _TravelGuideScreenState extends ConsumerState<TravelGuideScreen>
     );
   }
 
-  Widget _buildAIGuideTab() {
+  Widget _buildDestinationsTab() {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // AI Assistant Card
-          _buildAIAssistantCard(),
-          const SizedBox(height: 24),
-
-          // Quick Planning Cards
-          _buildQuickPlanningSection(),
-          const SizedBox(height: 24),
-
           // Popular Destinations
           _buildPopularDestinationsSection(),
           const SizedBox(height: 24),
 
-          // AI Recommendations
-          _buildAIRecommendationsSection(),
+          // Recommendations
+          _buildRecommendationsSection(),
         ],
-      ),
-    );
-  }
-
-  Widget _buildAIAssistantCard() {
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          gradient: const LinearGradient(
-            colors: [Color(0xFF2E7D5A), Color(0xFF4ADE80)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                const Icon(
-                  Icons.auto_awesome,
-                  color: Colors.white,
-                  size: 28,
-                ),
-                const SizedBox(width: 12),
-                const Expanded(
-                  child: Text(
-                    'AI Travel Assistant',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            const Text(
-              'Get personalized travel recommendations powered by AI. Tell me your preferences and I\'ll create the perfect itinerary for you!',
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.white,
-              ),
-            ),
-            const SizedBox(height: 16),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: () => _showAIDialog(context),
-                icon: const Icon(Icons.chat, color: Color(0xFF2E7D5A)),
-                label: const Text(
-                  'Start Planning',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF2E7D5A),
-                  ),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildQuickPlanningSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Quick Planning',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 12),
-        Row(
-          children: [
-            Expanded(
-              child: _buildQuickPlanCard(
-                'Day Trip',
-                'Perfect for a single day adventure',
-                Icons.today,
-                Colors.blue,
-                () => _showPlanDialog(context, 'Day Trip'),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _buildQuickPlanCard(
-                'Weekend',
-                'Great for 2-3 day getaways',
-                Icons.weekend,
-                Colors.purple,
-                () => _showPlanDialog(context, 'Weekend'),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        Row(
-          children: [
-            Expanded(
-              child: _buildQuickPlanCard(
-                'Week Long',
-                'Comprehensive 7-day exploration',
-                Icons.date_range,
-                Colors.orange,
-                () => _showPlanDialog(context, 'Week Long'),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _buildQuickPlanCard(
-                'Custom',
-                'Create your own timeline',
-                Icons.settings,
-                Colors.green,
-                () => _showCustomPlanDialog(context),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildQuickPlanCard(
-    String title,
-    String description,
-    IconData icon,
-    Color color,
-    VoidCallback onTap,
-  ) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              Icon(icon, size: 32, color: color),
-              const SizedBox(height: 8),
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 4),
-              Text(
-                description,
-                style: TextStyle(
-                  fontSize: 11,
-                  color: Colors.grey[600],
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }
@@ -291,6 +96,13 @@ class _TravelGuideScreenState extends ConsumerState<TravelGuideScreen>
         'rating': 4.7,
         'description': 'Tea capital of Bangladesh'
       },
+      {
+        'name': 'Rangamati',
+        'type': 'Hill District',
+        'image': '⛰️',
+        'rating': 4.5,
+        'description': 'Beautiful lakes and hills'
+      },
     ];
 
     return Column(
@@ -313,99 +125,97 @@ class _TravelGuideScreenState extends ConsumerState<TravelGuideScreen>
           ],
         ),
         const SizedBox(height: 12),
-        SizedBox(
-          height: 180,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: popularDestinations.length,
-            itemBuilder: (context, index) {
-              final destination = popularDestinations[index];
-              return Container(
-                width: 160,
-                margin: EdgeInsets.only(
-                  right: index < popularDestinations.length - 1 ? 12 : 0,
-                ),
-                child: Card(
-                  elevation: 3,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: InkWell(
-                    onTap: () => _showDestinationDetails(context, destination),
-                    borderRadius: BorderRadius.circular(12),
-                    child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+        GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 12,
+            mainAxisSpacing: 12,
+            childAspectRatio: 0.85,
+          ),
+          itemCount: popularDestinations.length,
+          itemBuilder: (context, index) {
+            final destination = popularDestinations[index];
+            return Card(
+              elevation: 3,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: InkWell(
+                onTap: () => _showDestinationDetails(context, destination),
+                borderRadius: BorderRadius.circular(12),
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Center(
+                        child: Text(
+                          destination['image'] as String,
+                          style: const TextStyle(fontSize: 32),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        destination['name'] as String,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        destination['type'] as String,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
                         children: [
-                          Center(
-                            child: Text(
-                              destination['image'] as String,
-                              style: const TextStyle(fontSize: 32),
-                            ),
+                          const Icon(
+                            Icons.star,
+                            size: 12,
+                            color: Colors.amber,
                           ),
-                          const SizedBox(height: 8),
+                          const SizedBox(width: 2),
                           Text(
-                            destination['name'] as String,
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            destination['type'] as String,
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Row(
-                            children: [
-                              const Icon(
-                                Icons.star,
-                                size: 12,
-                                color: Colors.amber,
-                              ),
-                              const SizedBox(width: 2),
-                              Text(
-                                '${destination['rating']}',
-                                style: const TextStyle(fontSize: 11),
-                              ),
-                            ],
-                          ),
-                          const Spacer(),
-                          Text(
-                            destination['description'] as String,
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: Colors.grey[600],
-                            ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
+                            '${destination['rating']}',
+                            style: const TextStyle(fontSize: 11),
                           ),
                         ],
                       ),
-                    ),
+                      const Spacer(),
+                      Text(
+                        destination['description'] as String,
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: Colors.grey[600],
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
                   ),
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          },
         ),
       ],
     );
   }
 
-  Widget _buildAIRecommendationsSection() {
+  Widget _buildRecommendationsSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'AI Recommendations',
+          'Travel Recommendations',
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -413,7 +223,7 @@ class _TravelGuideScreenState extends ConsumerState<TravelGuideScreen>
         ),
         const SizedBox(height: 12),
         _buildRecommendationCard(
-          'Cultural Heritage Explorer',
+          'Cultural Heritage',
           'Discover Bangladesh\'s rich history and cultural landmarks',
           Icons.museum,
           Colors.purple,
@@ -429,11 +239,11 @@ class _TravelGuideScreenState extends ConsumerState<TravelGuideScreen>
         ),
         const SizedBox(height: 12),
         _buildRecommendationCard(
-          'Food & Culture Tour',
+          'Food & Culture',
           'Taste authentic Bengali cuisine and local delicacies',
           Icons.restaurant,
           Colors.orange,
-          ['Old Dhaka Food Tour', 'Chittagong Seafood', 'Sylhet Tea Culture'],
+          ['Old Dhaka Food', 'Chittagong Seafood', 'Sylhet Tea'],
         ),
       ],
     );
@@ -469,7 +279,7 @@ class _TravelGuideScreenState extends ConsumerState<TravelGuideScreen>
                 ),
                 IconButton(
                   icon: const Icon(Icons.arrow_forward_ios, size: 16),
-                  onPressed: () => _showRecommendationDetails(context, title, highlights),
+                  onPressed: () => Navigator.pushNamed(context, '/attractions'),
                 ),
               ],
             ),
@@ -506,247 +316,6 @@ class _TravelGuideScreenState extends ConsumerState<TravelGuideScreen>
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildItineraryTab() {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Create New Itinerary
-          _buildCreateItineraryCard(),
-          const SizedBox(height: 24),
-
-          // Saved Itineraries
-          _buildSavedItinerariesSection(),
-          const SizedBox(height: 24),
-
-          // Sample Itineraries
-          _buildSampleItinerariesSection(),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCreateItineraryCard() {
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                const Icon(
-                  Icons.add_circle,
-                  color: Color(0xFF2E7D5A),
-                  size: 28,
-                ),
-                const SizedBox(width: 12),
-                const Text(
-                  'Create New Itinerary',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            const Text(
-              'Plan your perfect trip with our AI-powered itinerary generator. Just tell us your preferences!',
-              style: TextStyle(fontSize: 14),
-            ),
-            const SizedBox(height: 16),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: () => _showItineraryCreator(context),
-                icon: const Icon(Icons.auto_awesome),
-                label: const Text('Generate Itinerary'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF2E7D5A),
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSavedItinerariesSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Saved Itineraries',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 12),
-        Card(
-          elevation: 1,
-          child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              children: [
-                Icon(
-                  Icons.bookmark_border,
-                  size: 48,
-                  color: Colors.grey[400],
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  'No Saved Itineraries',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.grey[600],
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  'Create your first itinerary to see it here',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey[500],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSampleItinerariesSection() {
-    final sampleItineraries = [
-      {
-        'title': '3 Days in Dhaka',
-        'duration': '3 Days',
-        'type': 'Cultural',
-        'description': 'Explore the bustling capital with its rich history and vibrant culture',
-        'highlights': ['Old Dhaka', 'Lalbagh Fort', 'Ahsan Manzil', 'National Museum'],
-      },
-      {
-        'title': 'Cox\'s Bazar Beach Holiday',
-        'duration': '5 Days',
-        'type': 'Beach',
-        'description': 'Relax on the world\'s longest natural sea beach',
-        'highlights': ['Beach Activities', 'Himchari', 'Inani Beach', 'Local Seafood'],
-      },
-      {
-        'title': 'Sylhet Tea Country',
-        'duration': '4 Days',
-        'type': 'Nature',
-        'description': 'Discover tea gardens and natural beauty of Sylhet division',
-        'highlights': ['Srimangal', 'Lawachara Park', 'Tea Gardens', 'Waterfalls'],
-      },
-    ];
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Sample Itineraries',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 12),
-        ...sampleItineraries.map((itinerary) {
-          return Container(
-            margin: const EdgeInsets.only(bottom: 12),
-            child: Card(
-              elevation: 2,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-              child: InkWell(
-                onTap: () => _showSampleItinerary(context, itinerary),
-                borderRadius: BorderRadius.circular(12),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              itinerary['title'] as String,
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF2E7D5A).withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Text(
-                              itinerary['duration'] as String,
-                              style: const TextStyle(
-                                fontSize: 12,
-                                color: Color(0xFF2E7D5A),
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        itinerary['description'] as String,
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      Wrap(
-                        spacing: 6,
-                        runSpacing: 4,
-                        children: (itinerary['highlights'] as List<String>).take(3).map((highlight) {
-                          return Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                            decoration: BoxDecoration(
-                              color: Colors.blue.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              highlight,
-                              style: const TextStyle(
-                                fontSize: 10,
-                                color: Colors.blue,
-                              ),
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          );
-        }).toList(),
-      ],
     );
   }
 
@@ -1291,149 +860,6 @@ class _TravelGuideScreenState extends ConsumerState<TravelGuideScreen>
   }
 
   // Dialog Methods
-  void _showSearchDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Search Travel Guide'),
-          content: const TextField(
-            decoration: InputDecoration(
-              hintText: 'Search destinations, tips, or activities...',
-              prefixIcon: Icon(Icons.search),
-            ),
-          ),
-          actions: [
-            TextButton(
-              child: const Text('Cancel'),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-            ElevatedButton(
-              child: const Text('Search'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Search feature coming soon!')),
-                );
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _showAIDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Row(
-            children: [
-              Icon(Icons.auto_awesome, color: Color(0xFF2E7D5A)),
-              SizedBox(width: 8),
-              Text('AI Travel Assistant'),
-            ],
-          ),
-          content: const Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('🤖 Hello! I\'m your AI travel assistant.'),
-              SizedBox(height: 8),
-              Text('I can help you plan the perfect trip to Bangladesh based on your preferences, budget, and interests.'),
-              SizedBox(height: 8),
-              Text('What would you like to explore today?'),
-            ],
-          ),
-          actions: [
-            TextButton(
-              child: const Text('Maybe Later'),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-            ElevatedButton(
-              child: const Text('Let\'s Plan!'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                _showItineraryCreator(context);
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _showPlanDialog(BuildContext context, String planType) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('$planType Planning'),
-          content: Text('Create a $planType itinerary with AI assistance. This feature will help you plan the perfect $planType trip.'),
-          actions: [
-            TextButton(
-              child: const Text('Cancel'),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-            ElevatedButton(
-              child: const Text('Start Planning'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('$planType planning feature coming soon!')),
-                );
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _showCustomPlanDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Custom Itinerary'),
-          content: const Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                decoration: InputDecoration(
-                  labelText: 'Trip Duration (days)',
-                  hintText: 'e.g., 5',
-                ),
-                keyboardType: TextInputType.number,
-              ),
-              SizedBox(height: 16),
-              TextField(
-                decoration: InputDecoration(
-                  labelText: 'Destinations',
-                  hintText: 'e.g., Dhaka, Cox\'s Bazar',
-                ),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              child: const Text('Cancel'),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-            ElevatedButton(
-              child: const Text('Create'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Custom planning feature coming soon!')),
-                );
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
 
   void _showDestinationDetails(BuildContext context, Map<String, dynamic> destination) {
     showDialog(
@@ -1471,134 +897,6 @@ class _TravelGuideScreenState extends ConsumerState<TravelGuideScreen>
               onPressed: () {
                 Navigator.of(context).pop();
                 Navigator.pushNamed(context, '/attractions');
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _showRecommendationDetails(BuildContext context, String title, List<String> highlights) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(title),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text('Recommended places:'),
-              const SizedBox(height: 8),
-              ...highlights.map((highlight) => Padding(
-                padding: const EdgeInsets.symmetric(vertical: 2),
-                child: Text('• $highlight'),
-              )),
-            ],
-          ),
-          actions: [
-            TextButton(
-              child: const Text('Close'),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-            ElevatedButton(
-              child: const Text('Explore'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.pushNamed(context, '/attractions');
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _showItineraryCreator(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Create Itinerary'),
-          content: const Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                decoration: InputDecoration(
-                  labelText: 'Destination',
-                  hintText: 'Where do you want to go?',
-                ),
-              ),
-              SizedBox(height: 16),
-              TextField(
-                decoration: InputDecoration(
-                  labelText: 'Duration',
-                  hintText: 'How many days?',
-                ),
-                keyboardType: TextInputType.number,
-              ),
-              SizedBox(height: 16),
-              TextField(
-                decoration: InputDecoration(
-                  labelText: 'Budget (BDT)',
-                  hintText: 'Your travel budget',
-                ),
-                keyboardType: TextInputType.number,
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              child: const Text('Cancel'),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-            ElevatedButton(
-              child: const Text('Generate'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('AI Itinerary generation coming soon!')),
-                );
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _showSampleItinerary(BuildContext context, Map<String, dynamic> itinerary) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(itinerary['title'] as String),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Duration: ${itinerary['duration']}'),
-              Text('Type: ${itinerary['type']}'),
-              const SizedBox(height: 8),
-              Text(itinerary['description'] as String),
-              const SizedBox(height: 8),
-              const Text('Highlights:', style: TextStyle(fontWeight: FontWeight.bold)),
-              ...(itinerary['highlights'] as List<String>).map((highlight) => Text('• $highlight')),
-            ],
-          ),
-          actions: [
-            TextButton(
-              child: const Text('Close'),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-            ElevatedButton(
-              child: const Text('Use Template'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Template feature coming soon!')),
-                );
               },
             ),
           ],
