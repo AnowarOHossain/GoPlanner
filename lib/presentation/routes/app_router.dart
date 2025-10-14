@@ -4030,7 +4030,10 @@ class _HotelDetailScreenState extends ConsumerState<HotelDetailScreen> with Tick
                                     style: TextStyle(
                                       color: isFavorite ? Colors.red : Colors.grey[800],
                                       fontWeight: FontWeight.w600,
+                                      fontSize: 14,
                                     ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: isFavorite ? Colors.red.withValues(alpha: 0.1) : Colors.grey[100],
@@ -4038,7 +4041,7 @@ class _HotelDetailScreenState extends ConsumerState<HotelDetailScreen> with Tick
                                     side: BorderSide(
                                       color: isFavorite ? Colors.red : Colors.grey[300]!,
                                     ),
-                                    padding: const EdgeInsets.symmetric(vertical: 12),
+                                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                                   ),
                                 );
                               },
@@ -4110,115 +4113,6 @@ class _HotelDetailScreenState extends ConsumerState<HotelDetailScreen> with Tick
                 ),
               ),
             ],
-          ),
-          
-          // Bottom booking bar
-          bottomNavigationBar: Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.1),
-                  blurRadius: 10,
-                  offset: const Offset(0, -5),
-                ),
-              ],
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Consumer(
-                    builder: (context, ref, child) {
-                      final favoriteHotelIds = ref.watch(favoriteHotelsProvider);
-                      final isFavorite = favoriteHotelIds.contains(hotel.id);
-                      print('🏨 Hotel button builder: hotel.id=${hotel.id}, favoriteHotelIds=$favoriteHotelIds, isFavorite=$isFavorite');
-                      return OutlinedButton.icon(
-                        onPressed: () {
-                          print('🏨 Hotel bottom Save button tapped: ${hotel.name}, isFavorite: $isFavorite');
-                          print('🏨 Before update: favoriteHotelIds=$favoriteHotelIds');
-                          if (isFavorite) {
-                            final newState = {...favoriteHotelIds}..remove(hotel.id);
-                            ref.read(favoriteHotelsProvider.notifier).state = newState;
-                            print('🏨 Removed hotel from favorites: ${hotel.id}, newState=$newState');
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Removed from favorites')),
-                            );
-                          } else {
-                            final newState = {...favoriteHotelIds, hotel.id};
-                            ref.read(favoriteHotelsProvider.notifier).state = newState;
-                            print('🏨 Added hotel to favorites: ${hotel.id}, newState=$newState');
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Added to favorites!')),
-                            );
-                          }
-                        },
-                        icon: Icon(
-                          isFavorite ? Icons.favorite : Icons.favorite_border,
-                          color: isFavorite ? Colors.red : null,
-                        ),
-                        label: Text(isFavorite ? 'Added to Favorite' : 'Add to Favorite'),
-                        style: OutlinedButton.styleFrom(
-                          side: BorderSide(
-                            color: isFavorite ? Colors.red : Colors.grey,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  flex: 2,
-                  child: Consumer(
-                    builder: (context, ref, child) {
-                      final budgetItems = ref.watch(budgetItemsProvider);
-                      final isInBudget = budgetItems.any((item) => 
-                        item.type == 'hotel' && item.id == hotel.id);
-                      print('🏨 Hotel budget button builder: hotel.id=${hotel.id}, budgetItems.length=${budgetItems.length}, isInBudget=$isInBudget');
-                      return ElevatedButton.icon(
-                        onPressed: () {
-                          print('🏨 Hotel bottom Budget button tapped: ${hotel.name}, isInBudget: $isInBudget');
-                          print('🏨 Before budget update: budgetItems.length=${budgetItems.length}');
-                          if (isInBudget) {
-                            final newState = budgetItems.where((item) => 
-                                !(item.type == 'hotel' && item.id == hotel.id)).toList();
-                            ref.read(budgetItemsProvider.notifier).state = newState;
-                            print('🏨 Removed hotel from budget: ${hotel.id}, newState.length=${newState.length}');
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Removed from budget')),
-                            );
-                          } else {
-                            final newItem = BudgetItem(
-                              id: hotel.id,
-                              type: 'hotel',
-                              name: hotel.name,
-                              price: hotel.pricePerNight,
-                              currency: '৳',
-                              imageUrl: hotel.images.first,
-                              location: '${hotel.location.city}, ${hotel.division}',
-                              quantity: 1,
-                            );
-                            final newState = [...budgetItems, newItem];
-                            ref.read(budgetItemsProvider.notifier).state = newState;
-                            print('🏨 Added hotel to budget: ${hotel.id}, newState.length=${newState.length}');
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Added to budget!')),
-                            );
-                          }
-                        },
-                        icon: Icon(isInBudget ? Icons.shopping_cart : Icons.add_shopping_cart),
-                        label: Text(isInBudget ? 'In Budget' : 'Add to Budget'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: isInBudget ? Colors.green : const Color(0xFF2E7D5A),
-                          foregroundColor: Colors.white,
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
           ),
         );
       },
@@ -5273,7 +5167,10 @@ class RestaurantDetailScreen extends ConsumerWidget {
                                     style: TextStyle(
                                       color: isFavorite ? Colors.red : Colors.grey[800],
                                       fontWeight: FontWeight.w600,
+                                      fontSize: 14,
                                     ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: isFavorite ? Colors.red.withValues(alpha: 0.1) : Colors.grey[100],
@@ -5281,7 +5178,7 @@ class RestaurantDetailScreen extends ConsumerWidget {
                                     side: BorderSide(
                                       color: isFavorite ? Colors.red : Colors.grey[300]!,
                                     ),
-                                    padding: const EdgeInsets.symmetric(vertical: 12),
+                                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                                   ),
                                 );
                               },
@@ -5353,105 +5250,6 @@ class RestaurantDetailScreen extends ConsumerWidget {
                 ),
               ),
             ],
-          ),
-          
-          // Bottom Action Bar
-          bottomNavigationBar: Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.1),
-                  blurRadius: 10,
-                  offset: const Offset(0, -5),
-                ),
-              ],
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Consumer(
-                    builder: (context, ref, child) {
-                      final favoriteRestaurantIds = ref.watch(favoriteRestaurantsProvider);
-                      final isFavorite = favoriteRestaurantIds.contains(restaurant.id);
-                      return OutlinedButton.icon(
-                        onPressed: () {
-                          if (isFavorite) {
-                            ref.read(favoriteRestaurantsProvider.notifier).state = 
-                              {...favoriteRestaurantIds}..remove(restaurant.id);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Removed from favorites')),
-                            );
-                          } else {
-                            ref.read(favoriteRestaurantsProvider.notifier).state = 
-                              {...favoriteRestaurantIds, restaurant.id};
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Added to favorites!')),
-                            );
-                          }
-                        },
-                        icon: Icon(
-                          isFavorite ? Icons.favorite : Icons.favorite_border,
-                          color: isFavorite ? Colors.red : null,
-                        ),
-                        label: Text(isFavorite ? 'Added to Favorite' : 'Add to Favorite'),
-                        style: OutlinedButton.styleFrom(
-                          side: BorderSide(
-                            color: isFavorite ? Colors.red : Colors.grey,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  flex: 2,
-                  child: Consumer(
-                    builder: (context, ref, child) {
-                      final budgetItems = ref.watch(budgetItemsProvider);
-                      final isInBudget = budgetItems.any((item) => 
-                        item.type == 'restaurant' && item.id == restaurant.id);
-                      return ElevatedButton.icon(
-                        onPressed: () {
-                          if (isInBudget) {
-                            ref.read(budgetItemsProvider.notifier).state = 
-                              budgetItems.where((item) => 
-                                !(item.type == 'restaurant' && item.id == restaurant.id)).toList();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Removed from budget')),
-                            );
-                          } else {
-                            final newItem = BudgetItem(
-                              id: restaurant.id,
-                              type: 'restaurant',
-                              name: restaurant.name,
-                              price: restaurant.averageCostForTwo,
-                              currency: '৳',
-                              imageUrl: restaurant.images.first,
-                              location: '${restaurant.location.city}, ${restaurant.division}',
-                              quantity: 1,
-                            );
-                            ref.read(budgetItemsProvider.notifier).state = 
-                              [...budgetItems, newItem];
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Added to budget!')),
-                            );
-                          }
-                        },
-                        icon: Icon(isInBudget ? Icons.shopping_cart : Icons.add_shopping_cart),
-                        label: Text(isInBudget ? 'In Budget' : 'Add to Budget'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: isInBudget ? Colors.green : const Color(0xFF2E7D5A),
-                          foregroundColor: Colors.white,
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
           ),
         );
       },
