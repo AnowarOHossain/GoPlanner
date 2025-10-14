@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/listings_provider.dart';
+import '../screens/profile_screen.dart';
 import '../../data/models/hotel_model.dart';
 import '../../data/models/restaurant_model.dart';
 import '../../data/models/attraction_model.dart';
@@ -3543,34 +3544,6 @@ class _AttractionFilterBottomSheetState extends ConsumerState<AttractionFilterBo
             ),
           );
         },
-      ),
-    );
-  }
-}
-
-class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Profile')),
-      body: const Center(
-        child: Text('Profile Screen - Coming Soon'),
-      ),
-    );
-  }
-}
-
-class SettingsScreen extends StatelessWidget {
-  const SettingsScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
-      body: const Center(
-        child: Text('Settings Screen - Coming Soon'),
       ),
     );
   }
