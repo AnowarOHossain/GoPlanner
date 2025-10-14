@@ -210,39 +210,59 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   }
 
   Widget _buildStatCard(String title, String count, IconData icon, Color color) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Icon(
-              icon,
-              size: 32,
-              color: color,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              count,
-              style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
+    return InkWell(
+      onTap: () => _handleStatCardTap(title),
+      child: Card(
+        elevation: 2,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              Icon(
+                icon,
+                size: 32,
+                color: color,
               ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.grey[600],
+              const SizedBox(height: 8),
+              Text(
+                count,
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-              textAlign: TextAlign.center,
-            ),
-          ],
+              const SizedBox(height: 4),
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey[600],
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  void _handleStatCardTap(String title) {
+    switch (title) {
+      case 'Favorite Hotels':
+        context.go('/favorites');
+        break;
+      case 'Restaurants':
+        context.go('/favorites');
+        break;
+      case 'Attractions':
+        context.go('/favorites');
+        break;
+      case 'Budget Items':
+        context.go('/cart');
+        break;
+    }
   }
 
   Widget _buildQuickActionsSection(BuildContext context) {
@@ -264,14 +284,14 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               'See all your saved places',
               Icons.favorite,
               Colors.red,
-              () => _showFavoritesDialog(context),
+              () => context.go('/favorites'),
             ),
             _buildActionTile(
               'Manage Budget',
               'Track your travel expenses',
               Icons.account_balance_wallet,
               Colors.green,
-              () => Navigator.pushNamed(context, '/cart'),
+              () => context.go('/cart'),
             ),
             _buildActionTile(
               'Travel History',
@@ -560,68 +580,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           ),
         ],
       ),
-    );
-  }
-
-  void _showFavoritesDialog(BuildContext context) {
-    final favoriteHotels = ref.read(favoriteHotelsProvider);
-    final favoriteRestaurants = ref.read(favoriteRestaurantsProvider);
-    final favoriteAttractions = ref.read(favoriteAttractionsProvider);
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Your Favorites'),
-          content: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (favoriteHotels.isNotEmpty) ...[
-                  Text('Hotels (${favoriteHotels.length})',
-                      style: const TextStyle(fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 8),
-                  ...favoriteHotels.map((id) => Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 2),
-                        child: Text('• Hotel ID: $id'),
-                      )),
-                  const SizedBox(height: 12),
-                ],
-                if (favoriteRestaurants.isNotEmpty) ...[
-                  Text('Restaurants (${favoriteRestaurants.length})',
-                      style: const TextStyle(fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 8),
-                  ...favoriteRestaurants.map((id) => Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 2),
-                        child: Text('• Restaurant ID: $id'),
-                      )),
-                  const SizedBox(height: 12),
-                ],
-                if (favoriteAttractions.isNotEmpty) ...[
-                  Text('Attractions (${favoriteAttractions.length})',
-                      style: const TextStyle(fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 8),
-                  ...favoriteAttractions.map((id) => Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 2),
-                        child: Text('• Attraction ID: $id'),
-                      )),
-                ],
-                if (favoriteHotels.isEmpty && 
-                    favoriteRestaurants.isEmpty && 
-                    favoriteAttractions.isEmpty)
-                  const Text('No favorites yet. Start exploring!'),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              child: const Text('Close'),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          ],
-        );
-      },
     );
   }
 
