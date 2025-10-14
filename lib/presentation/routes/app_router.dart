@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/listings_provider.dart';
 import '../screens/profile_screen.dart';
 import '../screens/travel_guide_screen.dart';
+import '../screens/maps_screen.dart';
 import '../widgets/image_loader.dart';
 import '../../data/models/hotel_model.dart';
 import '../../data/models/restaurant_model.dart';
@@ -152,7 +153,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/map',
         name: 'map',
         builder: (context, state) => BackButtonWrapper(
-          child: const MapScreen(),
+          child: const MapsScreen(),
         ),
       ),
       GoRoute(
@@ -3086,29 +3087,6 @@ class ItineraryDetailScreen extends StatelessWidget {
       ),
       body: Center(
         child: Text('Itinerary Details for ID: $itineraryId'),
-      ),
-    );
-  }
-}
-
-class MapScreen extends StatelessWidget {
-  const MapScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Map'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.home),
-            onPressed: () => context.go('/'),
-            tooltip: 'Go to Home',
-          ),
-        ],
-      ),
-      body: const Center(
-        child: Text('Map Screen - Coming Soon'),
       ),
     );
   }

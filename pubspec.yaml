@@ -23,6 +23,7 @@ dependencies:
   # Maps & Location
   location: ^5.0.3
   geolocator: ^10.1.0
+  google_maps_flutter: ^2.5.0
   
   # HTTP & API
   http: ^1.1.0
