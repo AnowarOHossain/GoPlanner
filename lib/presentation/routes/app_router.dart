@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/listings_provider.dart';
 import '../screens/profile_screen.dart';
 import '../screens/travel_guide_screen.dart';
+import '../widgets/image_loader.dart';
 import '../../data/models/hotel_model.dart';
 import '../../data/models/restaurant_model.dart';
 import '../../data/models/attraction_model.dart';
@@ -596,24 +597,17 @@ class _HotelsScreenState extends ConsumerState<HotelsScreen> {
         onTap: () => context.go('/hotel/${hotel.id}'),
         borderRadius: BorderRadius.circular(16),
         child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
           // Hotel Image
           Expanded(
-            flex: 3,
-            child: ClipRRect(
+            flex: 2,
+            child: DecorationImageLoader.networkContainer(
+              imageUrl: hotel.images.first,
+              width: double.infinity,
               borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
               child: Stack(
                 children: [
-                  Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: NetworkImage(hotel.images.first),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
                   Positioned(
                     top: 8,
                     right: 8,
@@ -725,10 +719,11 @@ class _HotelsScreenState extends ConsumerState<HotelsScreen> {
           ),
           
           // Hotel Info
-          Expanded(
-            flex: 2,
-            child: Padding(
-              padding: const EdgeInsets.all(12),
+          Flexible(
+            flex: 3,
+            child: Container(
+              height: 120, // Fixed height to prevent overflow
+              padding: const EdgeInsets.all(8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -741,7 +736,7 @@ class _HotelsScreenState extends ConsumerState<HotelsScreen> {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 2),
                   Row(
                     children: [
                       const Icon(Icons.location_on, size: 12, color: Colors.grey),
@@ -756,7 +751,7 @@ class _HotelsScreenState extends ConsumerState<HotelsScreen> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 2),
                   Row(
                     children: [
                       const Icon(Icons.star, size: 12, color: Colors.amber),
@@ -771,7 +766,7 @@ class _HotelsScreenState extends ConsumerState<HotelsScreen> {
                       ),
                     ],
                   ),
-                  const Spacer(),
+                  const SizedBox(height: 3),
                   Text(
                     '৳${hotel.pricePerNight.toStringAsFixed(0)}/night',
                     style: const TextStyle(
@@ -796,18 +791,11 @@ class _HotelsScreenState extends ConsumerState<HotelsScreen> {
       child: ListTile(
         onTap: () => context.go('/hotel/${hotel.id}'),
         contentPadding: const EdgeInsets.all(16),
-        leading: ClipRRect(
+        leading: DecorationImageLoader.networkContainer(
+          imageUrl: hotel.images.first,
+          width: 80,
+          height: 80,
           borderRadius: BorderRadius.circular(8),
-          child: Container(
-            width: 80,
-            height: 80,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: NetworkImage(hotel.images.first),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
         ),
         title: Text(
           hotel.name,
@@ -1214,15 +1202,10 @@ class _RestaurantsScreenState extends ConsumerState<RestaurantsScreen> {
           children: [
             // Restaurant Image
             Expanded(
-              flex: 3,
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-                  image: DecorationImage(
-                    image: NetworkImage(restaurant.images.first),
-                    fit: BoxFit.cover,
-                  ),
-                ),
+              flex: 2,
+              child: DecorationImageLoader.networkContainer(
+                imageUrl: restaurant.images.first,
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
                 child: Stack(
                   children: [
                     // Price Range Badge
@@ -1348,10 +1331,11 @@ class _RestaurantsScreenState extends ConsumerState<RestaurantsScreen> {
             ),
             
             // Restaurant Info
-            Expanded(
-              flex: 2,
-              child: Padding(
-                padding: const EdgeInsets.all(12),
+            Flexible(
+              flex: 3,
+              child: Container(
+                height: 120, // Fixed height to prevent overflow
+                padding: const EdgeInsets.all(8),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -1365,7 +1349,7 @@ class _RestaurantsScreenState extends ConsumerState<RestaurantsScreen> {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 2),
                     
                     // Cuisine Type
                     Text(
@@ -1377,7 +1361,7 @@ class _RestaurantsScreenState extends ConsumerState<RestaurantsScreen> {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 2),
                     
                     // Location
                     Row(
@@ -1397,7 +1381,7 @@ class _RestaurantsScreenState extends ConsumerState<RestaurantsScreen> {
                         ),
                       ],
                     ),
-                    const Spacer(),
+                    const SizedBox(height: 3),
                     
                     // Rating and Price
                     Row(
@@ -1446,16 +1430,11 @@ class _RestaurantsScreenState extends ConsumerState<RestaurantsScreen> {
             child: Row(
               children: [
                 // Restaurant Image
-                Container(
+                DecorationImageLoader.networkContainer(
+                  imageUrl: restaurant.images.first,
                   width: 80,
                   height: 80,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    image: DecorationImage(
-                      image: NetworkImage(restaurant.images.first),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
+                  borderRadius: BorderRadius.circular(8),
                   child: Stack(
                     children: [
                       if (restaurant.isHalal)
@@ -1899,15 +1878,10 @@ class _AttractionsScreenState extends ConsumerState<AttractionsScreen> {
           children: [
             // Attraction Image
             Expanded(
-              flex: 3,
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-                  image: DecorationImage(
-                    image: NetworkImage(attraction.images.first),
-                    fit: BoxFit.cover,
-                  ),
-                ),
+              flex: 2,
+              child: DecorationImageLoader.networkContainer(
+                imageUrl: attraction.images.first,
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
                 child: Stack(
                   children: [
                     // Category Badge
@@ -2027,10 +2001,11 @@ class _AttractionsScreenState extends ConsumerState<AttractionsScreen> {
             ),
             
             // Attraction Info
-            Expanded(
-              flex: 2,
-              child: Padding(
-                padding: const EdgeInsets.all(12),
+            Flexible(
+              flex: 3,
+              child: Container(
+                height: 120, // Fixed height to prevent overflow
+                padding: const EdgeInsets.all(8),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -2076,7 +2051,7 @@ class _AttractionsScreenState extends ConsumerState<AttractionsScreen> {
                           ' (${attraction.reviewCount})',
                           style: const TextStyle(fontSize: 10, color: Colors.grey),
                         ),
-                        const Spacer(),
+                        const SizedBox(width: 8),
                         Text(
                           attraction.isFree ? 'Free' : '৳${attraction.entryFee!.toStringAsFixed(0)}',
                           style: TextStyle(
@@ -2110,16 +2085,11 @@ class _AttractionsScreenState extends ConsumerState<AttractionsScreen> {
             child: Row(
               children: [
                 // Attraction Image
-                Container(
+                DecorationImageLoader.networkContainer(
+                  imageUrl: attraction.images.first,
                   width: 80,
                   height: 80,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    image: DecorationImage(
-                      image: NetworkImage(attraction.images.first),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
+                  borderRadius: BorderRadius.circular(8),
                   child: Stack(
                     children: [
                       if (attraction.isFree)
