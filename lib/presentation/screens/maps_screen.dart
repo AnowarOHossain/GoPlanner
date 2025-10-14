@@ -889,51 +889,6 @@ class _MapsScreenState extends ConsumerState<MapsScreen>
     );
   }
 
-  void _showMapSetupInfo() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Google Maps Setup'),
-        content: const SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'To enable Google Maps functionality:',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 12),
-              Text('1. Get a Google Maps API key from Google Cloud Console'),
-              SizedBox(height: 8),
-              Text('2. Add google_maps_flutter package to pubspec.yaml'),
-              SizedBox(height: 8),
-              Text('3. Configure API key in android/app/src/main/AndroidManifest.xml'),
-              SizedBox(height: 8),
-              Text('4. Add API key to ios/Runner/AppDelegate.swift'),
-              SizedBox(height: 12),
-              Text(
-                'Current features available:',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 8),
-              Text('• Location services'),
-              Text('• Places listing'),
-              Text('• Navigation interface'),
-              Text('• Filter and search'),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Got it'),
-          ),
-        ],
-      ),
-    );
-  }
-
   void _navigateToPlace(double lat, double lng, String placeName) {
     if (!_isLocationEnabled) {
       ScaffoldMessenger.of(context).showSnackBar(
