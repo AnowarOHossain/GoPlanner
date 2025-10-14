@@ -14,8 +14,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: '/',
     debugLogDiagnostics: true,
-    // Enable proper back button handling
-    routerNeglect: false,
     routes: [
       GoRoute(
         path: '/',
@@ -25,7 +23,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/hotels',
         name: 'hotels',
-        builder: (context, state) => _BackNavigationWrapper(
+        builder: (context, state) => BackButtonWrapper(
           child: const HotelsScreen(),
         ),
       ),
@@ -34,7 +32,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         name: 'hotel_detail',
         builder: (context, state) {
           final hotelId = state.pathParameters['id']!;
-          return _BackNavigationWrapper(
+          return BackButtonWrapper(
             child: HotelDetailScreen(hotelId: hotelId),
           );
         },
@@ -42,7 +40,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/restaurants',
         name: 'restaurants',
-        builder: (context, state) => _BackNavigationWrapper(
+        builder: (context, state) => BackButtonWrapper(
           child: const RestaurantsScreen(),
         ),
       ),
@@ -51,7 +49,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         name: 'restaurant_detail',
         builder: (context, state) {
           final restaurantId = state.pathParameters['id']!;
-          return _BackNavigationWrapper(
+          return BackButtonWrapper(
             child: RestaurantDetailScreen(restaurantId: restaurantId),
           );
         },
@@ -59,7 +57,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/attractions',
         name: 'attractions',
-        builder: (context, state) => _BackNavigationWrapper(
+        builder: (context, state) => BackButtonWrapper(
           child: const AttractionsScreen(),
         ),
       ),
@@ -68,7 +66,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         name: 'attraction_detail',
         builder: (context, state) {
           final attractionId = state.pathParameters['id']!;
-          return _BackNavigationWrapper(
+          return BackButtonWrapper(
             child: AttractionDetailScreen(attractionId: attractionId),
           );
         },
@@ -76,21 +74,21 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/cart',
         name: 'cart',
-        builder: (context, state) => _BackNavigationWrapper(
+        builder: (context, state) => BackButtonWrapper(
           child: const CartScreen(),
         ),
       ),
       GoRoute(
         path: '/favorites',
         name: 'favorites',
-        builder: (context, state) => _BackNavigationWrapper(
+        builder: (context, state) => BackButtonWrapper(
           child: const FavoritesScreen(),
         ),
       ),
       GoRoute(
         path: '/itinerary-generator',
         name: 'itinerary_generator',
-        builder: (context, state) => _BackNavigationWrapper(
+        builder: (context, state) => BackButtonWrapper(
           child: const TravelGuideScreen(),
         ),
       ),
@@ -99,7 +97,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         name: 'itinerary_detail',
         builder: (context, state) {
           final id = state.pathParameters['id']!;
-          return _BackNavigationWrapper(
+          return BackButtonWrapper(
             child: ItineraryDetailScreen(itineraryId: id),
           );
         },
@@ -107,21 +105,21 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/map',
         name: 'map',
-        builder: (context, state) => _BackNavigationWrapper(
+        builder: (context, state) => BackButtonWrapper(
           child: const MapScreen(),
         ),
       ),
       GoRoute(
         path: '/profile',
         name: 'profile',
-        builder: (context, state) => _BackNavigationWrapper(
+        builder: (context, state) => BackButtonWrapper(
           child: const ProfileScreen(),
         ),
       ),
       GoRoute(
         path: '/settings',
         name: 'settings',
-        builder: (context, state) => _BackNavigationWrapper(
+        builder: (context, state) => BackButtonWrapper(
           child: const SettingsScreen(),
         ),
       ),
@@ -137,24 +135,58 @@ final appRouterProvider = Provider<GoRouter>((ref) {
   );
 });
 
-// Back navigation wrapper widget
-class _BackNavigationWrapper extends StatelessWidget {
+// Back button wrapper to handle Android system back button
+class BackButtonWrapper extends StatelessWidget {
   final Widget child;
 
-  const _BackNavigationWrapper({required this.child});
+  const BackButtonWrapper({
+    super.key,
+    required this.child,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        // Use GoRouter's built-in navigation
-        if (GoRouter.of(context).canPop()) {
-          GoRouter.of(context).pop();
-          return false; // Don't let the system handle it
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return;
+        
+        print('🔙 Back button pressed, checking navigation stack...');
+        
+        final router = GoRouter.of(context);
+        final currentPath = ModalRoute.of(context)?.settings.name ?? '';
+        
+        print('📍 Current path: $currentPath');
+        print('🏠 Home path: /');
+        
+        // If we're already on home, don't do anything (let system handle)
+        if (currentPath == '/' || currentPath.isEmpty) {
+          print('🏠 Already on home, letting system handle back');
+          return;
+        }
+        
+        // Try to use GoRouter to navigate back
+        if (router.canPop()) {
+          print('✅ Can pop, using GoRouter.pop()');
+          router.pop();
         } else {
-          // If can't pop, go to home screen instead of exiting
-          GoRouter.of(context).go('/');
-          return false; // Don't let the system handle it
+          print('🔄 Cannot pop, using go to navigate back based on current route');
+          // Navigate to appropriate parent based on current path
+          if (currentPath.contains('detail')) {
+            // From detail page, go back to list
+            if (currentPath.contains('restaurant')) {
+              router.go('/restaurants');
+            } else if (currentPath.contains('hotel')) {
+              router.go('/hotels');
+            } else if (currentPath.contains('attraction')) {
+              router.go('/attractions');
+            } else {
+              router.go('/');
+            }
+          } else {
+            // From any main page, go to home
+            router.go('/');
+          }
         }
       },
       child: child,
