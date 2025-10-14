@@ -13,6 +13,9 @@ import '../../data/models/attraction_model.dart';
 final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: '/',
+    debugLogDiagnostics: true,
+    // Enable proper back button handling
+    routerNeglect: false,
     routes: [
       GoRoute(
         path: '/',
@@ -22,86 +25,142 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/hotels',
         name: 'hotels',
-        builder: (context, state) => const HotelsScreen(),
+        builder: (context, state) => _BackNavigationWrapper(
+          child: const HotelsScreen(),
+        ),
       ),
       GoRoute(
         path: '/hotel/:id',
         name: 'hotel_detail',
         builder: (context, state) {
           final hotelId = state.pathParameters['id']!;
-          return HotelDetailScreen(hotelId: hotelId);
+          return _BackNavigationWrapper(
+            child: HotelDetailScreen(hotelId: hotelId),
+          );
         },
       ),
       GoRoute(
         path: '/restaurants',
         name: 'restaurants',
-        builder: (context, state) => const RestaurantsScreen(),
+        builder: (context, state) => _BackNavigationWrapper(
+          child: const RestaurantsScreen(),
+        ),
       ),
       GoRoute(
         path: '/restaurant/:id',
         name: 'restaurant_detail',
         builder: (context, state) {
           final restaurantId = state.pathParameters['id']!;
-          return RestaurantDetailScreen(restaurantId: restaurantId);
+          return _BackNavigationWrapper(
+            child: RestaurantDetailScreen(restaurantId: restaurantId),
+          );
         },
       ),
       GoRoute(
         path: '/attractions',
         name: 'attractions',
-        builder: (context, state) => const AttractionsScreen(),
+        builder: (context, state) => _BackNavigationWrapper(
+          child: const AttractionsScreen(),
+        ),
       ),
       GoRoute(
         path: '/attraction/:id',
         name: 'attraction_detail',
         builder: (context, state) {
           final attractionId = state.pathParameters['id']!;
-          return AttractionDetailScreen(attractionId: attractionId);
+          return _BackNavigationWrapper(
+            child: AttractionDetailScreen(attractionId: attractionId),
+          );
         },
       ),
       GoRoute(
         path: '/cart',
         name: 'cart',
-        builder: (context, state) => const CartScreen(),
+        builder: (context, state) => _BackNavigationWrapper(
+          child: const CartScreen(),
+        ),
       ),
       GoRoute(
         path: '/favorites',
         name: 'favorites',
-        builder: (context, state) => const FavoritesScreen(),
+        builder: (context, state) => _BackNavigationWrapper(
+          child: const FavoritesScreen(),
+        ),
       ),
       GoRoute(
         path: '/itinerary-generator',
         name: 'itinerary_generator',
-        builder: (context, state) => const TravelGuideScreen(),
+        builder: (context, state) => _BackNavigationWrapper(
+          child: const TravelGuideScreen(),
+        ),
       ),
       GoRoute(
         path: '/itinerary/:id',
         name: 'itinerary_detail',
         builder: (context, state) {
           final id = state.pathParameters['id']!;
-          return ItineraryDetailScreen(itineraryId: id);
+          return _BackNavigationWrapper(
+            child: ItineraryDetailScreen(itineraryId: id),
+          );
         },
       ),
       GoRoute(
         path: '/map',
         name: 'map',
-        builder: (context, state) => const MapScreen(),
+        builder: (context, state) => _BackNavigationWrapper(
+          child: const MapScreen(),
+        ),
       ),
       GoRoute(
         path: '/profile',
         name: 'profile',
-        builder: (context, state) => const ProfileScreen(),
+        builder: (context, state) => _BackNavigationWrapper(
+          child: const ProfileScreen(),
+        ),
       ),
       GoRoute(
         path: '/settings',
         name: 'settings',
-        builder: (context, state) => const SettingsScreen(),
+        builder: (context, state) => _BackNavigationWrapper(
+          child: const SettingsScreen(),
+        ),
       ),
     ],
     errorBuilder: (context, state) => ErrorScreen(
       error: state.error.toString(),
     ),
+    // Add redirect logic to handle navigation properly
+    redirect: (context, state) {
+      // You can add custom redirect logic here if needed
+      return null;
+    },
   );
 });
+
+// Back navigation wrapper widget
+class _BackNavigationWrapper extends StatelessWidget {
+  final Widget child;
+
+  const _BackNavigationWrapper({required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () async {
+        // Use GoRouter's built-in navigation
+        if (GoRouter.of(context).canPop()) {
+          GoRouter.of(context).pop();
+          return false; // Don't let the system handle it
+        } else {
+          // If can't pop, go to home screen instead of exiting
+          GoRouter.of(context).go('/');
+          return false; // Don't let the system handle it
+        }
+      },
+      child: child,
+    );
+  }
+}
 
 // Home Screen with proper UI
 class HomeScreen extends StatelessWidget {
