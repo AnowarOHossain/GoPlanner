@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/listings_provider.dart';
 import '../screens/profile_screen.dart';
+import '../screens/travel_guide_screen.dart';
 import '../../data/models/hotel_model.dart';
 import '../../data/models/restaurant_model.dart';
 import '../../data/models/attraction_model.dart';
@@ -2957,20 +2958,6 @@ class FavoritesScreen extends ConsumerWidget {
       default:
         return 0.0;
     }
-  }
-}
-
-class TravelGuideScreen extends StatelessWidget {
-  const TravelGuideScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Travel Guide')),
-      body: const Center(
-        child: Text('Travel Guide - Coming Soon'),
-      ),
-    );
   }
 }
 
