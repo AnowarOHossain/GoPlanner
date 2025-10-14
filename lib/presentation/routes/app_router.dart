@@ -9,11 +9,57 @@ import '../../data/models/hotel_model.dart';
 import '../../data/models/restaurant_model.dart';
 import '../../data/models/attraction_model.dart';
 
+// Navigation history provider
+final navigationHistoryProvider = StateNotifierProvider<NavigationHistory, List<String>>((ref) {
+  return NavigationHistory();
+});
+
+class NavigationHistory extends StateNotifier<List<String>> {
+  NavigationHistory() : super(['/']);
+
+  void push(String route) {
+    // Don't add duplicate consecutive routes
+    if (state.isEmpty || state.last != route) {
+      state = [...state, route];
+      print('📚 Navigation history: $state');
+    }
+  }
+
+  String? pop() {
+    if (state.length > 1) {
+      final newState = state.sublist(0, state.length - 1);
+      final previousRoute = newState.last;
+      state = newState;
+      print('📚 Popped to: $previousRoute, history: $state');
+      return previousRoute;
+    }
+    return null;
+  }
+
+  void clear() {
+    state = ['/'];
+  }
+}
+
 // Simple provider without code generation for now
 final appRouterProvider = Provider<GoRouter>((ref) {
+  final navigationHistory = ref.read(navigationHistoryProvider.notifier);
+  
   return GoRouter(
     initialLocation: '/',
     debugLogDiagnostics: true,
+    // Add navigation listener to track route changes
+    redirect: (context, state) {
+      final currentRoute = state.uri.toString();
+      print('🧭 Navigating to: $currentRoute');
+      
+      // Add to history when navigating (but not when going back via our back button)
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        navigationHistory.push(currentRoute);
+      });
+      
+      return null; // Allow navigation to proceed
+    },
     routes: [
       GoRoute(
         path: '/',
@@ -127,16 +173,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     errorBuilder: (context, state) => ErrorScreen(
       error: state.error.toString(),
     ),
-    // Add redirect logic to handle navigation properly
-    redirect: (context, state) {
-      // You can add custom redirect logic here if needed
-      return null;
-    },
   );
 });
 
 // Back button wrapper to handle Android system back button
-class BackButtonWrapper extends StatelessWidget {
+class BackButtonWrapper extends ConsumerWidget {
   final Widget child;
 
   const BackButtonWrapper({
@@ -145,48 +186,29 @@ class BackButtonWrapper extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) async {
         if (didPop) return;
         
-        print('🔙 Back button pressed, checking navigation stack...');
+        print('🔙 Back button pressed, checking navigation history...');
         
         final router = GoRouter.of(context);
-        final currentPath = ModalRoute.of(context)?.settings.name ?? '';
+        final navigationHistory = ref.read(navigationHistoryProvider.notifier);
+        final history = ref.read(navigationHistoryProvider);
         
-        print('📍 Current path: $currentPath');
-        print('🏠 Home path: /');
+        print('📚 Current history: $history');
         
-        // If we're already on home, don't do anything (let system handle)
-        if (currentPath == '/' || currentPath.isEmpty) {
-          print('🏠 Already on home, letting system handle back');
-          return;
-        }
+        // Try to pop from our custom history
+        final previousRoute = navigationHistory.pop();
         
-        // Try to use GoRouter to navigate back
-        if (router.canPop()) {
-          print('✅ Can pop, using GoRouter.pop()');
-          router.pop();
+        if (previousRoute != null && previousRoute != GoRouterState.of(context).uri.toString()) {
+          print('✅ Going back to: $previousRoute');
+          router.go(previousRoute);
         } else {
-          print('🔄 Cannot pop, using go to navigate back based on current route');
-          // Navigate to appropriate parent based on current path
-          if (currentPath.contains('detail')) {
-            // From detail page, go back to list
-            if (currentPath.contains('restaurant')) {
-              router.go('/restaurants');
-            } else if (currentPath.contains('hotel')) {
-              router.go('/hotels');
-            } else if (currentPath.contains('attraction')) {
-              router.go('/attractions');
-            } else {
-              router.go('/');
-            }
-          } else {
-            // From any main page, go to home
-            router.go('/');
-          }
+          print('🏠 No previous route, going to home');
+          router.go('/');
         }
       },
       child: child,
