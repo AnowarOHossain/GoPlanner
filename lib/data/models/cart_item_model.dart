@@ -1,25 +1,36 @@
+// Import Equatable to compare objects easily
 import 'package:equatable/equatable.dart';
 
+// Define types of items that can be added to cart
 enum ItemType {
-  hotel,
-  restaurant,
-  attraction,
+  hotel, // Hotel booking
+  restaurant, // Restaurant reservation
+  attraction, // Attraction ticket
 }
 
+// Cart item data model - represents an item in the shopping cart
 class CartItemModel extends Equatable {
-  final String id;
-  final String itemId;
-  final String name;
-  final ItemType type;
-  final double price;
-  final String currency;
-  final int quantity;
-  final DateTime? selectedDate;
-  final int? nights; // for hotels
-  final int? persons; // for restaurants/attractions
-  final String? imageUrl;
-  final Map<String, dynamic>? additionalData;
+  // Basic item information
+  final String id; // Unique cart item ID
+  final String itemId; // Original item ID (hotel/restaurant/attraction ID)
+  final String name; // Item name
+  final ItemType type; // Type of item
+  
+  // Pricing
+  final double price; // Price per unit
+  final String currency; // Currency (e.g., BDT)
+  final int quantity; // Number of items
+  
+  // Date and booking details
+  final DateTime? selectedDate; // Selected date for visit/booking
+  final int? nights; // Number of nights (for hotels)
+  final int? persons; // Number of persons (for restaurants/attractions)
+  
+  // Display information
+  final String? imageUrl; // Item image
+  final Map<String, dynamic>? additionalData; // Extra information
 
+  // Constructor to create cart item object
   const CartItemModel({
     required this.id,
     required this.itemId,
@@ -35,6 +46,7 @@ class CartItemModel extends Equatable {
     this.additionalData,
   });
 
+  // Create cart item from JSON data
   factory CartItemModel.fromJson(Map<String, dynamic> json) {
     return CartItemModel(
       id: json['id'] as String,
@@ -52,6 +64,7 @@ class CartItemModel extends Equatable {
     );
   }
 
+  // Convert cart item to JSON data
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -69,6 +82,7 @@ class CartItemModel extends Equatable {
     };
   }
 
+  // Properties to compare for equality
   @override
   List<Object?> get props => [
         id,
@@ -85,6 +99,7 @@ class CartItemModel extends Equatable {
         additionalData,
       ];
 
+  // Create a copy of cart item with some fields changed
   CartItemModel copyWith({
     String? id,
     String? itemId,
@@ -115,21 +130,27 @@ class CartItemModel extends Equatable {
     );
   }
 
+  // Calculate total price based on item type
   double get totalPrice {
     switch (type) {
       case ItemType.hotel:
+        // Hotel: price * nights * quantity
         return price * (nights ?? 1) * quantity;
       case ItemType.restaurant:
+        // Restaurant: price * persons * quantity
         return price * (persons ?? 1) * quantity;
       case ItemType.attraction:
+        // Attraction: price * persons * quantity
         return price * (persons ?? 1) * quantity;
     }
   }
 
+  // Get formatted total price with currency
   String get formattedTotalPrice {
     return '$currency ${totalPrice.toStringAsFixed(2)}';
   }
 
+  // Get item type as string
   String get typeString {
     switch (type) {
       case ItemType.hotel:
@@ -141,6 +162,7 @@ class CartItemModel extends Equatable {
     }
   }
 
+  // Check if item is a specific type
   bool get isHotel => type == ItemType.hotel;
   bool get isRestaurant => type == ItemType.restaurant;
   bool get isAttraction => type == ItemType.attraction;

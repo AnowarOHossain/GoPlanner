@@ -1,39 +1,60 @@
+// Import Equatable to compare objects easily
 import 'package:equatable/equatable.dart';
+// Import location model for attraction address
 import 'location_model.dart';
 
+// Attraction data model - represents a tourist attraction with all its information
 class AttractionModel extends Equatable {
-  final String id;
-  final String name;
-  final String description;
-  final List<String> images;
-  final LocationModel location;
-  final String division;
-  final String district;
-  final double rating;
-  final int reviewCount;
-  final double? entryFee;
-  final String currency;
+  // Basic attraction information
+  final String id; // Unique identifier
+  final String name; // Attraction name
+  final String description; // Attraction description
+  final List<String> images; // List of image URLs
+  final LocationModel location; // Attraction address
+  
+  // Location details
+  final String division; // Bangladesh division
+  final String district; // District name
+  
+  // Rating and reviews
+  final double rating; // Rating out of 5
+  final int reviewCount; // Number of reviews
+  
+  // Pricing
+  final double? entryFee; // Entry fee (null if free)
+  final String currency; // Currency (e.g., BDT)
+  
+  // Categorization
   final String category; // Historical, Natural, Cultural, Religious, Archaeological
   final String subcategory; // Mosque, Temple, Museum, Park, Beach, etc.
-  final List<String> highlights;
+  final List<String> highlights; // Key features
   final String historicalPeriod; // Ancient, Medieval, Colonial, Modern
-  final String openingHours;
-  final String closingHours;
-  final bool isOpen;
-  final int estimatedDuration; // in minutes
-  final String bestTimeToVisit; // Season or time
-  final List<String> nearbyAttractions;
-  final List<String> facilities;
-  final List<String> activities;
-  final bool isAccessible;
-  final bool hasGuide;
-  final bool hasParking;
-  final bool hasRestaurant;
-  final bool hasGiftShop;
   final String significance; // UNESCO, National Heritage, etc.
-  final String? contactPhone;
-  final String? website;
+  
+  // Operating information
+  final String openingHours; // Opening time
+  final String closingHours; // Closing time
+  final bool isOpen; // Is attraction currently open
+  final int estimatedDuration; // Visit duration in minutes
+  final String bestTimeToVisit; // Best season or time to visit
+  
+  // Related information
+  final List<String> nearbyAttractions; // Nearby places
+  final List<String> facilities; // Restrooms, parking, etc.
+  final List<String> activities; // Things to do here
+  
+  // Accessibility and features
+  final bool isAccessible; // Wheelchair accessible
+  final bool hasGuide; // Tour guide available
+  final bool hasParking; // Parking available
+  final bool hasRestaurant; // Restaurant/cafe on site
+  final bool hasGiftShop; // Gift shop available
+  
+  // Contact information
+  final String? contactPhone; // Attraction phone number
+  final String? website; // Attraction website
 
+  // Constructor to create attraction object
   const AttractionModel({
     required this.id,
     required this.name,

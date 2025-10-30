@@ -1,35 +1,56 @@
+// Import Equatable to compare objects easily
 import 'package:equatable/equatable.dart';
+// Import location model for restaurant address
 import 'location_model.dart';
 
+// Restaurant data model - represents a restaurant with all its information
 class RestaurantModel extends Equatable {
-  final String id;
-  final String name;
-  final String description;
-  final List<String> images;
-  final LocationModel location;
-  final String division;
-  final String district;
-  final double rating;
-  final int reviewCount;
+  // Basic restaurant information
+  final String id; // Unique identifier
+  final String name; // Restaurant name
+  final String description; // Restaurant description
+  final List<String> images; // List of image URLs
+  final LocationModel location; // Restaurant address
+  
+  // Location details
+  final String division; // Bangladesh division
+  final String district; // District name
+  
+  // Rating and reviews
+  final double rating; // Rating out of 5
+  final int reviewCount; // Number of reviews
+  
+  // Pricing information
   final String priceRange; // Budget, Mid-range, Fine Dining
+  final double averageCostForTwo; // Average cost for 2 people
+  final String currency; // Currency (e.g., BDT)
+  
+  // Food type and menu
   final String cuisineType; // Bengali, Mughlai, Chinese, Continental, etc.
-  final List<String> specialties;
-  final List<String> popularDishes;
-  final List<String> menuCategories;
-  final String openingHours;
-  final String closingHours;
-  final String? contactPhone;
-  final String? website;
-  final bool isOpen;
-  final bool hasDelivery;
-  final bool hasReservation;
-  final bool isHalal;
-  final bool hasParking;
-  final bool acceptsCards;
-  final double averageCostForTwo;
-  final String currency;
-  final List<String> amenities;
+  final List<String> specialties; // Restaurant specialties
+  final List<String> popularDishes; // Popular menu items
+  final List<String> menuCategories; // Menu categories
+  
+  // Operating hours
+  final String openingHours; // Opening time
+  final String closingHours; // Closing time
+  
+  // Contact information
+  final String? contactPhone; // Restaurant phone number
+  final String? website; // Restaurant website
+  
+  // Status and features
+  final bool isOpen; // Is restaurant currently open
+  final bool hasDelivery; // Delivery available
+  final bool hasReservation; // Reservation available
+  final bool isHalal; // Serves halal food
+  final bool hasParking; // Parking available
+  final bool acceptsCards; // Accepts card payment
+  
+  // Facilities
+  final List<String> amenities; // WiFi, AC, outdoor seating, etc.
 
+  // Constructor to create restaurant object
   const RestaurantModel({
     required this.id,
     required this.name,

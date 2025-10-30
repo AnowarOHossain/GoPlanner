@@ -1,14 +1,21 @@
+// Import math library for distance calculations
 import 'dart:math';
+// Import Equatable to compare objects easily
 import 'package:equatable/equatable.dart';
 
+// Location data model - represents a geographic location with coordinates
 class LocationModel extends Equatable {
-  final double latitude;
-  final double longitude;
-  final String address;
-  final String city;
-  final String country;
-  final String? postalCode;
+  // Geographic coordinates
+  final double latitude; // Latitude (north/south position)
+  final double longitude; // Longitude (east/west position)
+  
+  // Address information
+  final String address; // Full street address
+  final String city; // City name
+  final String country; // Country name
+  final String? postalCode; // Postal/ZIP code (optional)
 
+  // Constructor to create location object
   const LocationModel({
     required this.latitude,
     required this.longitude,
@@ -18,6 +25,7 @@ class LocationModel extends Equatable {
     this.postalCode,
   });
 
+  // Create location object from JSON data
   factory LocationModel.fromJson(Map<String, dynamic> json) {
     return LocationModel(
       latitude: (json['latitude'] as num).toDouble(),
@@ -29,6 +37,7 @@ class LocationModel extends Equatable {
     );
   }
 
+  // Convert location object to JSON data
   Map<String, dynamic> toJson() {
     return {
       'latitude': latitude,
@@ -40,6 +49,7 @@ class LocationModel extends Equatable {
     };
   }
 
+  // Properties to compare for equality
   @override
   List<Object?> get props => [
         latitude,
@@ -50,6 +60,7 @@ class LocationModel extends Equatable {
         postalCode,
       ];
 
+  // Create a copy of location with some fields changed
   LocationModel copyWith({
     double? latitude,
     double? longitude,
@@ -68,13 +79,18 @@ class LocationModel extends Equatable {
     );
   }
 
+  // Calculate distance to another location in kilometers
+  // Uses Haversine formula for accuracy
   double distanceTo(LocationModel other) {
-    const double earthRadius = 6371; // km
+    const double earthRadius = 6371; // Earth radius in km
+    
+    // Convert degrees to radians
     final double lat1Rad = latitude * (pi / 180);
     final double lat2Rad = other.latitude * (pi / 180);
     final double deltaLatRad = (other.latitude - latitude) * (pi / 180);
     final double deltaLonRad = (other.longitude - longitude) * (pi / 180);
 
+    // Haversine formula
     final double a = sin(deltaLatRad / 2) * sin(deltaLatRad / 2) +
         cos(lat1Rad) *
             cos(lat2Rad) *
@@ -82,6 +98,7 @@ class LocationModel extends Equatable {
             sin(deltaLonRad / 2);
     final double c = 2 * asin(sqrt(a));
 
+    // Return distance in kilometers
     return earthRadius * c;
   }
 }

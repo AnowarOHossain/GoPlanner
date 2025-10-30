@@ -1,33 +1,45 @@
+// Import dart JSON library for parsing data
 import 'dart:convert';
+// Import Flutter widgets for RangeValues
 import 'package:flutter/material.dart';
+// Import services to load asset files
 import 'package:flutter/services.dart';
+// Import Riverpod for state management
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+// Import data models
 import '../../data/models/hotel_model.dart';
 import '../../data/models/restaurant_model.dart';
 import '../../data/models/attraction_model.dart';
 
-// Bangladesh Hotels Provider
+// Provider to load Bangladesh hotels from JSON file
+// This runs once and caches the result
 final bangladeshHotelsProvider = FutureProvider<List<HotelModel>>((ref) async {
   try {
+    // Load JSON file from assets
     final String jsonString = await rootBundle.loadString('assets/data/bangladesh_hotels.json');
+    // Parse JSON string to list
     final List<dynamic> jsonList = json.decode(jsonString);
+    // Convert each JSON object to HotelModel
     return jsonList.map((json) => HotelModel.fromJson(json)).toList();
   } catch (e) {
-    // Fallback to empty list on error
+    // Return empty list if there's an error
     return [];
   }
 });
 
-// Bangladesh Restaurants Provider
+// Provider to load Bangladesh restaurants from JSON file
 final bangladeshRestaurantsProvider = FutureProvider<List<RestaurantModel>>((ref) async {
   try {
     print(' Loading restaurant data...');
+    // Load JSON file from assets
     final String jsonString = await rootBundle.loadString('assets/data/bangladesh_restaurants.json');
     print(' JSON loaded, length: ${jsonString.length}');
+    // Parse JSON string to list
     final List<dynamic> jsonList = json.decode(jsonString);
     print(' Parsed ${jsonList.length} restaurants');
     
     final List<RestaurantModel> restaurants = [];
+    // Process each restaurant one by one
     for (int i = 0; i < jsonList.length; i++) {
       try {
         print(' Processing restaurant ${i + 1}...');
@@ -35,6 +47,7 @@ final bangladeshRestaurantsProvider = FutureProvider<List<RestaurantModel>>((ref
         restaurants.add(restaurant);
         print(' Successfully added: ${restaurant.name}');
       } catch (e) {
+        // Log error but continue with other restaurants
         print(' ERROR with restaurant ${i + 1}: $e');
         print(' Data: ${jsonList[i]}');
       }
@@ -48,20 +61,26 @@ final bangladeshRestaurantsProvider = FutureProvider<List<RestaurantModel>>((ref
   }
 });
 
-// Current hotels provider (async version)
+// Provider for current hotels (returns AsyncValue for loading states)
 final hotelsProvider = Provider<AsyncValue<List<HotelModel>>>((ref) {
   return ref.watch(bangladeshHotelsProvider);
 });
 
-// Simple search provider
+// Provider for search query text
 final searchQueryProvider = StateProvider<String>((ref) => '');
 
-// Filter providers
+// Provider for selected division filter (null means all divisions)
 final selectedDivisionProvider = StateProvider<String?>((ref) => null);
+
+// Provider for selected hotel type filter (null means all types)
 final selectedHotelTypeProvider = StateProvider<String?>((ref) => null);
+
+// Provider for price range filter (min and max price)
 final priceRangeProvider = StateProvider<RangeValues>((ref) => const RangeValues(1000, 15000));
 
+// Provider that combines all filters to give filtered hotel list
 final filteredHotelsProvider = Provider<AsyncValue<List<HotelModel>>>((ref) {
+  // Watch all filter providers
   final hotelsAsync = ref.watch(bangladeshHotelsProvider);
   final searchQuery = ref.watch(searchQueryProvider);
   final selectedDivision = ref.watch(selectedDivisionProvider);
@@ -72,7 +91,7 @@ final filteredHotelsProvider = Provider<AsyncValue<List<HotelModel>>>((ref) {
     data: (hotels) {
       var filteredHotels = hotels;
       
-      // Search filter
+      // Apply search filter - check if hotel name, city, or division matches
       if (searchQuery.isNotEmpty) {
         filteredHotels = filteredHotels.where((hotel) =>
           hotel.name.toLowerCase().contains(searchQuery.toLowerCase()) ||
