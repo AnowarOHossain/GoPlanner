@@ -5,6 +5,7 @@ import '../providers/listings_provider.dart';
 import '../screens/profile_screen.dart';
 import '../screens/travel_guide_screen.dart';
 import '../screens/maps_screen.dart';
+import '../screens/explore_screen.dart';
 import '../widgets/image_loader.dart';
 import '../../data/models/hotel_model.dart';
 import '../../data/models/restaurant_model.dart';
@@ -66,6 +67,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/',
         name: 'home',
         builder: (context, state) => const HomeScreen(),
+      ),
+      GoRoute(
+        path: '/explore',
+        name: 'explore',
+        builder: (context, state) => BackButtonWrapper(
+          child: const ExploreScreen(),
+        ),
       ),
       GoRoute(
         path: '/hotels',
@@ -405,7 +413,7 @@ class HomeScreen extends StatelessWidget {
               context.go('/');
               break;
             case 1:
-              context.go('/attractions');
+              context.go('/explore');
               break;
             case 2:
               context.go('/cart');
