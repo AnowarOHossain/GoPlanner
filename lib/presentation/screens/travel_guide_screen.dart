@@ -555,21 +555,21 @@ class _TravelGuideScreenState extends ConsumerState<TravelGuideScreen>
       {
         'name': 'Cox\'s Bazar',
         'type': 'Beach Paradise',
-        'image': '🏖️',
+        'image': '',
         'rating': 4.8,
         'description': 'World\'s longest natural sea beach'
       },
       {
         'name': 'Sundarbans',
         'type': 'Mangrove Forest',
-        'image': '🌲',
+        'image': '',
         'rating': 4.6,
         'description': 'UNESCO World Heritage Site'
       },
       {
         'name': 'Srimangal',
         'type': 'Tea Gardens',
-        'image': '🍃',
+        'image': '',
         'rating': 4.7,
         'description': 'Tea capital of Bangladesh'
       },
@@ -1258,10 +1258,10 @@ class _TravelGuideScreenState extends ConsumerState<TravelGuideScreen>
                   ],
                 ),
                 const SizedBox(height: 12),
-                _buildInsightItem('🌊', 'Cox\'s Bazar is the world\'s longest natural sea beach at 120 km'),
-                _buildInsightItem('🐅', 'Sundarbans is home to the largest population of Bengal tigers'),
-                _buildInsightItem('🍃', 'Bangladesh produces 2% of world\'s tea, mostly from Sylhet region'),
-                _buildInsightItem('🏛️', 'Paharpur Buddhist Monastery is one of the largest in South Asia'),
+                _buildInsightItem('', 'Cox\'s Bazar is the world\'s longest natural sea beach at 120 km'),
+                _buildInsightItem('', 'Sundarbans is home to the largest population of Bengal tigers'),
+                _buildInsightItem('', 'Bangladesh produces 2% of world\'s tea, mostly from Sylhet region'),
+                _buildInsightItem('', 'Paharpur Buddhist Monastery is one of the largest in South Asia'),
               ],
             ),
           ),

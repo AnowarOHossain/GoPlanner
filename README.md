@@ -2,7 +2,7 @@
 
 A comprehensive Flutter mobile application for travel planning with smart travel guide, budget management, and location services.
 
-## ✨ Features
+##  Features
 
 - **Browse & Discover**: Hotels, restaurants, and attractions with images, ratings, and pricing
 - **Smart Budget Management**: Add items to cart and calculate total trip costs with detailed breakdowns
@@ -14,7 +14,7 @@ A comprehensive Flutter mobile application for travel planning with smart travel
 - **Responsive Navigation**: Smart back button handling and intuitive routing
 - **Multi-Tab Experience**: Organized favorites viewing with separate tabs for each category
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 - **Frontend**: Flutter (Dart)
 - **State Management**: Riverpod
@@ -25,7 +25,7 @@ A comprehensive Flutter mobile application for travel planning with smart travel
 - **Authentication**: Firebase Auth (Ready for integration)
 - **Data Storage**: JSON-based local data with provider caching
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### Prerequisites
 - Flutter SDK 3.16.0 or later
@@ -53,23 +53,23 @@ dart run build_runner build --delete-conflicting-outputs
 flutter doctor
 ```
 
-## 🆕 Recent Updates
+##  Recent Updates
 
-### ✅ Latest Improvements (October 2025)
+###  Latest Improvements (October 2025)
 - **Fixed duplicate buttons**: Removed redundant "Add to Favorite" and "Add to Budget" buttons
 - **Enhanced Profile functionality**: Made travel stats clickable with proper navigation
 - **Improved button styling**: Consistent text formatting across all screens
 - **Fixed navigation issues**: Proper GoRouter implementation for all actions
 - **Enhanced user experience**: Interactive elements throughout the app
 
-### 🚀 App Status
+###  App Status
 - **Fully functional** for local development and testing
 - **60+ items** of real Bangladesh tourism data
 - **Complete user flows** from browsing to budget management
 - **Ready for API integration** (Maps, AI, Firebase)
 - **Production-ready UI** with consistent design system
 
-## 🔑 API Configuration
+##  API Configuration
 
 #### Google Gemini API Key
 1. Go to [Google AI Studio](https://makersuite.google.com/app/apikey)
@@ -88,7 +88,7 @@ static const String geminiApiKey = 'YOUR_ACTUAL_GEMINI_API_KEY';
 static const String googleMapsApiKey = 'YOUR_ACTUAL_GOOGLE_MAPS_KEY';
 ```
 
-### 🔥 Firebase Setup
+###  Firebase Setup
 1. Go to [Firebase Console](https://console.firebase.google.com/)
 2. Create a new project named "GoPlanner"
 3. Enable Firestore Database
@@ -97,59 +97,59 @@ static const String googleMapsApiKey = 'YOUR_ACTUAL_GOOGLE_MAPS_KEY';
    - `google-services.json` → `android/app/`
    - `GoogleService-Info.plist` → `ios/Runner/`
 
-### ▶️ Run the App
+###  Run the App
 ```bash
 flutter run
 ```
 
-## 📂 Project Structure
+##  Project Structure
 
 ```
 lib/
-├── core/                 # Core functionality
-│   ├── constants/        # App constants, colors, strings
-│   ├── utils/           # Helper functions, extensions
-│   ├── services/        # API services, local storage
-│   └── exceptions/      # Custom exceptions
-├── data/                # Data layer
-│   ├── models/          # Data models (Hotel, Restaurant, Attraction)
-│   ├── repositories/    # Repository implementations
-│   └── datasources/     # Local JSON data sources
-├── presentation/        # UI layer
-│   ├── screens/         # App screens (Hotels, Restaurants, Attractions, Profile, Maps)
-│   ├── widgets/         # Reusable widgets (ImageLoader, Filters)
-│   ├── providers/       # Riverpod providers (State management)
-│   ├── routes/          # GoRouter configuration and navigation
-│   └── theme/           # App theme & styling
-├── assets/              # Static assets
-│   └── data/           # JSON data files (20 hotels, 20 restaurants, 20 attractions)
-└── main.dart           # App entry point
+ core/                 # Core functionality
+    constants/        # App constants, colors, strings
+    utils/           # Helper functions, extensions
+    services/        # API services, local storage
+    exceptions/      # Custom exceptions
+ data/                # Data layer
+    models/          # Data models (Hotel, Restaurant, Attraction)
+    repositories/    # Repository implementations
+    datasources/     # Local JSON data sources
+ presentation/        # UI layer
+    screens/         # App screens (Hotels, Restaurants, Attractions, Profile, Maps)
+    widgets/         # Reusable widgets (ImageLoader, Filters)
+    providers/       # Riverpod providers (State management)
+    routes/          # GoRouter configuration and navigation
+    theme/           # App theme & styling
+ assets/              # Static assets
+    data/           # JSON data files (20 hotels, 20 restaurants, 20 attractions)
+ main.dart           # App entry point
 ```
 
-## 🎯 Development Progress
+##  Development Progress
 
-### Phase 1: Project Setup ✅ COMPLETED
+### Phase 1: Project Setup  COMPLETED
 - [x] Create Flutter project structure
 - [x] Set up dependencies and configuration
 - [x] Create data models with JSON serialization
 - [x] Set up Riverpod state management
 - [x] Configure routing with GoRouter
 
-### Phase 2: UI Implementation ✅ COMPLETED
+### Phase 2: UI Implementation  COMPLETED
 - [x] Create reusable widgets and components
 - [x] Build listing screens (hotels, restaurants, attractions)
 - [x] Implement search and filter functionality
 - [x] Create detail screens for each item type
 - [x] Implement responsive navigation system
 
-### Phase 3: Core Features ✅ COMPLETED
+### Phase 3: Core Features  COMPLETED
 - [x] Cart and budget management system with breakdown
 - [x] Favorites functionality across all categories
 - [x] User profile with travel statistics
 - [x] Interactive travel stats and navigation
 - [x] Multi-tab favorites organization
 
-### Phase 4: Maps & Location ✅ COMPLETED
+### Phase 4: Maps & Location  COMPLETED
 - [x] Google Maps integration setup
 - [x] Location services implementation
 - [x] Maps screen with tabbed interface
@@ -175,9 +175,9 @@ lib/
 - [ ] App store preparation
 - [ ] Release builds
 
-## 💻 Current Features Implemented
+##  Current Features Implemented
 
-### ✅ Fully Functional Screens
+###  Fully Functional Screens
 - **Home Screen**: Quick actions and feature overview
 - **Hotels Screen**: 20 hotels with search, filters, and detail pages
 - **Restaurants Screen**: 20 restaurants with cuisine filters and detail pages  
@@ -187,7 +187,7 @@ lib/
 - **Budget Analysis**: Complete cart and expense tracking
 - **Favorites Screen**: Multi-tab organization for saved items
 
-### ✅ Key Functionalities
+###  Key Functionalities
 - **Navigation**: Custom back button handling with GoRouter
 - **State Management**: Riverpod providers for all app state
 - **Data Management**: JSON-based local data with 60 total items
@@ -196,13 +196,13 @@ lib/
 - **Budget Tracking**: Add items to cart with quantity and cost analysis
 - **Interactive UI**: Clickable stats, smooth navigation, consistent styling
 
-### 🔧 Ready for Integration
+###  Ready for Integration
 - **Google Maps**: Setup complete, ready for API key
 - **Location Services**: Permission handling implemented
 - **Firebase**: Project structure ready for Firestore integration
 - **AI Features**: Gemini API integration prepared
 
-## � Development Commands
+##  Development Commands
 
 ```bash
 # Generate code files
@@ -222,33 +222,33 @@ flutter build apk --release
 flutter build ios --release
 ```
 
-## 📱 App Screenshots & Features
+##  App Screenshots & Features
 
-### 🏨 Hotels Section
+###  Hotels Section
 - Browse 20+ hotels across Bangladesh
 - Filter by division, type, and price range
 - Detailed hotel information with amenities
 - Add to favorites and budget tracking
 
-### 🍽️ Restaurants Section  
+###  Restaurants Section  
 - Discover 20+ restaurants with diverse cuisines
 - Filter by cuisine type, price range, and division
 - View specialties, popular dishes, and services
 - Halal certification indicators
 
-### 🏛️ Attractions Section
+###  Attractions Section
 - Explore 20+ tourist attractions
 - Filter by category (Historical, Natural, Religious, Archaeological)
 - Detailed descriptions with activities and facilities
 - Entry fee information and best visiting times
 
-### 👤 Profile & Management
+###  Profile & Management
 - Personal travel statistics dashboard
 - Favorites management across all categories
 - Budget analysis with expense breakdown
 - Quick access to all features
 
-## 🧪 Testing
+##  Testing
 
 ### Unit Tests
 - Test data models
@@ -265,7 +265,7 @@ flutter build ios --release
 - Test API integrations
 - Test navigation
 
-## 📦 Deployment
+##  Deployment
 
 ### Before Release
 - [ ] Update app version in pubspec.yaml
@@ -291,7 +291,7 @@ flutter build ios --release
 - [ ] Upload to App Store Connect
 - [ ] Configure store listing
 
-## 🔍 Troubleshooting
+##  Troubleshooting
 
 ### Common Issues
 - **Build failures**: Run `flutter clean && flutter pub get`
@@ -305,7 +305,7 @@ flutter build ios --release
 - Network inspector for API calls
 - Performance overlay for optimization
 
-## 📚 Resources
+##  Resources
 
 - [Flutter Documentation](https://flutter.dev/docs)
 - [Riverpod Documentation](https://riverpod.dev/)
@@ -313,6 +313,6 @@ flutter build ios --release
 - [Google Gemini API](https://ai.google.dev/docs)
 - [Google Maps Flutter Plugin](https://pub.dev/packages/google_maps_flutter)
 
-## 📄 License
+##  License
 
 This project is licensed under the MIT License.

@@ -22,7 +22,7 @@ class NavigationHistory extends StateNotifier<List<String>> {
     // Don't add duplicate consecutive routes
     if (state.isEmpty || state.last != route) {
       state = [...state, route];
-      print('📚 Navigation history: $state');
+      print(' Navigation history: $state');
     }
   }
 
@@ -31,7 +31,7 @@ class NavigationHistory extends StateNotifier<List<String>> {
       final newState = state.sublist(0, state.length - 1);
       final previousRoute = newState.last;
       state = newState;
-      print('📚 Popped to: $previousRoute, history: $state');
+      print(' Popped to: $previousRoute, history: $state');
       return previousRoute;
     }
     return null;
@@ -52,7 +52,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     // Add navigation listener to track route changes
     redirect: (context, state) {
       final currentRoute = state.uri.toString();
-      print('🧭 Navigating to: $currentRoute');
+      print(' Navigating to: $currentRoute');
       
       // Add to history when navigating (but not when going back via our back button)
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -193,22 +193,22 @@ class BackButtonWrapper extends ConsumerWidget {
       onPopInvokedWithResult: (didPop, result) async {
         if (didPop) return;
         
-        print('🔙 Back button pressed, checking navigation history...');
+        print(' Back button pressed, checking navigation history...');
         
         final router = GoRouter.of(context);
         final navigationHistory = ref.read(navigationHistoryProvider.notifier);
         final history = ref.read(navigationHistoryProvider);
         
-        print('📚 Current history: $history');
+        print(' Current history: $history');
         
         // Try to pop from our custom history
         final previousRoute = navigationHistory.pop();
         
         if (previousRoute != null && previousRoute != GoRouterState.of(context).uri.toString()) {
-          print('✅ Going back to: $previousRoute');
+          print(' Going back to: $previousRoute');
           router.go(previousRoute);
         } else {
-          print('🏠 No previous route, going to home');
+          print(' No previous route, going to home');
           router.go('/');
         }
       },
@@ -753,15 +753,15 @@ class _HotelsScreenState extends ConsumerState<HotelsScreen> {
                             final isFavorite = favoriteHotelIds.contains(hotel.id);
                             return GestureDetector(
                               onTap: () {
-                                print('🏨 Hotel favorite button tapped: ${hotel.name}, isFavorite: $isFavorite');
+                                print(' Hotel favorite button tapped: ${hotel.name}, isFavorite: $isFavorite');
                                 if (isFavorite) {
                                   ref.read(favoriteHotelsProvider.notifier).state = 
                                     {...favoriteHotelIds}..remove(hotel.id);
-                                  print('🏨 Removed hotel from favorites: ${hotel.id}');
+                                  print(' Removed hotel from favorites: ${hotel.id}');
                                 } else {
                                   ref.read(favoriteHotelsProvider.notifier).state = 
                                     {...favoriteHotelIds, hotel.id};
-                                  print('🏨 Added hotel to favorites: ${hotel.id}');
+                                  print(' Added hotel to favorites: ${hotel.id}');
                                 }
                               },
                               child: Container(
@@ -787,12 +787,12 @@ class _HotelsScreenState extends ConsumerState<HotelsScreen> {
                               item.type == 'hotel' && item.id == hotel.id);
                             return GestureDetector(
                               onTap: () {
-                                print('🏨 Hotel budget button tapped: ${hotel.name}, isInBudget: $isInBudget');
+                                print(' Hotel budget button tapped: ${hotel.name}, isInBudget: $isInBudget');
                                 if (isInBudget) {
                                   ref.read(budgetItemsProvider.notifier).state = 
                                     budgetItems.where((item) => 
                                       !(item.type == 'hotel' && item.id == hotel.id)).toList();
-                                  print('🏨 Removed hotel from budget: ${hotel.id}');
+                                  print(' Removed hotel from budget: ${hotel.id}');
                                 } else {
                                   final newItem = BudgetItem(
                                     id: hotel.id,
@@ -806,7 +806,7 @@ class _HotelsScreenState extends ConsumerState<HotelsScreen> {
                                   );
                                   ref.read(budgetItemsProvider.notifier).state = 
                                     [...budgetItems, newItem];
-                                  print('🏨 Added hotel to budget: ${hotel.id}');
+                                  print(' Added hotel to budget: ${hotel.id}');
                                 }
                               },
                               child: Container(
@@ -1365,15 +1365,15 @@ class _RestaurantsScreenState extends ConsumerState<RestaurantsScreen> {
                               final isFavorite = favoriteRestaurantIds.contains(restaurant.id);
                               return GestureDetector(
                                 onTap: () {
-                                  print('🍽️ Restaurant favorite button tapped: ${restaurant.name}, isFavorite: $isFavorite');
+                                  print(' Restaurant favorite button tapped: ${restaurant.name}, isFavorite: $isFavorite');
                                   if (isFavorite) {
                                     ref.read(favoriteRestaurantsProvider.notifier).state = 
                                       {...favoriteRestaurantIds}..remove(restaurant.id);
-                                    print('🍽️ Removed restaurant from favorites: ${restaurant.id}');
+                                    print(' Removed restaurant from favorites: ${restaurant.id}');
                                   } else {
                                     ref.read(favoriteRestaurantsProvider.notifier).state = 
                                       {...favoriteRestaurantIds, restaurant.id};
-                                    print('🍽️ Added restaurant to favorites: ${restaurant.id}');
+                                    print(' Added restaurant to favorites: ${restaurant.id}');
                                   }
                                 },
                                 child: Container(
@@ -1399,12 +1399,12 @@ class _RestaurantsScreenState extends ConsumerState<RestaurantsScreen> {
                                 item.type == 'restaurant' && item.id == restaurant.id);
                               return GestureDetector(
                                 onTap: () {
-                                  print('🍽️ Restaurant budget button tapped: ${restaurant.name}, isInBudget: $isInBudget');
+                                  print(' Restaurant budget button tapped: ${restaurant.name}, isInBudget: $isInBudget');
                                   if (isInBudget) {
                                     ref.read(budgetItemsProvider.notifier).state = 
                                       budgetItems.where((item) => 
                                         !(item.type == 'restaurant' && item.id == restaurant.id)).toList();
-                                    print('🍽️ Removed restaurant from budget: ${restaurant.id}');
+                                    print(' Removed restaurant from budget: ${restaurant.id}');
                                   } else {
                                     final newItem = BudgetItem(
                                       id: restaurant.id,
@@ -1418,7 +1418,7 @@ class _RestaurantsScreenState extends ConsumerState<RestaurantsScreen> {
                                     );
                                     ref.read(budgetItemsProvider.notifier).state = 
                                       [...budgetItems, newItem];
-                                    print('🍽️ Added restaurant to budget: ${restaurant.id}');
+                                    print(' Added restaurant to budget: ${restaurant.id}');
                                   }
                                 },
                                 child: Container(
@@ -3126,15 +3126,15 @@ class AttractionDetailScreen extends ConsumerWidget {
                   final isFavorite = favoriteAttractionIds.contains(attraction.id);
                   return IconButton(
                     onPressed: () {
-                      print('🏛️ Attraction detail favorite button tapped: ${attraction.name}, isFavorite: $isFavorite');
+                      print(' Attraction detail favorite button tapped: ${attraction.name}, isFavorite: $isFavorite');
                       if (isFavorite) {
                         ref.read(favoriteAttractionsProvider.notifier).state = 
                           {...favoriteAttractionIds}..remove(attraction.id);
-                        print('🏛️ Removed attraction from favorites: ${attraction.id}');
+                        print(' Removed attraction from favorites: ${attraction.id}');
                       } else {
                         ref.read(favoriteAttractionsProvider.notifier).state = 
                           {...favoriteAttractionIds, attraction.id};
-                        print('🏛️ Added attraction to favorites: ${attraction.id}');
+                        print(' Added attraction to favorites: ${attraction.id}');
                       }
                     },
                     icon: Icon(
@@ -3152,12 +3152,12 @@ class AttractionDetailScreen extends ConsumerWidget {
                     item.type == 'attraction' && item.id == attraction.id);
                   return IconButton(
                     onPressed: () {
-                      print('🏛️ Attraction detail budget button tapped: ${attraction.name}, isInBudget: $isInBudget');
+                      print(' Attraction detail budget button tapped: ${attraction.name}, isInBudget: $isInBudget');
                       if (isInBudget) {
                         ref.read(budgetItemsProvider.notifier).state = 
                           budgetItems.where((item) => 
                             !(item.type == 'attraction' && item.id == attraction.id)).toList();
-                        print('🏛️ Removed attraction from budget: ${attraction.id}');
+                        print(' Removed attraction from budget: ${attraction.id}');
                       } else {
                         final newItem = BudgetItem(
                           id: attraction.id,
@@ -3171,7 +3171,7 @@ class AttractionDetailScreen extends ConsumerWidget {
                         );
                         ref.read(budgetItemsProvider.notifier).state = 
                           [...budgetItems, newItem];
-                        print('🏛️ Added attraction to budget: ${attraction.id}');
+                        print(' Added attraction to budget: ${attraction.id}');
                       }
                     },
                     icon: Icon(
@@ -3311,18 +3311,18 @@ class AttractionDetailScreen extends ConsumerWidget {
                                 final isFavorite = favoriteAttractionIds.contains(attraction.id);
                                 return ElevatedButton.icon(
                                   onPressed: () {
-                                    print('🏛️ Attraction Save button tapped: ${attraction.name}, isFavorite: $isFavorite');
+                                    print(' Attraction Save button tapped: ${attraction.name}, isFavorite: $isFavorite');
                                     if (isFavorite) {
                                       ref.read(favoriteAttractionsProvider.notifier).state = 
                                         {...favoriteAttractionIds}..remove(attraction.id);
-                                      print('🏛️ Removed attraction from favorites: ${attraction.id}');
+                                      print(' Removed attraction from favorites: ${attraction.id}');
                                       ScaffoldMessenger.of(context).showSnackBar(
                                         const SnackBar(content: Text('Removed from favorites')),
                                       );
                                     } else {
                                       ref.read(favoriteAttractionsProvider.notifier).state = 
                                         {...favoriteAttractionIds, attraction.id};
-                                      print('🏛️ Added attraction to favorites: ${attraction.id}');
+                                      print(' Added attraction to favorites: ${attraction.id}');
                                       ScaffoldMessenger.of(context).showSnackBar(
                                         const SnackBar(content: Text('Saved to favorites!')),
                                       );
@@ -3362,12 +3362,12 @@ class AttractionDetailScreen extends ConsumerWidget {
                                   item.type == 'attraction' && item.id == attraction.id);
                                 return ElevatedButton.icon(
                                   onPressed: () {
-                                    print('🏛️ Attraction Budget button tapped: ${attraction.name}, isInBudget: $isInBudget');
+                                    print(' Attraction Budget button tapped: ${attraction.name}, isInBudget: $isInBudget');
                                     if (isInBudget) {
                                       ref.read(budgetItemsProvider.notifier).state = 
                                         budgetItems.where((item) => 
                                           !(item.type == 'attraction' && item.id == attraction.id)).toList();
-                                      print('🏛️ Removed attraction from budget: ${attraction.id}');
+                                      print(' Removed attraction from budget: ${attraction.id}');
                                       ScaffoldMessenger.of(context).showSnackBar(
                                         const SnackBar(content: Text('Removed from budget')),
                                       );
@@ -3384,7 +3384,7 @@ class AttractionDetailScreen extends ConsumerWidget {
                                       );
                                       ref.read(budgetItemsProvider.notifier).state = 
                                         [...budgetItems, newItem];
-                                      print('🏛️ Added attraction to budget: ${attraction.id}');
+                                      print(' Added attraction to budget: ${attraction.id}');
                                       ScaffoldMessenger.of(context).showSnackBar(
                                         const SnackBar(content: Text('Added to budget!')),
                                       );
@@ -3701,15 +3701,15 @@ class _HotelDetailScreenState extends ConsumerState<HotelDetailScreen> with Tick
                       final isFavorite = favoriteHotelIds.contains(hotel.id);
                       return IconButton(
                         onPressed: () {
-                          print('🏨 Hotel detail favorite button tapped: ${hotel.name}, isFavorite: $isFavorite');
+                          print(' Hotel detail favorite button tapped: ${hotel.name}, isFavorite: $isFavorite');
                           if (isFavorite) {
                             ref.read(favoriteHotelsProvider.notifier).state = 
                               {...favoriteHotelIds}..remove(hotel.id);
-                            print('🏨 Removed hotel from favorites: ${hotel.id}');
+                            print(' Removed hotel from favorites: ${hotel.id}');
                           } else {
                             ref.read(favoriteHotelsProvider.notifier).state = 
                               {...favoriteHotelIds, hotel.id};
-                            print('🏨 Added hotel to favorites: ${hotel.id}');
+                            print(' Added hotel to favorites: ${hotel.id}');
                           }
                         },
                         icon: Icon(
@@ -3727,12 +3727,12 @@ class _HotelDetailScreenState extends ConsumerState<HotelDetailScreen> with Tick
                         item.type == 'hotel' && item.id == hotel.id);
                       return IconButton(
                         onPressed: () {
-                          print('🏨 Hotel detail budget button tapped: ${hotel.name}, isInBudget: $isInBudget');
+                          print(' Hotel detail budget button tapped: ${hotel.name}, isInBudget: $isInBudget');
                           if (isInBudget) {
                             ref.read(budgetItemsProvider.notifier).state = 
                               budgetItems.where((item) => 
                                 !(item.type == 'hotel' && item.id == hotel.id)).toList();
-                            print('🏨 Removed hotel from budget: ${hotel.id}');
+                            print(' Removed hotel from budget: ${hotel.id}');
                           } else {
                             final newItem = BudgetItem(
                               id: hotel.id,
@@ -3746,7 +3746,7 @@ class _HotelDetailScreenState extends ConsumerState<HotelDetailScreen> with Tick
                             );
                             ref.read(budgetItemsProvider.notifier).state = 
                               [...budgetItems, newItem];
-                            print('🏨 Added hotel to budget: ${hotel.id}');
+                            print(' Added hotel to budget: ${hotel.id}');
                           }
                         },
                         icon: Icon(
@@ -4004,18 +4004,18 @@ class _HotelDetailScreenState extends ConsumerState<HotelDetailScreen> with Tick
                                 final isFavorite = favoriteHotelIds.contains(hotel.id);
                                 return ElevatedButton.icon(
                                   onPressed: () {
-                                    print('🏨 Hotel Save button tapped: ${hotel.name}, isFavorite: $isFavorite');
+                                    print(' Hotel Save button tapped: ${hotel.name}, isFavorite: $isFavorite');
                                     if (isFavorite) {
                                       ref.read(favoriteHotelsProvider.notifier).state = 
                                         {...favoriteHotelIds}..remove(hotel.id);
-                                      print('🏨 Removed hotel from favorites: ${hotel.id}');
+                                      print(' Removed hotel from favorites: ${hotel.id}');
                                       ScaffoldMessenger.of(context).showSnackBar(
                                         const SnackBar(content: Text('Removed from favorites')),
                                       );
                                     } else {
                                       ref.read(favoriteHotelsProvider.notifier).state = 
                                         {...favoriteHotelIds, hotel.id};
-                                      print('🏨 Added hotel to favorites: ${hotel.id}');
+                                      print(' Added hotel to favorites: ${hotel.id}');
                                       ScaffoldMessenger.of(context).showSnackBar(
                                         const SnackBar(content: Text('Saved to favorites!')),
                                       );
@@ -4058,12 +4058,12 @@ class _HotelDetailScreenState extends ConsumerState<HotelDetailScreen> with Tick
                                   item.type == 'hotel' && item.id == hotel.id);
                                 return ElevatedButton.icon(
                                   onPressed: () {
-                                    print('🏨 Hotel Budget button tapped: ${hotel.name}, isInBudget: $isInBudget');
+                                    print(' Hotel Budget button tapped: ${hotel.name}, isInBudget: $isInBudget');
                                     if (isInBudget) {
                                       ref.read(budgetItemsProvider.notifier).state = 
                                         budgetItems.where((item) => 
                                           !(item.type == 'hotel' && item.id == hotel.id)).toList();
-                                      print('🏨 Removed hotel from budget: ${hotel.id}');
+                                      print(' Removed hotel from budget: ${hotel.id}');
                                       ScaffoldMessenger.of(context).showSnackBar(
                                         const SnackBar(content: Text('Removed from budget')),
                                       );
@@ -4080,7 +4080,7 @@ class _HotelDetailScreenState extends ConsumerState<HotelDetailScreen> with Tick
                                       );
                                       ref.read(budgetItemsProvider.notifier).state = 
                                         [...budgetItems, newItem];
-                                      print('🏨 Added hotel to budget: ${hotel.id}');
+                                      print(' Added hotel to budget: ${hotel.id}');
                                       ScaffoldMessenger.of(context).showSnackBar(
                                         const SnackBar(content: Text('Added to budget!')),
                                       );
@@ -4742,15 +4742,15 @@ class RestaurantDetailScreen extends ConsumerWidget {
                       final isFavorite = favoriteRestaurantIds.contains(restaurant.id);
                       return IconButton(
                         onPressed: () {
-                          print('🍽️ Restaurant detail favorite button tapped: ${restaurant.name}, isFavorite: $isFavorite');
+                          print(' Restaurant detail favorite button tapped: ${restaurant.name}, isFavorite: $isFavorite');
                           if (isFavorite) {
                             ref.read(favoriteRestaurantsProvider.notifier).state = 
                               {...favoriteRestaurantIds}..remove(restaurant.id);
-                            print('🍽️ Removed restaurant from favorites: ${restaurant.id}');
+                            print(' Removed restaurant from favorites: ${restaurant.id}');
                           } else {
                             ref.read(favoriteRestaurantsProvider.notifier).state = 
                               {...favoriteRestaurantIds, restaurant.id};
-                            print('🍽️ Added restaurant to favorites: ${restaurant.id}');
+                            print(' Added restaurant to favorites: ${restaurant.id}');
                           }
                         },
                         icon: Icon(
@@ -4768,12 +4768,12 @@ class RestaurantDetailScreen extends ConsumerWidget {
                         item.type == 'restaurant' && item.id == restaurant.id);
                       return IconButton(
                         onPressed: () {
-                          print('🍽️ Restaurant detail budget button tapped: ${restaurant.name}, isInBudget: $isInBudget');
+                          print(' Restaurant detail budget button tapped: ${restaurant.name}, isInBudget: $isInBudget');
                           if (isInBudget) {
                             ref.read(budgetItemsProvider.notifier).state = 
                               budgetItems.where((item) => 
                                 !(item.type == 'restaurant' && item.id == restaurant.id)).toList();
-                            print('🍽️ Removed restaurant from budget: ${restaurant.id}');
+                            print(' Removed restaurant from budget: ${restaurant.id}');
                           } else {
                             final newItem = BudgetItem(
                               id: restaurant.id,
@@ -4787,7 +4787,7 @@ class RestaurantDetailScreen extends ConsumerWidget {
                             );
                             ref.read(budgetItemsProvider.notifier).state = 
                               [...budgetItems, newItem];
-                            print('🍽️ Added restaurant to budget: ${restaurant.id}');
+                            print(' Added restaurant to budget: ${restaurant.id}');
                           }
                         },
                         icon: Icon(
@@ -5141,18 +5141,18 @@ class RestaurantDetailScreen extends ConsumerWidget {
                                 final isFavorite = favoriteRestaurantIds.contains(restaurant.id);
                                 return ElevatedButton.icon(
                                   onPressed: () {
-                                    print('🍽️ Restaurant Save button tapped: ${restaurant.name}, isFavorite: $isFavorite');
+                                    print(' Restaurant Save button tapped: ${restaurant.name}, isFavorite: $isFavorite');
                                     if (isFavorite) {
                                       ref.read(favoriteRestaurantsProvider.notifier).state = 
                                         {...favoriteRestaurantIds}..remove(restaurant.id);
-                                      print('🍽️ Removed restaurant from favorites: ${restaurant.id}');
+                                      print(' Removed restaurant from favorites: ${restaurant.id}');
                                       ScaffoldMessenger.of(context).showSnackBar(
                                         const SnackBar(content: Text('Removed from favorites')),
                                       );
                                     } else {
                                       ref.read(favoriteRestaurantsProvider.notifier).state = 
                                         {...favoriteRestaurantIds, restaurant.id};
-                                      print('🍽️ Added restaurant to favorites: ${restaurant.id}');
+                                      print(' Added restaurant to favorites: ${restaurant.id}');
                                       ScaffoldMessenger.of(context).showSnackBar(
                                         const SnackBar(content: Text('Saved to favorites!')),
                                       );
@@ -5195,12 +5195,12 @@ class RestaurantDetailScreen extends ConsumerWidget {
                                   item.type == 'restaurant' && item.id == restaurant.id);
                                 return ElevatedButton.icon(
                                   onPressed: () {
-                                    print('🍽️ Restaurant Budget button tapped: ${restaurant.name}, isInBudget: $isInBudget');
+                                    print(' Restaurant Budget button tapped: ${restaurant.name}, isInBudget: $isInBudget');
                                     if (isInBudget) {
                                       ref.read(budgetItemsProvider.notifier).state = 
                                         budgetItems.where((item) => 
                                           !(item.type == 'restaurant' && item.id == restaurant.id)).toList();
-                                      print('🍽️ Removed restaurant from budget: ${restaurant.id}');
+                                      print(' Removed restaurant from budget: ${restaurant.id}');
                                       ScaffoldMessenger.of(context).showSnackBar(
                                         const SnackBar(content: Text('Removed from budget')),
                                       );
@@ -5217,7 +5217,7 @@ class RestaurantDetailScreen extends ConsumerWidget {
                                       );
                                       ref.read(budgetItemsProvider.notifier).state = 
                                         [...budgetItems, newItem];
-                                      print('🍽️ Added restaurant to budget: ${restaurant.id}');
+                                      print(' Added restaurant to budget: ${restaurant.id}');
                                       ScaffoldMessenger.of(context).showSnackBar(
                                         const SnackBar(content: Text('Added to budget!')),
                                       );

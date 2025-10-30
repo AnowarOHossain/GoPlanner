@@ -21,29 +21,29 @@ final bangladeshHotelsProvider = FutureProvider<List<HotelModel>>((ref) async {
 // Bangladesh Restaurants Provider
 final bangladeshRestaurantsProvider = FutureProvider<List<RestaurantModel>>((ref) async {
   try {
-    print('🍽️ Loading restaurant data...');
+    print(' Loading restaurant data...');
     final String jsonString = await rootBundle.loadString('assets/data/bangladesh_restaurants.json');
-    print('🍽️ JSON loaded, length: ${jsonString.length}');
+    print(' JSON loaded, length: ${jsonString.length}');
     final List<dynamic> jsonList = json.decode(jsonString);
-    print('🍽️ Parsed ${jsonList.length} restaurants');
+    print(' Parsed ${jsonList.length} restaurants');
     
     final List<RestaurantModel> restaurants = [];
     for (int i = 0; i < jsonList.length; i++) {
       try {
-        print('🍽️ Processing restaurant ${i + 1}...');
+        print(' Processing restaurant ${i + 1}...');
         final restaurant = RestaurantModel.fromJson(jsonList[i]);
         restaurants.add(restaurant);
-        print('🍽️ Successfully added: ${restaurant.name}');
+        print(' Successfully added: ${restaurant.name}');
       } catch (e) {
-        print('🍽️ ERROR with restaurant ${i + 1}: $e');
-        print('🍽️ Data: ${jsonList[i]}');
+        print(' ERROR with restaurant ${i + 1}: $e');
+        print(' Data: ${jsonList[i]}');
       }
     }
     
-    print('🍽️ Final count: ${restaurants.length} restaurants loaded successfully');
+    print(' Final count: ${restaurants.length} restaurants loaded successfully');
     return restaurants;
   } catch (e) {
-    print('🍽️ FATAL ERROR loading restaurants: $e');
+    print(' FATAL ERROR loading restaurants: $e');
     return [];
   }
 });
@@ -227,29 +227,29 @@ final priceRangesProvider = Provider<List<String>>((ref) {
 // Bangladesh Attractions Provider
 final bangladeshAttractionsProvider = FutureProvider<List<AttractionModel>>((ref) async {
   try {
-    print('🏛️ Loading attraction data...');
+    print(' Loading attraction data...');
     final String jsonString = await rootBundle.loadString('assets/data/bangladesh_attractions.json');
-    print('🏛️ JSON loaded, length: ${jsonString.length}');
+    print(' JSON loaded, length: ${jsonString.length}');
     final List<dynamic> jsonList = json.decode(jsonString);
-    print('🏛️ Parsed ${jsonList.length} attractions');
+    print(' Parsed ${jsonList.length} attractions');
     
     final List<AttractionModel> attractions = [];
     for (int i = 0; i < jsonList.length; i++) {
       try {
-        print('🏛️ Processing attraction ${i + 1}...');
+        print(' Processing attraction ${i + 1}...');
         final attraction = AttractionModel.fromJson(jsonList[i]);
         attractions.add(attraction);
-        print('🏛️ Successfully added: ${attraction.name}');
+        print(' Successfully added: ${attraction.name}');
       } catch (e) {
-        print('🏛️ ERROR with attraction ${i + 1}: $e');
-        print('🏛️ Data: ${jsonList[i]}');
+        print(' ERROR with attraction ${i + 1}: $e');
+        print(' Data: ${jsonList[i]}');
       }
     }
     
-    print('🏛️ Final count: ${attractions.length} attractions loaded successfully');
+    print(' Final count: ${attractions.length} attractions loaded successfully');
     return attractions;
   } catch (e) {
-    print('🏛️ FATAL ERROR loading attractions: $e');
+    print(' FATAL ERROR loading attractions: $e');
     return [];
   }
 });
