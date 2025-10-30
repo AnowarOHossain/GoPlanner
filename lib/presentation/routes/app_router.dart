@@ -767,7 +767,7 @@ class _HotelsScreenState extends ConsumerState<HotelsScreen> {
                               child: Container(
                                 padding: const EdgeInsets.all(6),
                                 decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.9),
+                                  color: Colors.white.withValues(alpha: 0.9),
                                   shape: BoxShape.circle,
                                 ),
                                 child: Icon(
@@ -812,7 +812,7 @@ class _HotelsScreenState extends ConsumerState<HotelsScreen> {
                               child: Container(
                                 padding: const EdgeInsets.all(6),
                                 decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.9),
+                                  color: Colors.white.withValues(alpha: 0.9),
                                   shape: BoxShape.circle,
                                 ),
                                 child: Icon(
@@ -1271,7 +1271,7 @@ class _RestaurantsScreenState extends ConsumerState<RestaurantsScreen> {
         label: Text(label, style: const TextStyle(fontSize: 12)),
         deleteIcon: const Icon(Icons.close, size: 16),
         onDeleted: onRemove,
-        backgroundColor: const Color(0xFF2E7D5A).withOpacity(0.1),
+        backgroundColor: const Color(0xFF2E7D5A).withValues(alpha: 0.1),
         deleteIconColor: const Color(0xFF2E7D5A),
       ),
     );
@@ -1379,7 +1379,7 @@ class _RestaurantsScreenState extends ConsumerState<RestaurantsScreen> {
                                 child: Container(
                                   padding: const EdgeInsets.all(6),
                                   decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.9),
+                                    color: Colors.white.withValues(alpha: 0.9),
                                     shape: BoxShape.circle,
                                   ),
                                   child: Icon(
@@ -1424,7 +1424,7 @@ class _RestaurantsScreenState extends ConsumerState<RestaurantsScreen> {
                                 child: Container(
                                   padding: const EdgeInsets.all(6),
                                   decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.9),
+                                    color: Colors.white.withValues(alpha: 0.9),
                                     shape: BoxShape.circle,
                                   ),
                                   child: Icon(
@@ -1678,7 +1678,7 @@ class _RestaurantsScreenState extends ConsumerState<RestaurantsScreen> {
                                   margin: const EdgeInsets.only(right: 8),
                                   padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                                   decoration: BoxDecoration(
-                                    color: Colors.blue.withOpacity(0.1),
+                                    color: Colors.blue.withValues(alpha: 0.1),
                                     borderRadius: BorderRadius.circular(4),
                                   ),
                                   child: const Text(
@@ -1690,7 +1690,7 @@ class _RestaurantsScreenState extends ConsumerState<RestaurantsScreen> {
                                 Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                                   decoration: BoxDecoration(
-                                    color: Colors.orange.withOpacity(0.1),
+                                    color: Colors.orange.withValues(alpha: 0.1),
                                     borderRadius: BorderRadius.circular(4),
                                   ),
                                   child: const Text(
@@ -1947,7 +1947,7 @@ class _AttractionsScreenState extends ConsumerState<AttractionsScreen> {
         label: Text(label, style: const TextStyle(fontSize: 12)),
         deleteIcon: const Icon(Icons.close, size: 16),
         onDeleted: onRemove,
-        backgroundColor: const Color(0xFF2E7D5A).withOpacity(0.1),
+        backgroundColor: const Color(0xFF2E7D5A).withValues(alpha: 0.1),
         deleteIconColor: const Color(0xFF2E7D5A),
       ),
     );
@@ -2052,7 +2052,7 @@ class _AttractionsScreenState extends ConsumerState<AttractionsScreen> {
                                 child: Container(
                                   padding: const EdgeInsets.all(6),
                                   decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.9),
+                                    color: Colors.white.withValues(alpha: 0.9),
                                     shape: BoxShape.circle,
                                   ),
                                   child: Icon(
@@ -2094,7 +2094,7 @@ class _AttractionsScreenState extends ConsumerState<AttractionsScreen> {
                                 child: Container(
                                   padding: const EdgeInsets.all(6),
                                   decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.9),
+                                    color: Colors.white.withValues(alpha: 0.9),
                                     shape: BoxShape.circle,
                                   ),
                                   child: Icon(
@@ -2332,7 +2332,7 @@ class _AttractionsScreenState extends ConsumerState<AttractionsScreen> {
                                 margin: const EdgeInsets.only(right: 8),
                                 padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                                 decoration: BoxDecoration(
-                                  color: Colors.blue.withOpacity(0.1),
+                                  color: Colors.blue.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(4),
                                 ),
                                 child: Text(
@@ -2344,7 +2344,7 @@ class _AttractionsScreenState extends ConsumerState<AttractionsScreen> {
                                 Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                                   decoration: BoxDecoration(
-                                    color: Colors.orange.withOpacity(0.1),
+                                    color: Colors.orange.withValues(alpha: 0.1),
                                     borderRadius: BorderRadius.circular(4),
                                   ),
                                   child: Text(
@@ -2481,7 +2481,7 @@ class CartScreen extends ConsumerWidget {
                     gradient: LinearGradient(
                       colors: [
                         const Color(0xFF2E7D5A),
-                        const Color(0xFF2E7D5A).withOpacity(0.8),
+                        const Color(0xFF2E7D5A).withValues(alpha: 0.8),
                       ],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
@@ -3551,7 +3551,7 @@ class _AttractionFilterBottomSheetState extends ConsumerState<AttractionFilterBo
                         ref.read(selectedAttractionDivisionProvider.notifier).state = 
                             selected ? division : null;
                       },
-                      selectedColor: const Color(0xFF2E7D5A).withOpacity(0.2),
+                      selectedColor: const Color(0xFF2E7D5A).withValues(alpha: 0.2),
                       checkmarkColor: const Color(0xFF2E7D5A),
                     );
                   }).toList(),
@@ -3577,7 +3577,7 @@ class _AttractionFilterBottomSheetState extends ConsumerState<AttractionFilterBo
                         ref.read(selectedAttractionCategoryProvider.notifier).state = 
                             selected ? category : null;
                       },
-                      selectedColor: const Color(0xFF2E7D5A).withOpacity(0.2),
+                      selectedColor: const Color(0xFF2E7D5A).withValues(alpha: 0.2),
                       checkmarkColor: const Color(0xFF2E7D5A),
                     );
                   }).toList(),
@@ -3603,7 +3603,7 @@ class _AttractionFilterBottomSheetState extends ConsumerState<AttractionFilterBo
                         ref.read(selectedHistoricalPeriodProvider.notifier).state = 
                             selected ? period : null;
                       },
-                      selectedColor: const Color(0xFF2E7D5A).withOpacity(0.2),
+                      selectedColor: const Color(0xFF2E7D5A).withValues(alpha: 0.2),
                       checkmarkColor: const Color(0xFF2E7D5A),
                     );
                   }).toList(),

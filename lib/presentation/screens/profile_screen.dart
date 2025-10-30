@@ -326,7 +326,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: ListTile(
         leading: CircleAvatar(
-          backgroundColor: color.withOpacity(0.1),
+          backgroundColor: color.withValues(alpha: 0.1),
           child: Icon(icon, color: color),
         ),
         title: Text(
@@ -546,7 +546,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         children: [
           CircleAvatar(
             radius: 16,
-            backgroundColor: const Color(0xFF2E7D5A).withOpacity(0.1),
+            backgroundColor: const Color(0xFF2E7D5A).withValues(alpha: 0.1),
             child: Icon(icon, size: 16, color: const Color(0xFF2E7D5A)),
           ),
           const SizedBox(width: 12),

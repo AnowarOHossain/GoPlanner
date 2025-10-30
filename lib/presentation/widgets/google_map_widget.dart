@@ -121,7 +121,7 @@ class _GoogleMapWidgetState extends ConsumerState<GoogleMapWidget> {
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
+                      color: Colors.black.withValues(alpha: 0.2),
                       blurRadius: 5,
                       offset: const Offset(0, 2),
                     ),
@@ -149,7 +149,7 @@ class _GoogleMapWidgetState extends ConsumerState<GoogleMapWidget> {
                   border: Border.all(color: Colors.white, width: 3),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
+                      color: Colors.black.withValues(alpha: 0.2),
                       blurRadius: 5,
                       offset: const Offset(0, 2),
                     ),
@@ -171,11 +171,11 @@ class _GoogleMapWidgetState extends ConsumerState<GoogleMapWidget> {
             child: Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.9),
+                color: Colors.white.withValues(alpha: 0.9),
                 borderRadius: BorderRadius.circular(8),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: Colors.black.withValues(alpha: 0.1),
                     blurRadius: 5,
                     offset: const Offset(0, 2),
                   ),
@@ -325,7 +325,7 @@ class MapGridPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.grey.withOpacity(0.1)
+      ..color = Colors.grey.withValues(alpha: 0.1)
       ..strokeWidth = 1;
 
     // Draw grid
@@ -351,7 +351,7 @@ class MapGridPainter extends CustomPainter {
     );
     
     final pathPaint = Paint()
-      ..color = Colors.blue.withOpacity(0.1)
+      ..color = Colors.blue.withValues(alpha: 0.1)
       ..strokeWidth = 8
       ..style = PaintingStyle.stroke;
     

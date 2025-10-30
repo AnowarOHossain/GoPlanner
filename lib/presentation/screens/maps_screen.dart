@@ -593,7 +593,7 @@ class _MapsScreenState extends ConsumerState<MapsScreen>
                       width: 60,
                       height: 60,
                       decoration: BoxDecoration(
-                        color: color.withOpacity(0.1),
+                        color: color.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Icon(icon, color: color),
@@ -680,7 +680,7 @@ class _MapsScreenState extends ConsumerState<MapsScreen>
                     return Container(
                       height: 60,
                       decoration: BoxDecoration(
-                        color: color.withOpacity(0.1),
+                        color: color.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Icon(icon, color: color),
@@ -827,7 +827,7 @@ class _MapsScreenState extends ConsumerState<MapsScreen>
   ) {
     return ListTile(
       leading: CircleAvatar(
-        backgroundColor: color.withOpacity(0.1),
+        backgroundColor: color.withValues(alpha: 0.1),
         child: Icon(icon, color: color),
       ),
       title: Text(title),
@@ -885,7 +885,7 @@ class _MapsScreenState extends ConsumerState<MapsScreen>
       onChanged: (bool newValue) {
         // Handle filter change
       },
-      activeColor: const Color(0xFF2E7D5A),
+      activeThumbColor: const Color(0xFF2E7D5A),
     );
   }
 

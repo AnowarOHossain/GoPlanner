@@ -1,1 +1,29 @@
 include: package:flutter_lints/flutter.yaml
+
+linter:
+  rules:
+    # Disable style/preference warnings
+    avoid_print: false  # Allow print statements for debugging
+    prefer_const_constructors: false  # Don't enforce const constructors
+    prefer_const_literals_to_create_immutables: false  # Don't enforce const literals
+    
+    # Disable minor formatting warnings
+    unnecessary_brace_in_string_interps: false
+    unnecessary_to_list_in_spreads: false
+    sized_box_for_whitespace: false
+    
+    # Keep important rules enabled (these are enabled by default, just being explicit)
+    # always_declare_return_types: true
+    # avoid_empty_else: true
+    # avoid_returning_null_for_future: true
+    # prefer_final_fields: true
+
+analyzer:
+  errors:
+    # Treat certain warnings as info instead of warnings
+    deprecated_member_use: info
+    
+  exclude:
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+    - "**/generated/**"
