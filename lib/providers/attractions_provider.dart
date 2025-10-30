@@ -1,44 +1,52 @@
+// Import Riverpod for state management
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+// Import attractions data source
 import '../data/attractions_data.dart';
+// Import attraction model
 import '../data/models/attraction_model.dart';
 
-// Provider for all Bangladesh attractions
+// Provider that gives access to all Bangladesh attractions
 final bangladeshAttractionsProvider = Provider<List<AttractionModel>>((ref) {
   return bangladeshAttractions;
 });
 
-// Provider for filtered attractions by division
+// Provider that filters attractions by division (e.g., Dhaka, Chittagong)
 final attractionsByDivisionProvider = Provider.family<List<AttractionModel>, String?>((ref, division) {
   final attractions = ref.watch(bangladeshAttractionsProvider);
   
+  // Return all attractions if no division selected
   if (division == null || division.isEmpty || division == 'All') {
     return attractions;
   }
   
+  // Filter by matching division
   return attractions.where((attraction) => 
     attraction.division.toLowerCase() == division.toLowerCase()
   ).toList();
 });
 
-// Provider for filtered attractions by category
+// Provider that filters attractions by category (e.g., Historical, Natural)
 final attractionsByCategoryProvider = Provider.family<List<AttractionModel>, String?>((ref, category) {
   final attractions = ref.watch(bangladeshAttractionsProvider);
   
+  // Return all attractions if no category selected
   if (category == null || category.isEmpty || category == 'All') {
     return attractions;
   }
   
+  // Filter by matching category
   return attractions.where((attraction) => 
     attraction.category.toLowerCase() == category.toLowerCase()
   ).toList();
 });
 
-// Provider for attractions with multiple filters
+// Provider that filters attractions using multiple criteria at once
 final filteredAttractionsProvider = Provider.family<List<AttractionModel>, AttractionFilters>((ref, filters) {
   final attractions = ref.watch(bangladeshAttractionsProvider);
   
+  // Apply all filters to the list
   return attractions.where((attraction) {
-    // Division filter
+    // Filter by division if specified
     if (filters.division != null && 
         filters.division!.isNotEmpty && 
         filters.division != 'All' &&
@@ -46,7 +54,7 @@ final filteredAttractionsProvider = Provider.family<List<AttractionModel>, Attra
       return false;
     }
     
-    // Category filter
+    // Filter by category if specified
     if (filters.category != null && 
         filters.category!.isNotEmpty && 
         filters.category != 'All' &&
@@ -54,7 +62,7 @@ final filteredAttractionsProvider = Provider.family<List<AttractionModel>, Attra
       return false;
     }
     
-    // Subcategory filter
+    // Filter by subcategory if specified
     if (filters.subcategory != null && 
         filters.subcategory!.isNotEmpty && 
         filters.subcategory != 'All' &&
@@ -62,24 +70,25 @@ final filteredAttractionsProvider = Provider.family<List<AttractionModel>, Attra
       return false;
     }
     
-    // Rating filter
+    // Filter by minimum rating if specified
     if (filters.minRating != null && attraction.rating < filters.minRating!) {
       return false;
     }
     
-    // Entry fee filter
+    // Filter for free attractions only if requested
     if (filters.freeOnly && attraction.entryFee != null && attraction.entryFee! > 0) {
       return false;
     }
     
-    // Accessibility filter
+    // Filter for accessible attractions only if requested
     if (filters.accessibleOnly && !attraction.isAccessible) {
       return false;
     }
     
-    // Search query filter
+    // Filter by search text if provided
     if (filters.searchQuery != null && filters.searchQuery!.isNotEmpty) {
       final query = filters.searchQuery!.toLowerCase();
+      // Search in name, description, highlights, and location
       return attraction.name.toLowerCase().contains(query) ||
              attraction.description.toLowerCase().contains(query) ||
              attraction.highlights.any((highlight) => highlight.toLowerCase().contains(query)) ||
@@ -91,14 +100,16 @@ final filteredAttractionsProvider = Provider.family<List<AttractionModel>, Attra
   }).toList();
 });
 
-// Provider for search results
+// Provider for searching attractions by text query
 final attractionSearchProvider = Provider.family<List<AttractionModel>, String>((ref, query) {
   final attractions = ref.watch(bangladeshAttractionsProvider);
   
+  // Return all if search is empty
   if (query.isEmpty) {
     return attractions;
   }
   
+  // Search across multiple fields
   final searchQuery = query.toLowerCase();
   return attractions.where((attraction) {
     return attraction.name.toLowerCase().contains(searchQuery) ||
@@ -110,38 +121,41 @@ final attractionSearchProvider = Provider.family<List<AttractionModel>, String>(
   }).toList();
 });
 
-// Provider for featured attractions (highly rated)
+// Provider for featured attractions (those with high ratings)
 final featuredAttractionsProvider = Provider<List<AttractionModel>>((ref) {
   final attractions = ref.watch(bangladeshAttractionsProvider);
   
+  // Get attractions with rating >= 4.5 and sort by rating
   return attractions.where((attraction) => attraction.rating >= 4.5).toList()
     ..sort((a, b) => b.rating.compareTo(a.rating));
 });
 
-// Provider for UNESCO World Heritage sites
+// Provider for UNESCO World Heritage sites in Bangladesh
 final unescoAttractionsProvider = Provider<List<AttractionModel>>((ref) {
   final attractions = ref.watch(bangladeshAttractionsProvider);
   
+  // Filter attractions with UNESCO in their significance
   return attractions.where((attraction) => 
     attraction.significance.toLowerCase().contains('unesco')
   ).toList();
 });
 
-// Provider for attractions by historical period
+// Provider that filters attractions by historical time period
 final attractionsByPeriodProvider = Provider.family<List<AttractionModel>, String>((ref, period) {
   final attractions = ref.watch(bangladeshAttractionsProvider);
   
+  // Filter by matching historical period
   return attractions.where((attraction) => 
     attraction.historicalPeriod.toLowerCase().contains(period.toLowerCase())
   ).toList();
 });
 
-// Provider for nearby attractions
+// Provider for finding attractions near a given attraction
 final nearbyAttractionsProvider = Provider.family<List<AttractionModel>, String>((ref, attractionId) {
   final attractions = ref.watch(bangladeshAttractionsProvider);
   final currentAttraction = attractions.firstWhere((a) => a.id == attractionId);
   
-  // Find attractions in the same division or district
+  // Find attractions in same division or district (excluding current)
   return attractions.where((attraction) => 
     attraction.id != attractionId &&
     (attraction.division == currentAttraction.division ||
@@ -149,15 +163,15 @@ final nearbyAttractionsProvider = Provider.family<List<AttractionModel>, String>
   ).take(5).toList();
 });
 
-// Data class for attraction filters
+// Filter options class for attraction filtering
 class AttractionFilters {
-  final String? division;
-  final String? category;
-  final String? subcategory;
-  final double? minRating;
-  final bool freeOnly;
-  final bool accessibleOnly;
-  final String? searchQuery;
+  final String? division; // Filter by division
+  final String? category; // Filter by category
+  final String? subcategory; // Filter by subcategory
+  final double? minRating; // Minimum rating filter
+  final bool freeOnly; // Show only free attractions
+  final bool accessibleOnly; // Show only accessible attractions
+  final String? searchQuery; // Text search query
 
   const AttractionFilters({
     this.division,
@@ -169,6 +183,7 @@ class AttractionFilters {
     this.searchQuery,
   });
 
+  // Create a copy with modified filters
   AttractionFilters copyWith({
     String? division,
     String? category,
@@ -189,12 +204,12 @@ class AttractionFilters {
     );
   }
 
-  // Reset all filters
+  // Reset all filters to default
   AttractionFilters clear() {
     return const AttractionFilters();
   }
 
-  // Check if any filters are active
+  // Check if any filters are currently active
   bool get hasActiveFilters {
     return division != null && division != 'All' ||
            category != null && category != 'All' ||
@@ -206,7 +221,7 @@ class AttractionFilters {
   }
 }
 
-// Lists for filter options
+// List of all Bangladesh divisions for filtering
 const List<String> bangladeshDivisions = [
   'All',
   'Dhaka',
@@ -219,6 +234,7 @@ const List<String> bangladeshDivisions = [
   'Mymensingh',
 ];
 
+// List of attraction categories for filtering
 const List<String> attractionCategories = [
   'All',
   'Historical',
@@ -229,6 +245,7 @@ const List<String> attractionCategories = [
   'Modern',
 ];
 
+// List of attraction subcategories for detailed filtering
 const List<String> attractionSubcategories = [
   'All',
   'National Park',

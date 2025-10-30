@@ -1,25 +1,32 @@
+// Import Flutter widgets
 import 'package:flutter/material.dart';
+// Import cached network image for efficient image loading
 import 'package:cached_network_image/cached_network_image.dart';
+// Import Riverpod for state management
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+// Import app colors and theme
 import '../../core/constants/app_colors.dart';
 import '../../presentation/theme/app_theme.dart';
+// Import cart item model
 import '../../data/models/cart_item_model.dart';
+// Import favorites provider
 import '../providers/favorites_provider.dart';
 
-// Generic Item Card Widget
+// Reusable card widget for displaying hotels, restaurants, and attractions
+// Shows image, name, rating, price, location with favorite button
 class ItemCard extends ConsumerWidget {
-  final String id;
-  final String name;
-  final String imageUrl;
-  final double rating;
-  final int reviewCount;
-  final String priceText;
-  final String category;
-  final String location;
-  final List<String> tags;
-  final VoidCallback? onTap;
-  final VoidCallback? onAddToCart;
-  final ItemType itemType;
+  final String id; // Item unique ID
+  final String name; // Item name
+  final String imageUrl; // Image URL
+  final double rating; // Rating out of 5
+  final int reviewCount; // Number of reviews
+  final String priceText; // Price display text
+  final String category; // Category (luxury, budget, etc.)
+  final String location; // Location text
+  final List<String> tags; // Feature tags
+  final VoidCallback? onTap; // When card is tapped
+  final VoidCallback? onAddToCart; // When add to cart is tapped
+  final ItemType itemType; // Type (hotel, restaurant, attraction)
 
   const ItemCard({
     super.key,
@@ -39,6 +46,7 @@ class ItemCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Check if item is in favorites
     final isFavorite = ref.watch(favoritesNotifierProvider.notifier).isFavorite(id, itemType);
 
     return Card(
@@ -53,7 +61,7 @@ class ItemCard extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Image section with favorite button
+            // Image section with favorite button overlay
             Stack(
               children: [
                 ClipRRect(
@@ -77,7 +85,7 @@ class ItemCard extends ConsumerWidget {
                     ),
                   ),
                 ),
-                // Favorite button
+                // Favorite button overlay on top-right corner
                 Positioned(
                   top: 8,
                   right: 8,
@@ -90,11 +98,12 @@ class ItemCard extends ConsumerWidget {
                         color: isFavorite ? Colors.red : AppColors.grey600,
                         size: 20,
                       ),
+                      // Toggle favorite status when pressed
                       onPressed: () => _toggleFavorite(ref),
                     ),
                   ),
                 ),
-                // Category badge
+                // Category badge overlay on top-left corner showing item type
                 Positioned(
                   top: 8,
                   left: 8,
@@ -112,13 +121,13 @@ class ItemCard extends ConsumerWidget {
                 ),
               ],
             ),
-            // Content section
+            // Content section with item details
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Name and rating
+                  // Item name and rating in a row
                   Row(
                     children: [
                       Expanded(
@@ -134,7 +143,7 @@ class ItemCard extends ConsumerWidget {
                     ],
                   ),
                   const SizedBox(height: 8),
-                  // Location
+                  // Location display with pin icon
                   Row(
                     children: [
                       const Icon(Icons.location_on, size: 16, color: AppColors.grey600),
@@ -150,7 +159,7 @@ class ItemCard extends ConsumerWidget {
                     ],
                   ),
                   const SizedBox(height: 8),
-                  // Tags
+                  // Feature tags (show maximum 3 tags)
                   if (tags.isNotEmpty)
                     Wrap(
                       spacing: 4,
@@ -158,14 +167,16 @@ class ItemCard extends ConsumerWidget {
                       children: tags.take(3).map((tag) => TagChip(label: tag)).toList(),
                     ),
                   const SizedBox(height: 12),
-                  // Price and add to budget
+                  // Bottom row with price and add to cart button
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      // Price display in primary color
                       Text(
                         priceText,
                         style: AppTextStyles.heading4.copyWith(color: AppColors.primary),
                       ),
+                      // Show add to budget button only if callback is provided
                       if (onAddToCart != null)
                         ElevatedButton.icon(
                           onPressed: onAddToCart,
@@ -188,35 +199,38 @@ class ItemCard extends ConsumerWidget {
     );
   }
 
+  // Toggle favorite status - add or remove from favorites
   void _toggleFavorite(WidgetRef ref) {
     final favoritesNotifier = ref.read(favoritesNotifierProvider.notifier);
     
     if (favoritesNotifier.isFavorite(id, itemType)) {
+      // Remove from favorites if already favorited
       favoritesNotifier.removeFromFavorites(id, itemType);
     } else {
-      // Create a FavoriteItemModel and add to favorites
+      // Add to favorites if not yet favorited
       // This would require importing the appropriate model
       // favoritesNotifier.addToFavorites(favoriteItem);
     }
   }
 
+  // Get color for category badge based on item type
   Color _getCategoryColor() {
     switch (itemType) {
       case ItemType.hotel:
-        return AppColors.hotel;
+        return AppColors.hotel; // Blue for hotels
       case ItemType.restaurant:
-        return AppColors.restaurant;
+        return AppColors.restaurant; // Orange for restaurants
       case ItemType.attraction:
-        return AppColors.attraction;
+        return AppColors.attraction; // Green for attractions
     }
   }
 }
 
-// Rating Widget
+// Rating display widget showing star icon, rating number, and review count
 class RatingWidget extends StatelessWidget {
-  final double rating;
-  final int reviewCount;
-  final double size;
+  final double rating; // Rating value (0-5)
+  final int reviewCount; // Number of reviews
+  final double size; // Icon size
 
   const RatingWidget({
     super.key,
@@ -230,12 +244,14 @@ class RatingWidget extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
+        // Gold star icon
         Icon(
           Icons.star,
           size: size,
           color: AppColors.ratingGold,
         ),
         const SizedBox(width: 2),
+        // Rating number with 1 decimal place
         Text(
           rating.toStringAsFixed(1),
           style: AppTextStyles.labelMedium.copyWith(
@@ -243,6 +259,7 @@ class RatingWidget extends StatelessWidget {
             fontWeight: FontWeight.w600,
           ),
         ),
+        // Review count in parentheses
         Text(
           ' ($reviewCount)',
           style: AppTextStyles.labelSmall.copyWith(
@@ -255,11 +272,11 @@ class RatingWidget extends StatelessWidget {
   }
 }
 
-// Tag Chip Widget
+// Tag chip widget for displaying feature tags like "WiFi", "Pool", etc.
 class TagChip extends StatelessWidget {
-  final String label;
-  final Color? backgroundColor;
-  final Color? textColor;
+  final String label; // Tag text
+  final Color? backgroundColor; // Optional background color
+  final Color? textColor; // Optional text color
 
   const TagChip({
     super.key,
@@ -270,6 +287,7 @@ class TagChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Container with rounded background for the tag
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
@@ -286,13 +304,13 @@ class TagChip extends StatelessWidget {
   }
 }
 
-// Search Bar Widget
+// Search bar widget with filter button for searching items
 class SearchBarWidget extends StatelessWidget {
-  final TextEditingController controller;
-  final String hintText;
-  final VoidCallback? onFilterTap;
-  final ValueChanged<String>? onChanged;
-  final VoidCallback? onClear;
+  final TextEditingController controller; // Text input controller
+  final String hintText; // Placeholder text
+  final VoidCallback? onFilterTap; // Filter button callback
+  final ValueChanged<String>? onChanged; // Text change callback
+  final VoidCallback? onClear; // Clear button callback
 
   const SearchBarWidget({
     super.key,
@@ -309,6 +327,7 @@ class SearchBarWidget extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       child: Row(
         children: [
+          // Search text field
           Expanded(
             child: TextField(
               controller: controller,
@@ -316,6 +335,7 @@ class SearchBarWidget extends StatelessWidget {
               decoration: InputDecoration(
                 hintText: hintText,
                 prefixIcon: const Icon(Icons.search, color: AppColors.grey500),
+                // Show clear button only when text is not empty
                 suffixIcon: controller.text.isNotEmpty
                     ? IconButton(
                         icon: const Icon(Icons.clear, color: AppColors.grey500),
@@ -335,6 +355,7 @@ class SearchBarWidget extends StatelessWidget {
               ),
             ),
           ),
+          // Show filter button if callback is provided
           if (onFilterTap != null) ...[
             const SizedBox(width: 12),
             CircleAvatar(
@@ -351,11 +372,11 @@ class SearchBarWidget extends StatelessWidget {
   }
 }
 
-// Filter Chip Row Widget
+// Horizontal scrolling row of filter chips for category selection
 class FilterChipRow extends StatelessWidget {
-  final List<FilterOption> options;
-  final List<String> selectedValues;
-  final ValueChanged<String> onChanged;
+  final List<FilterOption> options; // Available filter options
+  final List<String> selectedValues; // Currently selected values
+  final ValueChanged<String> onChanged; // Selection change callback
 
   const FilterChipRow({
     super.key,
@@ -366,14 +387,17 @@ class FilterChipRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Horizontal scrolling list of filter chips
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
         children: options.map((option) {
+          // Check if this option is currently selected
           final isSelected = selectedValues.contains(option.value);
           return Padding(
             padding: const EdgeInsets.only(right: 8),
+            // Filter chip with selection state
             child: FilterChip(
               selected: isSelected,
               label: Text(option.label),
@@ -381,6 +405,7 @@ class FilterChipRow extends StatelessWidget {
               backgroundColor: AppColors.grey200,
               selectedColor: AppColors.primary,
               checkmarkColor: Colors.white,
+              // Change text color based on selection
               labelStyle: TextStyle(
                 color: isSelected ? Colors.white : AppColors.grey700,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
@@ -393,9 +418,10 @@ class FilterChipRow extends StatelessWidget {
   }
 }
 
+// Filter option data class for filter chips
 class FilterOption {
-  final String value;
-  final String label;
+  final String value; // Internal value
+  final String label; // Display text
 
   const FilterOption({
     required this.value,
@@ -403,9 +429,9 @@ class FilterOption {
   });
 }
 
-// Loading Widget
+// Loading widget with circular progress indicator and optional message
 class LoadingWidget extends StatelessWidget {
-  final String? message;
+  final String? message; // Optional loading message
 
   const LoadingWidget({super.key, this.message});
 
@@ -415,7 +441,9 @@ class LoadingWidget extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          // Circular loading spinner
           const CircularProgressIndicator(color: AppColors.primary),
+          // Show message if provided
           if (message != null) ...[
             const SizedBox(height: 16),
             Text(
@@ -430,10 +458,10 @@ class LoadingWidget extends StatelessWidget {
   }
 }
 
-// Error Widget
+// Error widget with icon, message, and optional retry button
 class ErrorWidget extends StatelessWidget {
-  final String message;
-  final VoidCallback? onRetry;
+  final String message; // Error message to display
+  final VoidCallback? onRetry; // Optional retry callback
 
   const ErrorWidget({
     super.key,
@@ -449,23 +477,27 @@ class ErrorWidget extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            // Error icon
             const Icon(
               Icons.error_outline,
               size: 64,
               color: AppColors.error,
             ),
             const SizedBox(height: 16),
+            // Error title
             const Text(
               'Oops! Something went wrong',
               style: AppTextStyles.heading3,
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 8),
+            // Error message
             Text(
               message,
               style: AppTextStyles.bodyMedium,
               textAlign: TextAlign.center,
             ),
+            // Show retry button if callback is provided
             if (onRetry != null) ...[
               const SizedBox(height: 24),
               ElevatedButton.icon(
