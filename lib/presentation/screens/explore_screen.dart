@@ -1,11 +1,17 @@
+// Import Flutter material design widgets
 import 'package:flutter/material.dart';
+// Import Riverpod for state management
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+// Import GoRouter for navigation
 import 'package:go_router/go_router.dart';
+// Import providers for fetching data
 import '../providers/listings_provider.dart';
+// Import data models
 import '../../data/models/hotel_model.dart';
 import '../../data/models/restaurant_model.dart';
 import '../../data/models/attraction_model.dart';
 
+// Explore screen - shows all hotels, restaurants, and attractions with search
 class ExploreScreen extends ConsumerStatefulWidget {
   const ExploreScreen({super.key});
 
@@ -14,18 +20,23 @@ class ExploreScreen extends ConsumerStatefulWidget {
 }
 
 class _ExploreScreenState extends ConsumerState<ExploreScreen> {
+  // Controller for search text input
   final TextEditingController _searchController = TextEditingController();
+  // Store current search query
   String _searchQuery = '';
-  String _selectedCategory = 'All'; // All, Hotels, Restaurants, Attractions
+  // Store selected category filter (All, Hotels, Restaurants, Attractions)
+  String _selectedCategory = 'All';
 
   @override
   void dispose() {
+    // Clean up controller when widget is disposed
     _searchController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    // Watch providers to get data from state management
     final hotelsAsync = ref.watch(bangladeshHotelsProvider);
     final restaurantsAsync = ref.watch(bangladeshRestaurantsProvider);
     final attractionsAsync = ref.watch(bangladeshAttractionsProvider);
@@ -39,7 +50,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
       ),
       body: Column(
         children: [
-          // Search Bar
+          // Search Bar Section
           Container(
             padding: const EdgeInsets.all(16),
             color: const Color(0xFF2E7D5A),
@@ -49,11 +60,14 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
               decoration: InputDecoration(
                 hintText: 'Search hotels, restaurants, attractions...',
                 hintStyle: const TextStyle(color: Colors.white70),
+                // Search icon at the start
                 prefixIcon: const Icon(Icons.search, color: Colors.white),
+                // Clear button appears when user types something
                 suffixIcon: _searchQuery.isNotEmpty
                     ? IconButton(
                         icon: const Icon(Icons.clear, color: Colors.white),
                         onPressed: () {
+                          // Clear search text
                           _searchController.clear();
                           setState(() {
                             _searchQuery = '';
@@ -68,6 +82,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                   borderSide: BorderSide.none,
                 ),
               ),
+              // Update search query when user types
               onChanged: (value) {
                 setState(() {
                   _searchQuery = value.toLowerCase();
@@ -76,7 +91,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
             ),
           ),
 
-          // Category Filter
+          // Category Filter Chips Section
           Container(
             height: 50,
             padding: const EdgeInsets.symmetric(vertical: 8),
@@ -84,6 +99,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               children: [
+                // Build filter chips for each category
                 _buildCategoryChip('All', Icons.apps),
                 _buildCategoryChip('Hotels', Icons.hotel),
                 _buildCategoryChip('Restaurants', Icons.restaurant),
@@ -92,27 +108,37 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
             ),
           ),
 
-          // Results
+          // Results List Section
           Expanded(
             child: hotelsAsync.when(
+              // Show loading indicator while fetching hotels
               loading: () => const Center(child: CircularProgressIndicator()),
+              // Show error message if hotels fail to load
               error: (error, stack) => Center(child: Text('Error: $error')),
+              // When hotels are loaded successfully
               data: (hotels) {
                 return restaurantsAsync.when(
+                  // Show loading indicator while fetching restaurants
                   loading: () => const Center(child: CircularProgressIndicator()),
+                  // Show error message if restaurants fail to load
                   error: (error, stack) => Center(child: Text('Error: $error')),
+                  // When restaurants are loaded successfully
                   data: (restaurants) {
                     return attractionsAsync.when(
+                      // Show loading indicator while fetching attractions
                       loading: () => const Center(child: CircularProgressIndicator()),
+                      // Show error message if attractions fail to load
                       error: (error, stack) => Center(child: Text('Error: $error')),
+                      // When all data is loaded successfully
                       data: (attractions) {
-                        // Filter based on search and category
+                        // Filter results based on search query and selected category
                         final filteredResults = _getFilteredResults(
                           hotels,
                           restaurants,
                           attractions,
                         );
 
+                        // Show message if no results found
                         if (filteredResults.isEmpty) {
                           return Center(
                             child: Column(
@@ -140,6 +166,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                           );
                         }
 
+                        // Build list of results
                         return ListView.builder(
                           padding: const EdgeInsets.all(16),
                           itemCount: filteredResults.length,
@@ -160,6 +187,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
     );
   }
 
+  // Build category filter chip widget
   Widget _buildCategoryChip(String label, IconData icon) {
     final isSelected = _selectedCategory == label;
     return Padding(
@@ -178,6 +206,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
           ],
         ),
         selected: isSelected,
+        // Update selected category when chip is tapped
         onSelected: (selected) {
           setState(() {
             _selectedCategory = label;
@@ -193,6 +222,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
     );
   }
 
+  // Filter and combine all results based on search and category
   List<Map<String, dynamic>> _getFilteredResults(
     List<HotelModel> hotels,
     List<RestaurantModel> restaurants,
@@ -200,9 +230,10 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
   ) {
     List<Map<String, dynamic>> results = [];
 
-    // Add hotels
+    // Add hotels to results if category matches
     if (_selectedCategory == 'All' || _selectedCategory == 'Hotels') {
       for (var hotel in hotels) {
+        // Check if hotel matches search query
         if (_searchQuery.isEmpty ||
             hotel.name.toLowerCase().contains(_searchQuery) ||
             hotel.location.city.toLowerCase().contains(_searchQuery) ||
@@ -215,9 +246,10 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
       }
     }
 
-    // Add restaurants
+    // Add restaurants to results if category matches
     if (_selectedCategory == 'All' || _selectedCategory == 'Restaurants') {
       for (var restaurant in restaurants) {
+        // Check if restaurant matches search query
         if (_searchQuery.isEmpty ||
             restaurant.name.toLowerCase().contains(_searchQuery) ||
             restaurant.location.city.toLowerCase().contains(_searchQuery) ||
@@ -231,9 +263,10 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
       }
     }
 
-    // Add attractions
+    // Add attractions to results if category matches
     if (_selectedCategory == 'All' || _selectedCategory == 'Attractions') {
       for (var attraction in attractions) {
+        // Check if attraction matches search query
         if (_searchQuery.isEmpty ||
             attraction.name.toLowerCase().contains(_searchQuery) ||
             attraction.location.city.toLowerCase().contains(_searchQuery) ||
@@ -250,10 +283,12 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
     return results;
   }
 
+  // Build card widget for each search result
   Widget _buildResultCard(Map<String, dynamic> item) {
     final type = item['type'] as String;
     final data = item['data'];
 
+    // Variables to store card information
     String name = '';
     String location = '';
     String subtitle = '';
@@ -263,8 +298,10 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
     Color color = Colors.green;
     String route = '';
 
+    // Extract data based on item type
     switch (type) {
       case 'hotel':
+        // Get hotel data
         final hotel = data as HotelModel;
         name = hotel.name;
         location = '${hotel.location.city}, ${hotel.division}';
@@ -276,6 +313,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
         route = '/hotel/${hotel.id}';
         break;
       case 'restaurant':
+        // Get restaurant data
         final restaurant = data as RestaurantModel;
         name = restaurant.name;
         location = '${restaurant.location.city}, ${restaurant.division}';
@@ -287,6 +325,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
         route = '/restaurant/${restaurant.id}';
         break;
       case 'attraction':
+        // Get attraction data
         final attraction = data as AttractionModel;
         name = attraction.name;
         location = '${attraction.location.city}, ${attraction.division}';
@@ -299,6 +338,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
         break;
     }
 
+    // Build card UI
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       elevation: 2,
@@ -306,13 +346,14 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
         borderRadius: BorderRadius.circular(12),
       ),
       child: InkWell(
+        // Navigate to detail page when tapped
         onTap: () => context.go(route),
         borderRadius: BorderRadius.circular(12),
         child: Padding(
           padding: const EdgeInsets.all(12),
           child: Row(
             children: [
-              // Icon
+              // Icon Container
               Container(
                 width: 60,
                 height: 60,
@@ -328,11 +369,12 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
               ),
               const SizedBox(width: 12),
               
-              // Details
+              // Details Section
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Name text
                     Text(
                       name,
                       style: const TextStyle(
@@ -343,6 +385,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 4),
+                    // Subtitle (hotel type, cuisine, or category)
                     Text(
                       subtitle,
                       style: TextStyle(
@@ -351,6 +394,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                       ),
                     ),
                     const SizedBox(height: 4),
+                    // Location row
                     Row(
                       children: [
                         Icon(Icons.location_on, size: 14, color: Colors.grey[600]),
@@ -372,10 +416,11 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                 ),
               ),
               
-              // Rating and Price
+              // Rating and Price Section
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
+                  // Star rating display
                   Row(
                     children: [
                       const Icon(Icons.star, color: Colors.amber, size: 16),
@@ -390,6 +435,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                     ],
                   ),
                   const SizedBox(height: 8),
+                  // Price display
                   Text(
                     price,
                     style: TextStyle(

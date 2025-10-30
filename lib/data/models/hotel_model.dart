@@ -1,34 +1,57 @@
+// Import Equatable to compare objects easily
 import 'package:equatable/equatable.dart';
+// Import location model for hotel address
 import 'location_model.dart';
 
+// Hotel data model - represents a hotel with all its information
 class HotelModel extends Equatable {
-  final String id;
-  final String name;
-  final String description;
-  final List<String> images;
-  final LocationModel location;
-  final double rating;
-  final int reviewCount;
-  final double pricePerNight;
-  final String currency;
-  final List<String> amenities;
+  // Basic hotel information
+  final String id; // Unique identifier
+  final String name; // Hotel name
+  final String description; // Hotel description
+  final List<String> images; // List of image URLs
+  final LocationModel location; // Hotel address
+  
+  // Rating and pricing
+  final double rating; // Rating out of 5
+  final int reviewCount; // Number of reviews
+  final double pricePerNight; // Price per night
+  final String currency; // Currency (e.g., BDT)
+  
+  // Hotel features
+  final List<String> amenities; // WiFi, pool, gym, etc.
   final String category; // luxury, business, standard, budget, resort, heritage
-  final bool isAvailable;
-  final DateTime? checkInDate;
-  final DateTime? checkOutDate;
-  final String? contactPhone;
-  final String? website;
+  final bool isAvailable; // Is hotel available for booking
+  
+  // Date information
+  final DateTime? checkInDate; // Optional check-in date
+  final DateTime? checkOutDate; // Optional check-out date
+  
+  // Contact information
+  final String? contactPhone; // Hotel phone number
+  final String? website; // Hotel website
+  
+  // Location details
   final String division; // Bangladesh division (Dhaka, Chittagong, etc.)
   final String district; // District name
+  
+  // Hotel characteristics
   final String hotelType; // business, resort, heritage, budget, luxury
-  final int totalRooms;
-  final List<String> nearbyAttractions;
-  final String checkInTime;
-  final String checkOutTime;
-  final bool hasParking;
-  final bool hasAirport;
-  final Map<String, dynamic>? additionalInfo;
+  final int totalRooms; // Number of rooms
+  final List<String> nearbyAttractions; // Nearby places
+  
+  // Timing
+  final String checkInTime; // Check-in time
+  final String checkOutTime; // Check-out time
+  
+  // Facilities
+  final bool hasParking; // Parking available
+  final bool hasAirport; // Airport transfer available
+  
+  // Extra information
+  final Map<String, dynamic>? additionalInfo; // Other details
 
+  // Constructor to create hotel object
   const HotelModel({
     required this.id,
     required this.name,
@@ -58,6 +81,7 @@ class HotelModel extends Equatable {
     this.additionalInfo,
   });
 
+  // Create hotel object from JSON data
   factory HotelModel.fromJson(Map<String, dynamic> json) {
     return HotelModel(
       id: json['id'] as String,
