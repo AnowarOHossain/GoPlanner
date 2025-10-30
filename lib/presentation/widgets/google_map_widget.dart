@@ -64,8 +64,7 @@ class _GoogleMapWidgetState extends ConsumerState<GoogleMapWidget> {
     // Show placeholder until Google Maps API key is configured
     return _buildMapPlaceholder();
     
-    // TODO: Uncomment below when Google Maps API key is configured:
-    /*
+    /* Uncomment below when Google Maps API key is configured:
     final initialPosition = CameraPosition(
       target: LatLng(
         widget.initialLat ?? _currentPosition?.latitude ?? 23.8103, // Dhaka, Bangladesh
