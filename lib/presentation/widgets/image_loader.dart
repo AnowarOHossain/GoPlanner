@@ -1,13 +1,15 @@
+// Import Flutter widgets
 import 'package:flutter/material.dart';
 
+// Widget to load and display images from network with loading and error states
 class ImageLoader extends StatelessWidget {
-  final String imageUrl;
-  final double? width;
-  final double? height;
-  final BoxFit fit;
-  final BorderRadius? borderRadius;
-  final Widget? placeholder;
-  final Widget? errorWidget;
+  final String imageUrl; // URL of the image to load
+  final double? width; // Image width
+  final double? height; // Image height
+  final BoxFit fit; // How image should fit in the box
+  final BorderRadius? borderRadius; // Rounded corners
+  final Widget? placeholder; // Custom loading placeholder
+  final Widget? errorWidget; // Custom error widget
 
   const ImageLoader({
     super.key,
@@ -23,6 +25,7 @@ class ImageLoader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
+      // Apply rounded corners
       borderRadius: borderRadius ?? BorderRadius.zero,
       child: Container(
         width: width,
@@ -32,10 +35,12 @@ class ImageLoader extends StatelessWidget {
           width: width,
           height: height,
           fit: fit,
+          // Show placeholder while loading
           loadingBuilder: (context, child, loadingProgress) {
-            if (loadingProgress == null) return child;
+            if (loadingProgress == null) return child; // Image loaded
             return placeholder ?? _buildDefaultPlaceholder();
           },
+          // Show error widget if image fails to load
           errorBuilder: (context, error, stackTrace) {
             return errorWidget ?? _buildDefaultErrorWidget();
           },
@@ -44,6 +49,7 @@ class ImageLoader extends StatelessWidget {
     );
   }
 
+  // Default loading indicator widget
   Widget _buildDefaultPlaceholder() {
     return Container(
       width: width,
@@ -58,6 +64,7 @@ class ImageLoader extends StatelessWidget {
     );
   }
 
+  // Default error display widget
   Widget _buildDefaultErrorWidget() {
     return Container(
       width: width,
@@ -86,23 +93,25 @@ class ImageLoader extends StatelessWidget {
   }
 }
 
-// Decoration Image version for use in Container decorations
+// Helper class for loading images in Container decorations
 class DecorationImageLoader {
+  // Create a DecorationImage from network URL
   static DecorationImage network(
     String imageUrl, {
     BoxFit fit = BoxFit.cover,
     Widget? errorWidget,
   }) {
-    // For now, we'll create a fallback approach
     return DecorationImage(
       image: NetworkImage(imageUrl),
       fit: fit,
+      // Handle image load errors
       onError: (exception, stackTrace) {
         print('Failed to load image: $imageUrl');
       },
     );
   }
 
+  // Create a Container with background image and fallback
   static Widget networkContainer({
     required String imageUrl,
     double? width,
@@ -120,7 +129,7 @@ class DecorationImageLoader {
       ),
       child: Stack(
         children: [
-          // Background fallback
+          // Fallback background - shows if image fails
           Container(
             width: width,
             height: height,
@@ -147,7 +156,7 @@ class DecorationImageLoader {
               ],
             ),
           ),
-          // Try to load the actual image
+          // Actual image - loads on top of fallback
           ClipRRect(
             borderRadius: borderRadius ?? BorderRadius.zero,
             child: Image.network(
@@ -155,13 +164,13 @@ class DecorationImageLoader {
               width: width,
               height: height,
               fit: fit,
+              // If error, show nothing (fallback will be visible)
               errorBuilder: (context, error, stackTrace) {
-                // Return empty container to show the fallback background
                 return const SizedBox.shrink();
               },
             ),
           ),
-          // Child overlay
+          // Optional child widget overlay
           if (child != null) child,
         ],
       ),
