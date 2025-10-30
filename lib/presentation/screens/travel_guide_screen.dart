@@ -1,8 +1,15 @@
+// Import Flutter widgets
 import 'package:flutter/material.dart';
+// Import Riverpod for state management
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+// Import GoRouter for navigation
 import 'package:go_router/go_router.dart';
+// Import favorites provider
 import '../providers/favorites_provider.dart';
 
+// Travel guide screen showing all hotels, restaurants, and attractions
+// Has 4 tabs: All Items, Hotels, Restaurants, and Attractions
+// Each tab shows items with search and filter options
 class TravelGuideScreen extends ConsumerStatefulWidget {
   const TravelGuideScreen({super.key});
 
@@ -12,11 +19,12 @@ class TravelGuideScreen extends ConsumerStatefulWidget {
 
 class _TravelGuideScreenState extends ConsumerState<TravelGuideScreen>
     with SingleTickerProviderStateMixin {
-  late TabController _tabController;
+  late TabController _tabController; // Controls tab switching
 
   @override
   void initState() {
     super.initState();
+    // Initialize tab controller with 4 tabs
     _tabController = TabController(length: 4, vsync: this);
   }
 

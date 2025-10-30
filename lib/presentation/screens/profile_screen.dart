@@ -1,8 +1,14 @@
+// Import Flutter widgets
 import 'package:flutter/material.dart';
+// Import Riverpod for state management
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+// Import GoRouter for navigation
 import 'package:go_router/go_router.dart';
+// Import listings provider for favorites and budget
 import '../providers/listings_provider.dart';
 
+// Profile screen showing user's favorites, budget, and settings
+// This is the main profile page with tabs for different sections
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
 
@@ -13,9 +19,11 @@ class ProfileScreen extends ConsumerStatefulWidget {
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
+    // Get all favorite items from providers
     final favoriteHotels = ref.watch(favoriteHotelsProvider);
     final favoriteRestaurants = ref.watch(favoriteRestaurantsProvider);
     final favoriteAttractions = ref.watch(favoriteAttractionsProvider);
+    // Get budget items
     final budgetItems = ref.watch(budgetItemsProvider);
 
     return Scaffold(

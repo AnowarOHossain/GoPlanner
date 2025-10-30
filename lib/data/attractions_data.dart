@@ -1,6 +1,10 @@
+// Import attraction data model
 import 'models/attraction_model.dart';
+// Import location model for GPS coordinates
 import 'models/location_model.dart';
 
+// List of all 20 Bangladesh tourist attractions
+// Includes UNESCO sites, historical places, natural wonders, and cultural sites
 final List<AttractionModel> bangladeshAttractions = [
   // UNESCO World Heritage Sites
   AttractionModel(

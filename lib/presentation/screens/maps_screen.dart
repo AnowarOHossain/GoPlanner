@@ -1,10 +1,19 @@
+// Import Flutter widgets
 import 'package:flutter/material.dart';
+// Import Riverpod for state management
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+// Import GoRouter for navigation
 import 'package:go_router/go_router.dart';
+// Import Geolocator for GPS location
 import 'package:geolocator/geolocator.dart' as geo;
+// Import listings provider for hotels, restaurants, attractions
 import '../providers/listings_provider.dart';
+// Import Google Map widget
 import '../widgets/google_map_widget.dart';
 
+// Maps screen showing locations of hotels, restaurants, and attractions
+// Has 3 tabs: Hotels, Restaurants, and Attractions
+// Shows items on Google Map with user's current location
 class MapsScreen extends ConsumerStatefulWidget {
   const MapsScreen({super.key});
 
@@ -14,10 +23,10 @@ class MapsScreen extends ConsumerStatefulWidget {
 
 class _MapsScreenState extends ConsumerState<MapsScreen>
     with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-  String _selectedCategory = 'All';
-  bool _isLocationEnabled = false;
-  geo.Position? _currentPosition;
+  late TabController _tabController; // Controls tab switching
+  String _selectedCategory = 'All'; // Currently selected category filter
+  bool _isLocationEnabled = false; // GPS location permission status
+  geo.Position? _currentPosition; // User's current GPS position
 
   @override
   void initState() {
