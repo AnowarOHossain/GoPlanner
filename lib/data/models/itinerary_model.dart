@@ -1,22 +1,26 @@
+// Import Equatable to compare objects easily
 import 'package:equatable/equatable.dart';
+// Import cart item and location models
 import 'cart_item_model.dart';
 import 'location_model.dart';
 
-// Simplified models for future Gemini API integration
+// Itinerary model - represents a complete travel plan
+// This is for future Gemini API integration to generate travel plans
 
+// Main itinerary class - full travel plan
 class ItineraryModel extends Equatable {
-  final String id;
-  final String title;
-  final String description;
-  final LocationModel destination;
-  final DateTime startDate;
-  final DateTime endDate;
-  final double totalBudget;
-  final String currency;
-  final List<DayPlanModel> dayPlans;
-  final List<String> tags;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  final String id; // Unique identifier
+  final String title; // Trip name (e.g., "Weekend in Dhaka")
+  final String description; // Trip description
+  final LocationModel destination; // Where the trip is
+  final DateTime startDate; // Trip start date
+  final DateTime endDate; // Trip end date
+  final double totalBudget; // Total budget for trip
+  final String currency; // Currency (e.g., BDT)
+  final List<DayPlanModel> dayPlans; // Plan for each day
+  final List<String> tags; // Tags (e.g., "family", "adventure")
+  final DateTime createdAt; // When itinerary was created
+  final DateTime updatedAt; // When itinerary was last updated
 
   const ItineraryModel({
     required this.id,
@@ -33,6 +37,7 @@ class ItineraryModel extends Equatable {
     required this.updatedAt,
   });
 
+  // Create itinerary from JSON data
   factory ItineraryModel.fromJson(Map<String, dynamic> json) {
     return ItineraryModel(
       id: json['id'] as String,
@@ -50,6 +55,7 @@ class ItineraryModel extends Equatable {
     );
   }
 
+  // Convert itinerary to JSON data
   Map<String, dynamic> toJson() {
     return {
       'id': id,

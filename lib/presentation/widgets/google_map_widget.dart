@@ -1,16 +1,22 @@
+// Import Flutter widgets
 import 'package:flutter/material.dart';
+// Import Riverpod for state management
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-// import 'package:google_maps_flutter/google_maps_flutter.dart'; // Uncomment when API key is configured
+// Google Maps import (uncomment when API key is configured)
+// import 'package:google_maps_flutter/google_maps_flutter.dart';
+// Import Geolocator for getting user's current location
 import 'package:geolocator/geolocator.dart' as geo;
+// Import location provider
 import '../providers/location_provider.dart';
 
+// Widget to display Google Maps with markers
 class GoogleMapWidget extends ConsumerStatefulWidget {
-  final List<MapMarker> markers;
-  final Function(double, double)? onMapTap;
-  final bool showCurrentLocation;
-  final double? initialLat;
-  final double? initialLng;
-  final double initialZoom;
+  final List<MapMarker> markers; // List of markers to show on map
+  final Function(double, double)? onMapTap; // Callback when map is tapped
+  final bool showCurrentLocation; // Whether to show user's location
+  final double? initialLat; // Starting latitude
+  final double? initialLng; // Starting longitude
+  final double initialZoom; // Starting zoom level
 
   const GoogleMapWidget({
     super.key,
@@ -27,18 +33,22 @@ class GoogleMapWidget extends ConsumerStatefulWidget {
 }
 
 class _GoogleMapWidgetState extends ConsumerState<GoogleMapWidget> {
-  // GoogleMapController? _controller; // Uncomment when API key is configured
-  geo.Position? _currentPosition;
-  // Set<Marker> _markers = {}; // Uncomment when API key is configured
+  // Map controller (uncomment when API key is configured)
+  // GoogleMapController? _controller;
+  geo.Position? _currentPosition; // User's current location
+  // Map markers (uncomment when API key is configured)
+  // Set<Marker> _markers = {};
 
   @override
   void initState() {
     super.initState();
+    // Get user's location when widget is created
     if (widget.showCurrentLocation) {
       _getCurrentLocation();
     }
   }
 
+  // Get user's current GPS location
   Future<void> _getCurrentLocation() async {
     final locationService = ref.read(locationServiceProvider);
     final position = await locationService.getCurrentPosition();
@@ -51,10 +61,10 @@ class _GoogleMapWidgetState extends ConsumerState<GoogleMapWidget> {
 
   @override
   Widget build(BuildContext context) {
-    // For now, return a placeholder until Google Maps API key is configured
+    // Show placeholder until Google Maps API key is configured
     return _buildMapPlaceholder();
     
-    // Uncomment below when Google Maps API key is configured:
+    // TODO: Uncomment below when Google Maps API key is configured:
     /*
     final initialPosition = CameraPosition(
       target: LatLng(

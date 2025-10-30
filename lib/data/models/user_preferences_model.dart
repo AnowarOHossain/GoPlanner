@@ -1,19 +1,22 @@
+// Import Equatable to compare objects easily
 import 'package:equatable/equatable.dart';
+// Import cart item model
 import 'cart_item_model.dart';
 
-// Simplified models for future user preference management
+// User preferences model - stores user's settings and preferences
 
+// Main user preferences class
 class UserPreferencesModel extends Equatable {
-  final String userId;
-  final String? preferredCurrency;
-  final List<String> favoriteCategories;
-  final Map<String, double> budgetRanges; // category -> max budget
-  final List<String> dietaryRestrictions;
-  final String? preferredLanguage;
-  final bool notificationsEnabled;
-  final bool locationEnabled;
-  final TravelStyleModel travelStyle;
-  final DateTime lastUpdated;
+  final String userId; // User's unique ID
+  final String? preferredCurrency; // Preferred currency (e.g., BDT, USD)
+  final List<String> favoriteCategories; // Favorite types (hotels, food, etc.)
+  final Map<String, double> budgetRanges; // Budget limits by category
+  final List<String> dietaryRestrictions; // Food restrictions (vegan, halal, etc.)
+  final String? preferredLanguage; // App language preference
+  final bool notificationsEnabled; // Allow notifications
+  final bool locationEnabled; // Allow location access
+  final TravelStyleModel travelStyle; // How user likes to travel
+  final DateTime lastUpdated; // When preferences were last changed
 
   const UserPreferencesModel({
     required this.userId,
@@ -28,6 +31,7 @@ class UserPreferencesModel extends Equatable {
     required this.lastUpdated,
   });
 
+  // Create preferences from JSON data
   factory UserPreferencesModel.fromJson(Map<String, dynamic> json) {
     return UserPreferencesModel(
       userId: json['userId'] as String,
@@ -47,6 +51,7 @@ class UserPreferencesModel extends Equatable {
     );
   }
 
+  // Convert preferences to JSON data
   Map<String, dynamic> toJson() {
     return {
       'userId': userId,

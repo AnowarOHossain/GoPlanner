@@ -1,32 +1,43 @@
+// Import GoRouter for navigation
 import 'package:go_router/go_router.dart';
+// Import Flutter widgets
 import 'package:flutter/material.dart';
+// Import Riverpod for state management
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+// Import providers for data
 import '../providers/listings_provider.dart';
+// Import all screens
 import '../screens/profile_screen.dart';
 import '../screens/travel_guide_screen.dart';
 import '../screens/maps_screen.dart';
 import '../screens/explore_screen.dart';
+// Import widgets
 import '../widgets/image_loader.dart';
+// Import data models
 import '../../data/models/hotel_model.dart';
 import '../../data/models/restaurant_model.dart';
 import '../../data/models/attraction_model.dart';
 
-// Navigation history provider
+// Provider to track navigation history (which pages user visited)
 final navigationHistoryProvider = StateNotifierProvider<NavigationHistory, List<String>>((ref) {
   return NavigationHistory();
 });
 
+// Class to manage navigation history
 class NavigationHistory extends StateNotifier<List<String>> {
+  // Start with home page
   NavigationHistory() : super(['/']);
 
+  // Add a new page to history
   void push(String route) {
-    // Don't add duplicate consecutive routes
+    // Don't add if it's the same as last page
     if (state.isEmpty || state.last != route) {
       state = [...state, route];
       print(' Navigation history: $state');
     }
   }
 
+  // Go back to previous page
   String? pop() {
     if (state.length > 1) {
       final newState = state.sublist(0, state.length - 1);
@@ -38,6 +49,7 @@ class NavigationHistory extends StateNotifier<List<String>> {
     return null;
   }
 
+  // Clear all history
   void clear() {
     state = ['/'];
   }

@@ -1,21 +1,25 @@
+// Import Flutter material design
 import 'package:flutter/material.dart';
+// Import app colors
 import '../../core/constants/app_colors.dart';
 
+// App theme configuration - defines the look and feel of the entire app
 class AppTheme {
+  // Light theme configuration
   static ThemeData get lightTheme {
     return ThemeData(
-      useMaterial3: true,
+      useMaterial3: true, // Use latest Material Design
       colorScheme: ColorScheme.fromSeed(
         seedColor: AppColors.primary,
         brightness: Brightness.light,
       ),
-      fontFamily: 'Poppins',
+      fontFamily: 'Poppins', // Default font for the app
       
-      // AppBar Theme
+      // AppBar styling (top navigation bar)
       appBarTheme: const AppBarTheme(
-        elevation: 0,
-        scrolledUnderElevation: 1,
-        centerTitle: true,
+        elevation: 0, // No shadow by default
+        scrolledUnderElevation: 1, // Small shadow when scrolled
+        centerTitle: true, // Center the title
         backgroundColor: AppColors.white,
         foregroundColor: AppColors.grey900,
         titleTextStyle: TextStyle(
@@ -26,22 +30,22 @@ class AppTheme {
         ),
       ),
       
-      // Card Theme
+      // Card styling (for hotel cards, restaurant cards, etc.)
       cardTheme: CardThemeData(
-        elevation: 2,
+        elevation: 2, // Slight shadow
         shadowColor: AppColors.grey400.withValues(alpha: 0.2),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(16), // Rounded corners
         ),
         color: AppColors.white,
       ),
       
-      // Bottom Navigation Bar Theme
+      // Bottom navigation bar styling (Home, Explore, Cart, Profile)
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         elevation: 8,
         backgroundColor: AppColors.white,
-        selectedItemColor: AppColors.primary,
-        unselectedItemColor: AppColors.grey500,
+        selectedItemColor: AppColors.primary, // Active item color
+        unselectedItemColor: AppColors.grey500, // Inactive item color
         type: BottomNavigationBarType.fixed,
         showSelectedLabels: true,
         showUnselectedLabels: true,
@@ -57,7 +61,7 @@ class AppTheme {
         ),
       ),
       
-      // Elevated Button Theme
+      // Button styling
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primary,

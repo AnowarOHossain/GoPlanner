@@ -1,15 +1,23 @@
+// Import JSON library for API communication
 import 'dart:convert';
+// Import HTTP library for making API calls
 import 'package:http/http.dart' as http;
+// Import app constants
 import '../../core/constants/app_constants.dart';
+// Import data models
 import '../../data/models/itinerary_model.dart';
 import '../../data/models/user_preferences_model.dart';
 import '../../data/models/location_model.dart';
 
+// Service to interact with Google Gemini AI API
+// This generates personalized travel itineraries using AI
 class GeminiApiService {
   static const String _baseUrl = AppConstants.geminiApiBaseUrl;
   static const String _apiKey = AppConstants.geminiApiKey;
 
-  /// Generate a personalized travel itinerary using Google Gemini API
+  /// Generate a personalized travel itinerary using Google Gemini AI
+  /// Takes destination, dates, budget, and user preferences
+  /// Returns a complete day-by-day itinerary
   Future<ItineraryModel> generateItinerary({
     required LocationModel destination,
     required DateTime startDate,
@@ -20,6 +28,7 @@ class GeminiApiService {
     List<String>? specificRequests,
   }) async {
     try {
+      // Build AI prompt with all the information
       final prompt = _buildItineraryPrompt(
         destination: destination,
         startDate: startDate,
@@ -30,34 +39,42 @@ class GeminiApiService {
         specificRequests: specificRequests,
       );
 
+      // Call Gemini API
       final response = await _callGeminiAPI(prompt);
+      
+      // Parse AI response into itinerary model
       return _parseItineraryResponse(response, destination, startDate, endDate, budget, currency);
     } catch (e) {
       throw GeminiApiException('Failed to generate itinerary: ${e.toString()}');
     }
   }
 
-  /// Get travel recommendations based on preferences
+  /// Get travel recommendations based on user preferences
+  /// Returns list of suggested activities and places
   Future<List<String>> getTravelRecommendations({
     required LocationModel destination,
     required TravelStyleModel travelStyle,
     required List<String> interests,
   }) async {
     try {
+      // Build AI prompt for recommendations
       final prompt = _buildRecommendationPrompt(
         destination: destination,
         travelStyle: travelStyle,
         interests: interests,
       );
 
+      // Call Gemini API
       final response = await _callGeminiAPI(prompt);
+      
+      // Parse AI response into list of recommendations
       return _parseRecommendationsResponse(response);
     } catch (e) {
       throw GeminiApiException('Failed to get recommendations: ${e.toString()}');
     }
   }
 
-  /// Optimize existing itinerary based on feedback
+  /// Optimize existing itinerary based on user feedback
   Future<ItineraryModel> optimizeItinerary({
     required ItineraryModel currentItinerary,
     required String feedback,

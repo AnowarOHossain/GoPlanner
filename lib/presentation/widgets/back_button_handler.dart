@@ -1,12 +1,15 @@
+// Import Flutter widgets
 import 'package:flutter/material.dart';
+// Import system services for closing app
 import 'package:flutter/services.dart';
+// Import GoRouter for navigation
 import 'package:go_router/go_router.dart';
 
-/// A widget that properly handles Android system back button behavior
-/// for GoRouter navigation
+// Widget that handles Android back button properly with GoRouter
+// Shows exit confirmation when on home page
 class BackButtonHandler extends StatelessWidget {
-  final Widget child;
-  final GoRouter router;
+  final Widget child; // The screen to wrap
+  final GoRouter router; // Router instance for navigation
 
   const BackButtonHandler({
     super.key,
@@ -17,18 +20,19 @@ class BackButtonHandler extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: false,
+      canPop: false, // Don't auto-pop, we handle it manually
+      // Called when user presses back button
       onPopInvokedWithResult: (didPop, result) async {
         if (didPop) return;
         
-        // Try to pop the current route
+        // Try to go back to previous screen
         if (router.canPop()) {
           router.pop();
         } else {
-          // Show exit confirmation dialog
+          // On home page - show exit confirmation dialog
           final shouldExit = await _showExitDialog(context);
           if (shouldExit == true) {
-            SystemNavigator.pop();
+            SystemNavigator.pop(); // Close the app
           }
         }
       },
@@ -36,6 +40,7 @@ class BackButtonHandler extends StatelessWidget {
     );
   }
 
+  // Show dialog asking user if they want to exit the app
   Future<bool?> _showExitDialog(BuildContext context) {
     return showDialog<bool>(
       context: context,
