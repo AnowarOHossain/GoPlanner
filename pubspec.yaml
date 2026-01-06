@@ -50,6 +50,9 @@ dependencies:
   cloud_firestore: ^5.4.3
   firebase_storage: ^12.3.2
 
+  # Auth Providers
+  google_sign_in: ^6.2.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

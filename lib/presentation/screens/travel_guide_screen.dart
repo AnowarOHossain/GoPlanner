@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 // Import favorites provider
 import '../providers/favorites_provider.dart';
+import '../providers/auth_providers.dart';
 
 // Travel guide screen showing all hotels, restaurants, and attractions
 // Has 4 tabs: All Items, Hotels, Restaurants, and Attractions
@@ -762,6 +763,11 @@ class _TravelGuideScreenState extends ConsumerState<TravelGuideScreen>
 
   // Dialog Methods
   void _showAIDialog(BuildContext context) {
+    final user = ref.read(currentUserProvider);
+    if (user == null) {
+      _showLoginRequiredDialog(context);
+      return;
+    }
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -812,7 +818,40 @@ class _TravelGuideScreenState extends ConsumerState<TravelGuideScreen>
     );
   }
 
+  void _showLoginRequiredDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Login required'),
+        content: const Text('To use AI travel planning features, please sign in first.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(dialogContext);
+              final from = Uri.encodeComponent(GoRouterState.of(context).uri.toString());
+              context.go('/login?from=$from');
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF2E7D5A),
+              foregroundColor: Colors.white,
+            ),
+            child: const Text('Sign in'),
+          ),
+        ],
+      ),
+    );
+  }
+
   void _showPlanDialog(BuildContext context, String planType) {
+    final user = ref.read(currentUserProvider);
+    if (user == null) {
+      _showLoginRequiredDialog(context);
+      return;
+    }
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -857,6 +896,11 @@ class _TravelGuideScreenState extends ConsumerState<TravelGuideScreen>
   }
 
   void _showCustomPlanDialog(BuildContext context) {
+    final user = ref.read(currentUserProvider);
+    if (user == null) {
+      _showLoginRequiredDialog(context);
+      return;
+    }
     showDialog(
       context: context,
       builder: (context) => AlertDialog(

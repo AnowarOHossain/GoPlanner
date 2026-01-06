@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "716899305461",
+    "project_id": "goplanner-d981c",
+    "storage_bucket": "goplanner-d981c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:716899305461:android:f7f05fac2ad741ba64c2bc",
+        "android_client_info": {
+          "package_name": "com.goplanner.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCeNxtBaXddNx0Y8GZmtg1qWX7kG2jqCHA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

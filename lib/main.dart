@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 // Import Riverpod for state management
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-// Firebase import (currently disabled)
-// import 'package:firebase_core/firebase_core.dart'; // Temporarily disabled
+
+import 'core/services/firebase_bootstrap.dart';
 
 // Import app constants like app name
 import 'core/constants/app_constants.dart';
@@ -19,8 +19,8 @@ void main() async {
   // Initialize Flutter engine before running the app
   WidgetsFlutterBinding.ensureInitialized();
   
-  // Initialize Firebase (currently disabled for development)
-  // await Firebase.initializeApp(); // Temporarily disabled
+  // Initialize Firebase (required for Auth/Firestore)
+  await FirebaseBootstrap.init();
   
   // Lock app to portrait mode only (no landscape)
   await SystemChrome.setPreferredOrientations([

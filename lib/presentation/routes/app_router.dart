@@ -11,6 +11,8 @@ import '../screens/profile_screen.dart';
 import '../screens/travel_guide_screen.dart';
 import '../screens/maps_screen.dart';
 import '../screens/explore_screen.dart';
+import '../screens/auth/login_screen.dart';
+import '../screens/auth/register_screen.dart';
 // Import widgets
 import '../widgets/image_loader.dart';
 // Import data models
@@ -79,6 +81,16 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/',
         name: 'home',
         builder: (context, state) => const HomeScreen(),
+      ),
+      GoRoute(
+        path: '/login',
+        name: 'login',
+        builder: (context, state) => const LoginScreen(),
+      ),
+      GoRoute(
+        path: '/register',
+        name: 'register',
+        builder: (context, state) => const RegisterScreen(),
       ),
       GoRoute(
         path: '/explore',

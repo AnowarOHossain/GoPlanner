@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 // Import listings provider for favorites and budget
 import '../providers/listings_provider.dart';
+import '../providers/auth_providers.dart';
 
 // Profile screen showing user's favorites, budget, and settings
 // This is the main profile page with tabs for different sections
@@ -90,6 +91,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   }
 
   Widget _buildUserInfoCard(BuildContext context) {
+    final user = ref.watch(currentUserProvider);
+
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -111,8 +114,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Travel Explorer',
+                  Text(
+                    user?.displayName ?? (user?.email ?? 'Travel Explorer'),
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
@@ -120,29 +123,60 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Bangladesh Travel Enthusiast',
+                    user == null ? 'Bangladesh Travel Enthusiast' : 'Signed in',
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.grey[600],
                     ),
                   ),
                   const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.location_on,
-                        size: 16,
+                  if (user?.email != null)
+                    Text(
+                      user!.email!,
+                      style: TextStyle(
+                        fontSize: 14,
                         color: Colors.grey[600],
                       ),
-                      const SizedBox(width: 4),
-                      Text(
-                        'Dhaka, Bangladesh',
-                        style: TextStyle(
-                          fontSize: 14,
+                    )
+                  else
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.location_on,
+                          size: 16,
                           color: Colors.grey[600],
                         ),
-                      ),
-                    ],
+                        const SizedBox(width: 4),
+                        Text(
+                          'Dhaka, Bangladesh',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ],
+                    ),
+                  const SizedBox(height: 12),
+                  SizedBox(
+                    width: double.infinity,
+                    child: user == null
+                        ? ElevatedButton(
+                            onPressed: () {
+                              final from = Uri.encodeComponent(GoRouterState.of(context).uri.toString());
+                              context.go('/login?from=$from');
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF2E7D5A),
+                              foregroundColor: Colors.white,
+                            ),
+                            child: const Text('Sign in to use AI planning'),
+                          )
+                        : OutlinedButton(
+                            onPressed: () async {
+                              await ref.read(authServiceProvider).signOut();
+                            },
+                            child: const Text('Logout'),
+                          ),
                   ),
                 ],
               ),
