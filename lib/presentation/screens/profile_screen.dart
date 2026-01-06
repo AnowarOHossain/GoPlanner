@@ -92,6 +92,19 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
   Widget _buildUserInfoCard(BuildContext context) {
     final user = ref.watch(currentUserProvider);
+    
+    // Get display name, or extract name from email, or use default
+    String displayName = 'Hello, Traveler! 👋';
+    if (user != null) {
+      if (user.displayName != null && user.displayName!.isNotEmpty) {
+        displayName = user.displayName!;
+      } else if (user.email != null) {
+        // Extract name from email (e.g., "anowar@gmail.com" -> "Anowar")
+        final emailName = user.email!.split('@').first;
+        // Capitalize first letter
+        displayName = emailName[0].toUpperCase() + emailName.substring(1);
+      }
+    }
 
     return Card(
       elevation: 4,
@@ -115,7 +128,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    user?.displayName ?? (user?.email ?? 'Travel Explorer'),
+                    displayName,
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
@@ -123,7 +136,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    user == null ? 'Bangladesh Travel Enthusiast' : 'Signed in',
+                    user == null ? 'Your next adventure awaits!' : 'Welcome back!',
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.grey[600],
@@ -142,13 +155,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     Row(
                       children: [
                         Icon(
-                          Icons.location_on,
+                          Icons.explore,
                           size: 16,
-                          color: Colors.grey[600],
+                          color: const Color(0xFF2E7D5A),
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          'Dhaka, Bangladesh',
+                          'Unlock personalized trip plans',
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.grey[600],
@@ -160,7 +173,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   SizedBox(
                     width: double.infinity,
                     child: user == null
-                        ? ElevatedButton(
+                        ? ElevatedButton.icon(
                             onPressed: () {
                               final from = Uri.encodeComponent(GoRouterState.of(context).uri.toString());
                               context.go('/login?from=$from');
@@ -168,8 +181,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF2E7D5A),
                               foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(vertical: 12),
                             ),
-                            child: const Text('Sign in to use AI planning'),
+                            icon: const Icon(Icons.rocket_launch, size: 18),
+                            label: const Text('Start Your Journey'),
                           )
                         : OutlinedButton(
                             onPressed: () async {
