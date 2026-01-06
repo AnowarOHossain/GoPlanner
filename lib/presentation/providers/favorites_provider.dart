@@ -65,18 +65,7 @@ class FavoritesNotifier extends StateNotifier<Map<ItemType, List<String>>> {
     } catch (e) {
       print('❌ Error loading favorites: $e');
     }
-  }
-
-  // Save favorites to Firestore
-  Future<void> _saveFavorites() async {
-    if (_userId == null) return;
-    
-    await _service.saveFavorites(
-      hotels: state[ItemType.hotel] ?? [],
-      restaurants: state[ItemType.restaurant] ?? [],
-      attractions: state[ItemType.attraction] ?? [],
-    );
-  }
+  } 
 
   // Check if an item is in favorites
   bool isFavorite(String id, ItemType itemType) {
