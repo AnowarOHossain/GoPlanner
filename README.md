@@ -60,13 +60,6 @@ flutter doctor
 - **Removed unused sample data**: Deleted `sample_*.json` assets (non-Bangladesh demo data) to keep the dataset clean
 - **Improved Gemini prompt grounding**: Updated itinerary/recommendation prompts to better align with local datasets and app parsing
 
-###  Latest Improvements (October 2025)
-- **Fixed duplicate buttons**: Removed redundant "Add to Favorite" and "Add to Budget" buttons
-- **Enhanced Profile functionality**: Made travel stats clickable with proper navigation
-- **Improved button styling**: Consistent text formatting across all screens
-- **Fixed navigation issues**: Proper GoRouter implementation for all actions
-- **Enhanced user experience**: Interactive elements throughout the app
-
 ###  App Status
 - **Fully functional** for local development and testing
 - **90+ items** of real Bangladesh tourism data
@@ -195,7 +188,7 @@ lib/
 ###  Key Functionalities
 - **Navigation**: Custom back button handling with GoRouter
 - **State Management**: Riverpod providers for all app state
-- **Data Management**: JSON-based local data with 60 total items
+- **Data Management**: JSON-based local data with 90+ total items
 
 ##  Local Dataset
 
@@ -241,19 +234,19 @@ flutter build ios --release
 ##  App Screenshots & Features
 
 ###  Hotels Section
-- Browse 20+ hotels across Bangladesh
+- Browse 30+ hotels across Bangladesh
 - Filter by division, type, and price range
 - Detailed hotel information with amenities
 - Add to favorites and budget tracking
 
 ###  Restaurants Section  
-- Discover 20+ restaurants with diverse cuisines
+- Discover 30+ restaurants with diverse cuisines
 - Filter by cuisine type, price range, and division
 - View specialties, popular dishes, and services
 - Halal certification indicators
 
 ###  Attractions Section
-- Explore 20+ tourist attractions
+- Explore 30+ tourist attractions
 - Filter by category (Historical, Natural, Religious, Archaeological)
 - Detailed descriptions with activities and facilities
 - Entry fee information and best visiting times
