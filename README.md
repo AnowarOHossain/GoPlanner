@@ -55,6 +55,11 @@ flutter doctor
 
 ##  Recent Updates
 
+###  Latest Improvements (January 2026)
+- **Expanded Bangladesh datasets**: Added more hotels, restaurants, and attractions for improved AI travel planning quality
+- **Removed unused sample data**: Deleted `sample_*.json` assets (non-Bangladesh demo data) to keep the dataset clean
+- **Improved Gemini prompt grounding**: Updated itinerary/recommendation prompts to better align with local datasets and app parsing
+
 ###  Latest Improvements (October 2025)
 - **Fixed duplicate buttons**: Removed redundant "Add to Favorite" and "Add to Budget" buttons
 - **Enhanced Profile functionality**: Made travel stats clickable with proper navigation
@@ -64,7 +69,7 @@ flutter doctor
 
 ###  App Status
 - **Fully functional** for local development and testing
-- **60+ items** of real Bangladesh tourism data
+- **90+ items** of real Bangladesh tourism data
 - **Complete user flows** from browsing to budget management
 - **Ready for API integration** (Maps, AI, Firebase)
 - **Production-ready UI** with consistent design system
@@ -122,7 +127,7 @@ lib/
     routes/          # GoRouter configuration and navigation
     theme/           # App theme & styling
  assets/              # Static assets
-    data/           # JSON data files (20 hotels, 20 restaurants, 20 attractions)
+    data/           # JSON data files (32 hotels, 30 restaurants, 30 attractions)
  main.dart           # App entry point
 ```
 
@@ -156,9 +161,9 @@ lib/
 - [x] Location permissions handling
 
 ### Phase 5: Current Status
-- [x] 20 Hotels with detailed information
-- [x] 20 Restaurants with cuisine and pricing
-- [x] 20 Attractions with categories and activities
+- [x] 32 Hotels with detailed information
+- [x] 30 Restaurants with cuisine and pricing
+- [x] 30 Attractions with categories and activities
 - [x] Fully functional add to favorites
 - [x] Complete budget analysis system
 - [x] Working profile management
@@ -179,9 +184,9 @@ lib/
 
 ###  Fully Functional Screens
 - **Home Screen**: Quick actions and feature overview
-- **Hotels Screen**: 20 hotels with search, filters, and detail pages
-- **Restaurants Screen**: 20 restaurants with cuisine filters and detail pages  
-- **Attractions Screen**: 20 attractions with category filters and detail pages
+- **Hotels Screen**: 30+ hotels with search, filters, and detail pages
+- **Restaurants Screen**: 30+ restaurants with cuisine filters and detail pages  
+- **Attractions Screen**: 30+ attractions with category filters and detail pages
 - **Profile Screen**: Travel statistics, favorites management, quick actions
 - **Maps Screen**: Google Maps integration with location services
 - **Budget Analysis**: Complete cart and expense tracking
@@ -191,6 +196,17 @@ lib/
 - **Navigation**: Custom back button handling with GoRouter
 - **State Management**: Riverpod providers for all app state
 - **Data Management**: JSON-based local data with 60 total items
+
+##  Local Dataset
+
+The app ships with curated Bangladesh tourism datasets in `assets/data/`:
+
+- Hotels: **32** entries
+- Restaurants: **30** entries
+- Attractions: **30** entries
+
+These datasets are used for browsing and can be passed into the Gemini prompts for better grounded itinerary generation.
+  
 - **Search & Filter**: Advanced filtering by multiple criteria
 - **Favorites System**: Add/remove favorites across all categories
 - **Budget Tracking**: Add items to cart with quantity and cost analysis
