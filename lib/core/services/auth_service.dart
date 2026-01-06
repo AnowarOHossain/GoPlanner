@@ -17,15 +17,27 @@ class AuthService {
   Future<UserCredential> signInWithEmailPassword({
     required String email,
     required String password,
-  }) {
-    return _auth.signInWithEmailAndPassword(email: email, password: password);
+  }) async {
+    final credential = await _auth.signInWithEmailAndPassword(email: email, password: password);
+    await credential.user?.reload();
+    return credential;
   }
 
   Future<UserCredential> signUpWithEmailPassword({
     required String email,
     required String password,
-  }) {
-    return _auth.createUserWithEmailAndPassword(email: email, password: password);
+    String? displayName,
+  }) async {
+    final credential = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+    final user = credential.user;
+    if (user != null) {
+      final name = (displayName ?? '').trim();
+      if (name.isNotEmpty) {
+        await user.updateDisplayName(name);
+      }
+      await user.reload();
+    }
+    return credential;
   }
 
   Future<UserCredential> signInWithGoogle() async {

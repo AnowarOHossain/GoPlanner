@@ -45,7 +45,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
       if (!mounted) return;
       final from = GoRouterState.of(context).uri.queryParameters['from'];
-      context.go(from ?? '/');
+      final target = (from == null || from.isEmpty) ? '/' : from;
+      context.go(target);
     } catch (e) {
       setState(() {
         _error = e.toString();
@@ -65,7 +66,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       await ref.read(authServiceProvider).signInWithGoogle();
       if (!mounted) return;
       final from = GoRouterState.of(context).uri.queryParameters['from'];
-      context.go(from ?? '/');
+      final target = (from == null || from.isEmpty) ? '/' : from;
+      context.go(target);
     } catch (e) {
       setState(() {
         _error = e.toString();
@@ -81,14 +83,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     if (user != null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Sign In')),
+        appBar: AppBar(
+          title: const Text('Sign In'),
+          backgroundColor: const Color(0xFF2E7D5A),
+          foregroundColor: Colors.white,
+        ),
         body: Center(
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text('You are already signed in.'),
+                Text(
+                  'Signed in as ${user.displayName ?? user.email ?? 'User'}',
+                  textAlign: TextAlign.center,
+                ),
                 const SizedBox(height: 12),
                 FilledButton(
                   onPressed: () {
@@ -107,6 +116,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Sign In'),
+        backgroundColor: const Color(0xFF2E7D5A),
+        foregroundColor: Colors.white,
       ),
       body: Center(
         child: ConstrainedBox(
@@ -115,9 +126,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             padding: const EdgeInsets.all(16.0),
             child: Form(
               key: _formKey,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                  const SizedBox(height: 12),
+                  const Text(
+                    'Welcome back',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
                   if (_error != null) ...[
                     Text(
                       _error!,
@@ -182,12 +202,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         ? null
                         : () {
                             final from = GoRouterState.of(context).uri.queryParameters['from'];
-                            context.go(from == null ? '/register' : '/register?from=$from');
+                            final encodedFrom = from == null ? null : Uri.encodeComponent(from);
+                            context.go(encodedFrom == null ? '/register' : '/register?from=$encodedFrom');
                           },
                     child: const Text("Don't have an account? Create one"),
                   ),
                 ],
-              ),
+              )),
             ),
           ),
         ),
