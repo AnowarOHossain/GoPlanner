@@ -1,27 +1,22 @@
-// Import Riverpod for state management
+// This file manages favorites state using Riverpod and syncs with Firebase
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-// Import cart item model for ItemType enum
 import '../../data/models/cart_item_model.dart';
-// Import Firebase Firestore service for persistence
 import '../../core/services/favorites_service.dart';
-// Import auth providers to watch user state
 import 'auth_providers.dart';
 
-// Provider for the FavoritesService
+// Provider for the FavoritesService instance
 final favoritesServiceProvider = Provider<FavoritesService>((ref) {
   return FavoritesService();
 });
 
-// Main favorites provider - manages favorite items by type
-// Stores favorites as a map: ItemType -> List of IDs
-// Now persists to Firestore when user is logged in
+// Main favorites provider - stores favorite item IDs by type
 final favoritesNotifierProvider = StateNotifierProvider<FavoritesNotifier, Map<ItemType, List<String>>>((ref) {
   final service = ref.watch(favoritesServiceProvider);
   final user = ref.watch(currentUserProvider);
   return FavoritesNotifier(service, user?.uid);
 });
 
-// Provider for favorite hotel IDs (as a Set for quick lookup)
+// Provider for favorite hotel IDs
 final favoriteHotelsProvider = Provider<Set<String>>((ref) {
   final favorites = ref.watch(favoritesNotifierProvider);
   return Set<String>.from(favorites[ItemType.hotel] ?? []);
@@ -39,20 +34,18 @@ final favoriteAttractionsProvider = Provider<Set<String>>((ref) {
   return Set<String>.from(favorites[ItemType.attraction] ?? []);
 });
 
-// Favorites state manager - handles all favorite operations
-// Now syncs with Firebase Firestore for persistence
+// Manages favorites state and syncs with Firebase
 class FavoritesNotifier extends StateNotifier<Map<ItemType, List<String>>> {
   final FavoritesService _service;
   final String? _userId;
 
-  // Initialize with empty favorites map, then load from Firestore if logged in
   FavoritesNotifier(this._service, this._userId) : super({}) {
     if (_userId != null) {
       _loadFavorites();
     }
   }
 
-  // Load favorites from Firestore
+  // Load favorites from Firebase
   Future<void> _loadFavorites() async {
     try {
       final data = await _service.loadFavorites();
@@ -61,9 +54,9 @@ class FavoritesNotifier extends StateNotifier<Map<ItemType, List<String>>> {
         ItemType.restaurant: data['restaurants'] ?? [],
         ItemType.attraction: data['attractions'] ?? [],
       };
-      print('📥 Loaded favorites from cloud: ${state}');
+      print('Loaded favorites from cloud: ${state}');
     } catch (e) {
-      print('❌ Error loading favorites: $e');
+      print('Error loading favorites: $e');
     }
   } 
 
@@ -73,32 +66,27 @@ class FavoritesNotifier extends StateNotifier<Map<ItemType, List<String>>> {
     return favorites.contains(id);
   }
 
-  // Add or remove item from favorites (toggle)
+  // Toggle favorite status (add or remove)
   void toggleFavorite(String id, ItemType itemType) {
-    // Create a copy of current state
     final currentFavorites = Map<ItemType, List<String>>.from(state);
     final favorites = List<String>.from(currentFavorites[itemType] ?? []);
     
     if (favorites.contains(id)) {
-      // Remove from favorites
       favorites.remove(id);
       if (_userId != null) {
         _service.removeFavorite(id, _getTypeString(itemType));
       }
     } else {
-      // Add to favorites
       favorites.add(id);
       if (_userId != null) {
         _service.addFavorite(id, _getTypeString(itemType));
       }
     }
-    
-    // Update state
     currentFavorites[itemType] = favorites;
     state = currentFavorites;
   }
 
-  // Helper to convert ItemType to string for Firestore
+  // Convert ItemType to string for Firestore
   String _getTypeString(ItemType type) {
     switch (type) {
       case ItemType.hotel:
@@ -110,18 +98,14 @@ class FavoritesNotifier extends StateNotifier<Map<ItemType, List<String>>> {
     }
   }
 
-  // Add item to favorites (doesn't remove if already exists)
+  // Add item to favorites
   void addToFavorites(String id, ItemType itemType) {
     final currentFavorites = Map<ItemType, List<String>>.from(state);
     final favorites = List<String>.from(currentFavorites[itemType] ?? []);
-    
-    // Only add if not already in favorites
     if (!favorites.contains(id)) {
       favorites.add(id);
       currentFavorites[itemType] = favorites;
       state = currentFavorites;
-      
-      // Persist to Firestore
       if (_userId != null) {
         _service.addFavorite(id, _getTypeString(itemType));
       }
@@ -132,21 +116,17 @@ class FavoritesNotifier extends StateNotifier<Map<ItemType, List<String>>> {
   void removeFromFavorites(String id, ItemType itemType) {
     final currentFavorites = Map<ItemType, List<String>>.from(state);
     final favorites = List<String>.from(currentFavorites[itemType] ?? []);
-    
-    // Only remove if in favorites
     if (favorites.contains(id)) {
       favorites.remove(id);
       currentFavorites[itemType] = favorites;
       state = currentFavorites;
-      
-      // Persist to Firestore
       if (_userId != null) {
         _service.removeFavorite(id, _getTypeString(itemType));
       }
     }
   }
 
-  // Get all favorite IDs for a specific type
+  // Get all favorite IDs for a type
   List<String> getFavorites(ItemType itemType) {
     return state[itemType] ?? [];
   }

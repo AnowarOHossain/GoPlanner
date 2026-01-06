@@ -1,22 +1,24 @@
+// This service saves and loads user favorites to Firebase Firestore cloud database
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-/// Service to persist user favorites to Firebase Firestore
+// Manages cloud storage of user favorites (hotels, restaurants, attractions)
 class FavoritesService {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance; // Cloud database
+  final FirebaseAuth _auth = FirebaseAuth.instance; // For getting current user
 
-  /// Get the current user's ID
+  // Get current user's ID (null if not logged in)
   String? get _userId => _auth.currentUser?.uid;
 
-  /// Reference to the user's favorites document
+  // Get reference to user's favorites document in Firestore
+  // Path: users/{userId}/data/favorites
   DocumentReference<Map<String, dynamic>>? get _userFavoritesDoc {
     final userId = _userId;
     if (userId == null) return null;
     return _firestore.collection('users').doc(userId).collection('data').doc('favorites');
   }
 
-  /// Save favorites to Firestore
+  // Save all favorites to Firestore
   Future<void> saveFavorites({
     required List<String> hotels,
     required List<String> restaurants,
@@ -35,13 +37,13 @@ class FavoritesService {
         'attractions': attractions,
         'updatedAt': FieldValue.serverTimestamp(),
       }, SetOptions(merge: true));
-      print('✅ Favorites saved to Firestore');
+      print('Favorites saved to Firestore successfully');
     } catch (e) {
-      print('❌ Error saving favorites: $e');
+      print('Error saving favorites: $e');
     }
   }
 
-  /// Load favorites from Firestore
+  // Load favorites from Firestore
   Future<Map<String, List<String>>> loadFavorites() async {
     final doc = _userFavoritesDoc;
     if (doc == null) {
@@ -53,7 +55,7 @@ class FavoritesService {
       final snapshot = await doc.get();
       if (snapshot.exists) {
         final data = snapshot.data()!;
-        print('✅ Favorites loaded from Firestore');
+        print('Favorites loaded from Firestore successfully');
         return {
           'hotels': List<String>.from(data['hotels'] ?? []),
           'restaurants': List<String>.from(data['restaurants'] ?? []),
@@ -61,13 +63,12 @@ class FavoritesService {
         };
       }
     } catch (e) {
-      print('❌ Error loading favorites: $e');
+      print('Error loading favorites: $e');
     }
-
     return {'hotels': [], 'restaurants': [], 'attractions': []};
   }
 
-  /// Add a single favorite item
+  // Add a single item to favorites
   Future<void> addFavorite(String id, String type) async {
     final doc = _userFavoritesDoc;
     if (doc == null) return;
@@ -77,13 +78,13 @@ class FavoritesService {
         type: FieldValue.arrayUnion([id]),
         'updatedAt': FieldValue.serverTimestamp(),
       }, SetOptions(merge: true));
-      print('✅ Added $id to $type favorites');
+      print('Added $id to $type favorites successfully');
     } catch (e) {
-      print('❌ Error adding favorite: $e');
+      print('Error adding favorite: $e');
     }
   }
 
-  /// Remove a single favorite item
+  // Remove a single item from favorites
   Future<void> removeFavorite(String id, String type) async {
     final doc = _userFavoritesDoc;
     if (doc == null) return;
@@ -93,13 +94,13 @@ class FavoritesService {
         type: FieldValue.arrayRemove([id]),
         'updatedAt': FieldValue.serverTimestamp(),
       });
-      print('✅ Removed $id from $type favorites');
+      print('Removed $id from $type favorites successfully');
     } catch (e) {
-      print('❌ Error removing favorite: $e');
+      print('Error removing favorite: $e');
     }
   }
 
-  /// Stream of favorites for real-time updates
+  // Stream of favorites for real-time updates
   Stream<Map<String, List<String>>> favoritesStream() {
     final doc = _userFavoritesDoc;
     if (doc == null) {

@@ -1,9 +1,11 @@
+// This screen allows new users to create an account with email and password
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../providers/auth_providers.dart';
 
+// Register screen widget for creating new accounts
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
 
@@ -12,16 +14,17 @@ class RegisterScreen extends ConsumerStatefulWidget {
 }
 
 class _RegisterScreenState extends ConsumerState<RegisterScreen> {
-  final _formKey = GlobalKey<FormState>();
-  final _firstNameController = TextEditingController();
-  final _lastNameController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>(); // For form validation
+  final _firstNameController = TextEditingController(); // First name input
+  final _lastNameController = TextEditingController(); // Last name input
+  final _emailController = TextEditingController(); // Email input
+  final _passwordController = TextEditingController(); // Password input
+  final _confirmPasswordController = TextEditingController(); // Confirm password
 
-  bool _isLoading = false;
-  String? _error;
+  bool _isLoading = false; // Shows loading spinner
+  String? _error; // Error message if signup fails
 
+  // Clean up controllers when screen closes
   @override
   void dispose() {
     _firstNameController.dispose();
@@ -32,6 +35,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     super.dispose();
   }
 
+  // Create new user account with Firebase
   Future<void> _signUpEmail() async {
     setState(() {
       _error = null;

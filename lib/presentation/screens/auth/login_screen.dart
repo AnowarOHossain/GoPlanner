@@ -1,9 +1,11 @@
+// This screen allows users to sign in with email/password or Google account
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../providers/auth_providers.dart';
 
+// Login screen widget with state for form handling
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
@@ -12,13 +14,14 @@ class LoginScreen extends ConsumerStatefulWidget {
 }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
-  final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>(); // For form validation
+  final _emailController = TextEditingController(); // Email input
+  final _passwordController = TextEditingController(); // Password input
 
-  bool _isLoading = false;
-  String? _error;
+  bool _isLoading = false; // Shows loading spinner
+  String? _error; // Error message if login fails
 
+  // Clean up controllers when screen closes
   @override
   void dispose() {
     _emailController.dispose();
@@ -26,6 +29,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     super.dispose();
   }
 
+  // Handle email/password sign in
   Future<void> _signInEmail() async {
     setState(() {
       _error = null;
@@ -56,6 +60,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
   }
 
+  // Handle Google sign in
   Future<void> _signInGoogle() async {
     setState(() {
       _error = null;
