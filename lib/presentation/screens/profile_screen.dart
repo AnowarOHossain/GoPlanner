@@ -160,11 +160,14 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           color: const Color(0xFF2E7D5A),
                         ),
                         const SizedBox(width: 4),
-                        Text(
-                          'Unlock personalized trip plans',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey[600],
+                        Flexible(
+                          child: Text(
+                            'Unlock personalized trip plans',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[600],
+                            ),
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ],
