@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 // Import listings provider for favorites and budget
 import '../providers/listings_provider.dart';
 import '../providers/auth_providers.dart';
+import '../providers/user_preferences_provider.dart';
 
 // Profile screen showing user's favorites, budget, and settings
 // This is the main profile page with tabs for different sections
@@ -488,6 +489,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   }
 
   Widget _buildTravelPreferences(BuildContext context) {
+    final prefs = ref.watch(userPreferencesProvider);
+    
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -509,16 +512,23 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 ),
                 const Spacer(),
                 TextButton(
-                  onPressed: () => _showComingSoonDialog(context, 'Preferences Settings'),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const SettingsScreen(),
+                      ),
+                    );
+                  },
                   child: const Text('Edit'),
                 ),
               ],
             ),
             const SizedBox(height: 12),
-            _buildPreferenceItem('Budget Level', 'Mid-range', Icons.attach_money),
-            _buildPreferenceItem('Adventure Level', 'Moderate', Icons.landscape),
-            _buildPreferenceItem('Travel Pace', 'Relaxed', Icons.schedule),
-            _buildPreferenceItem('Group Size', 'Small Group', Icons.group),
+            _buildPreferenceItem('Budget Level', prefs.budgetLevelDisplay, Icons.attach_money),
+            _buildPreferenceItem('Adventure Level', prefs.adventureLevelDisplay, Icons.landscape),
+            _buildPreferenceItem('Travel Pace', prefs.travelPaceDisplay, Icons.schedule),
+            _buildPreferenceItem('Group Size', prefs.groupSizeDisplay, Icons.group),
           ],
         ),
       ),
@@ -693,11 +703,15 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   }
 }
 
-class SettingsScreen extends StatelessWidget {
+// Full settings screen with functional preferences using Riverpod
+class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final prefs = ref.watch(userPreferencesProvider);
+    final prefsNotifier = ref.read(userPreferencesProvider.notifier);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Settings'),
@@ -733,25 +747,86 @@ class SettingsScreen extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           _buildSettingsSection(
-            'Preferences',
+            'App Preferences',
             [
-              _buildSettingsTile(
-                'Notifications',
-                'Manage notification preferences',
-                Icons.notifications,
-                () => _showComingSoon(context, 'Notification Settings'),
+              // Dark Mode Toggle
+              SwitchListTile(
+                secondary: const Icon(Icons.dark_mode, color: Color(0xFF2E7D5A)),
+                title: const Text('Dark Mode'),
+                subtitle: Text(prefs.darkModeEnabled ? 'Enabled' : 'Disabled'),
+                value: prefs.darkModeEnabled,
+                onChanged: (value) => prefsNotifier.setDarkModeEnabled(value),
               ),
+              // Notifications Toggle
+              SwitchListTile(
+                secondary: const Icon(Icons.notifications, color: Color(0xFF2E7D5A)),
+                title: const Text('Notifications'),
+                subtitle: Text(prefs.notificationsEnabled ? 'Enabled' : 'Disabled'),
+                value: prefs.notificationsEnabled,
+                onChanged: (value) => prefsNotifier.setNotificationsEnabled(value),
+              ),
+              // Location Toggle
+              SwitchListTile(
+                secondary: const Icon(Icons.location_on, color: Color(0xFF2E7D5A)),
+                title: const Text('Location Services'),
+                subtitle: Text(prefs.locationEnabled ? 'Enabled' : 'Disabled'),
+                value: prefs.locationEnabled,
+                onChanged: (value) => prefsNotifier.setLocationEnabled(value),
+              ),
+              // Language Selection
               _buildSettingsTile(
                 'Language',
-                'Change app language',
+                prefs.languageDisplay,
                 Icons.language,
-                () => _showComingSoon(context, 'Language Settings'),
+                () => _showLanguageSelector(context, ref, prefs.preferredLanguage),
               ),
+              // Currency Selection
               _buildSettingsTile(
                 'Currency',
-                'Set preferred currency',
+                prefs.currencyDisplay,
                 Icons.attach_money,
-                () => _showComingSoon(context, 'Currency Settings'),
+                () => _showCurrencySelector(context, ref, prefs.preferredCurrency),
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+          _buildSettingsSection(
+            'Travel Preferences',
+            [
+              // Budget Level
+              _buildSettingsTile(
+                'Budget Level',
+                prefs.budgetLevelDisplay,
+                Icons.account_balance_wallet,
+                () => _showBudgetSelector(context, ref, prefs.budgetLevel),
+              ),
+              // Adventure Level
+              _buildSettingsTile(
+                'Adventure Level',
+                prefs.adventureLevelDisplay,
+                Icons.landscape,
+                () => _showAdventureSelector(context, ref, prefs.adventureLevel),
+              ),
+              // Travel Pace
+              _buildSettingsTile(
+                'Travel Pace',
+                prefs.travelPaceDisplay,
+                Icons.schedule,
+                () => _showTravelPaceSelector(context, ref, prefs.travelPace),
+              ),
+              // Group Size
+              _buildSettingsTile(
+                'Group Size',
+                prefs.groupSizeDisplay,
+                Icons.group,
+                () => _showGroupSizeSelector(context, ref, prefs.groupSize),
+              ),
+              // Interests
+              _buildSettingsTile(
+                'Interests',
+                prefs.interests.isEmpty ? 'None selected' : prefs.interests.join(', '),
+                Icons.interests,
+                () => _showInterestsSelector(context, ref, prefs.interests),
               ),
             ],
           ),
@@ -815,6 +890,228 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
+  void _showLanguageSelector(BuildContext context, WidgetRef ref, String current) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => _buildOptionSelector(
+        context,
+        'Select Language',
+        [
+          _OptionItem('en', 'English'),
+          _OptionItem('bn', 'বাংলা (Bengali)'),
+        ],
+        current,
+        (value) => ref.read(userPreferencesProvider.notifier).setLanguage(value),
+      ),
+    );
+  }
+
+  void _showCurrencySelector(BuildContext context, WidgetRef ref, String current) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => _buildOptionSelector(
+        context,
+        'Select Currency',
+        [
+          _OptionItem('BDT', 'BDT (৳) - Bangladeshi Taka'),
+          _OptionItem('USD', 'USD (\$) - US Dollar'),
+          _OptionItem('EUR', 'EUR (€) - Euro'),
+        ],
+        current,
+        (value) => ref.read(userPreferencesProvider.notifier).setCurrency(value),
+      ),
+    );
+  }
+
+  void _showBudgetSelector(BuildContext context, WidgetRef ref, String current) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => _buildOptionSelector(
+        context,
+        'Select Budget Level',
+        [
+          _OptionItem('budget', 'Budget'),
+          _OptionItem('mid-range', 'Mid-range'),
+          _OptionItem('luxury', 'Luxury'),
+        ],
+        current,
+        (value) => ref.read(userPreferencesProvider.notifier).setBudgetLevel(value),
+      ),
+    );
+  }
+
+  void _showAdventureSelector(BuildContext context, WidgetRef ref, String current) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => _buildOptionSelector(
+        context,
+        'Select Adventure Level',
+        [
+          _OptionItem('low', 'Low - Prefer relaxed activities'),
+          _OptionItem('moderate', 'Moderate - Mix of activities'),
+          _OptionItem('high', 'High - Love adventure!'),
+        ],
+        current,
+        (value) => ref.read(userPreferencesProvider.notifier).setAdventureLevel(value),
+      ),
+    );
+  }
+
+  void _showTravelPaceSelector(BuildContext context, WidgetRef ref, String current) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => _buildOptionSelector(
+        context,
+        'Select Travel Pace',
+        [
+          _OptionItem('relaxed', 'Relaxed - Take it easy'),
+          _OptionItem('moderate', 'Moderate - Balanced'),
+          _OptionItem('fast', 'Fast-paced - See everything!'),
+        ],
+        current,
+        (value) => ref.read(userPreferencesProvider.notifier).setTravelPace(value),
+      ),
+    );
+  }
+
+  void _showGroupSizeSelector(BuildContext context, WidgetRef ref, String current) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => _buildOptionSelector(
+        context,
+        'Select Group Size',
+        [
+          _OptionItem('solo', 'Solo'),
+          _OptionItem('couple', 'Couple'),
+          _OptionItem('small-group', 'Small Group (3-6)'),
+          _OptionItem('large-group', 'Large Group (7+)'),
+        ],
+        current,
+        (value) => ref.read(userPreferencesProvider.notifier).setGroupSize(value),
+      ),
+    );
+  }
+
+  void _showInterestsSelector(BuildContext context, WidgetRef ref, List<String> currentInterests) {
+    final allInterests = ['nature', 'history', 'food', 'adventure', 'culture', 'photography', 'wildlife', 'beaches'];
+    
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) {
+          return Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Select Your Interests',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 16),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: allInterests.map((interest) {
+                    final isSelected = currentInterests.contains(interest);
+                    return FilterChip(
+                      label: Text(interest[0].toUpperCase() + interest.substring(1)),
+                      selected: isSelected,
+                      onSelected: (selected) {
+                        ref.read(userPreferencesProvider.notifier).toggleInterest(interest);
+                        Navigator.pop(context);
+                        Future.delayed(const Duration(milliseconds: 100), () {
+                          _showInterestsSelector(context, ref, ref.read(userPreferencesProvider).interests);
+                        });
+                      },
+                      selectedColor: const Color(0xFF2E7D5A).withValues(alpha: 0.3),
+                      checkmarkColor: const Color(0xFF2E7D5A),
+                    );
+                  }).toList(),
+                ),
+                const SizedBox(height: 16),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () => Navigator.pop(context),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF2E7D5A),
+                      foregroundColor: Colors.white,
+                    ),
+                    child: const Text('Done'),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildOptionSelector(
+    BuildContext context,
+    String title,
+    List<_OptionItem> options,
+    String currentValue,
+    Function(String) onSelect,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 16),
+          ...options.map((option) => ListTile(
+            title: Text(option.label),
+            leading: Radio<String>(
+              value: option.value,
+              groupValue: currentValue,
+              onChanged: (value) {
+                if (value != null) {
+                  onSelect(value);
+                  Navigator.pop(context);
+                }
+              },
+              activeColor: const Color(0xFF2E7D5A),
+            ),
+            onTap: () {
+              onSelect(option.value);
+              Navigator.pop(context);
+            },
+          )),
+        ],
+      ),
+    );
+  }
+
   void _showComingSoon(BuildContext context, String feature) {
     showDialog(
       context: context,
@@ -860,4 +1157,12 @@ class SettingsScreen extends StatelessWidget {
       },
     );
   }
+}
+
+// Helper class for option items in selectors
+class _OptionItem {
+  final String value;
+  final String label;
+  
+  _OptionItem(this.value, this.label);
 }
