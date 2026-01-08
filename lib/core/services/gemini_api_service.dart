@@ -124,7 +124,7 @@ class GeminiApiService {
 
   // Private methods for API communication
   Future<String> _callGeminiAPI(String prompt) async {
-    final url = Uri.parse('$_baseUrl/gemini-1.5-flash:generateContent?key=$_apiKey');
+    final url = Uri.parse('$_baseUrl/gemini-2.0-flash:generateContent?key=$_apiKey');
     
     final requestBody = {
       'contents': [
