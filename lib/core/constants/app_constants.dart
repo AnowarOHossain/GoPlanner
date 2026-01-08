@@ -27,7 +27,7 @@ class AppConstants {
   static const String itinerariesBox = 'saved_itineraries';
 
   // API URL for Gemini AI
-  static const String geminiApiBaseUrl = 'https://generativelanguage.googleapis.com/v1/models';
+  static const String geminiApiBaseUrl = 'https://generativelanguage.googleapis.com/v1beta/models';
   
   // App limits to prevent too much data
   static const int maxCartItems = 50; // Maximum items in budget planner

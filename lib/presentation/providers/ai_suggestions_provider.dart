@@ -1,8 +1,8 @@
-// Simplified AI suggestions provider
+// AI suggestions provider
 // Uses plain text responses for better free tier compatibility
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../core/services/gemini_simple_service.dart';
+import '../../core/services/gemini_service.dart';
 
 // Provider for the simplified Gemini service
 final geminiSimpleServiceProvider = Provider<GeminiSimpleService>((ref) {

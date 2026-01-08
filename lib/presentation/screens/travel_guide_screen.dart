@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import '../providers/auth_providers.dart';
 import '../providers/ai_suggestions_provider.dart';
 
+// Main screen for AI-powered travel planning
 class TravelGuideScreen extends ConsumerStatefulWidget {
   const TravelGuideScreen({super.key});
 
@@ -14,8 +15,10 @@ class TravelGuideScreen extends ConsumerStatefulWidget {
   ConsumerState<TravelGuideScreen> createState() => _TravelGuideScreenState();
 }
 
+// State for TravelGuideScreen, manages UI and chat logic
 class _TravelGuideScreenState extends ConsumerState<TravelGuideScreen> {
   
+  // Build the main UI scaffold with AppBar and content
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,6 +61,7 @@ class _TravelGuideScreenState extends ConsumerState<TravelGuideScreen> {
     );
   }
 
+  // Card displaying the AI assistant intro and start button
   Widget _buildAIAssistantCard() {
     return Card(
       elevation: 4,
@@ -117,6 +121,7 @@ class _TravelGuideScreenState extends ConsumerState<TravelGuideScreen> {
     );
   }
 
+  // Section for quick planning options (Day Trip, Weekend, Week Long)
   Widget _buildQuickPlanningSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -161,6 +166,7 @@ class _TravelGuideScreenState extends ConsumerState<TravelGuideScreen> {
     );
   }
 
+  // Card for each quick plan option
   Widget _buildQuickPlanCard(String title, String description, IconData icon, Color color, int days) {
     return Card(
       elevation: 2,
@@ -191,6 +197,7 @@ class _TravelGuideScreenState extends ConsumerState<TravelGuideScreen> {
     );
   }
 
+  // Open the chat screen, or prompt login if not signed in
   void _openChat(BuildContext context, {int? days, String? title}) {
     final user = ref.read(currentUserProvider);
     if (user == null) {
@@ -206,6 +213,7 @@ class _TravelGuideScreenState extends ConsumerState<TravelGuideScreen> {
     );
   }
 
+  // Show dialog prompting user to sign in
   void _showLoginDialog() {
     showDialog(
       context: context,
@@ -235,6 +243,7 @@ class _TravelGuideScreenState extends ConsumerState<TravelGuideScreen> {
 }
 
 // Chat Screen - Opens when user clicks Start Planning or Quick Plan cards
+// Chat screen widget for AI conversation
 class _ChatScreen extends ConsumerStatefulWidget {
   final int? initialDays;
   final String? planType;
@@ -245,25 +254,27 @@ class _ChatScreen extends ConsumerStatefulWidget {
   ConsumerState<_ChatScreen> createState() => _ChatScreenState();
 }
 
+// State for the chat screen, manages messages and AI calls
 class _ChatScreenState extends ConsumerState<_ChatScreen> {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   final List<_ChatMessage> _messages = [];
   bool _isLoading = false;
 
+  // Initialize chat with a greeting message
   @override
   void initState() {
     super.initState();
     // Add initial greeting
     String greeting;
     if (widget.planType != null) {
-      greeting = "Let's plan your ${widget.planType}! 🎉\n\n"
+      greeting = "Let's plan your ${widget.planType}!\n\n"
           "Tell me:\n"
           "• Where do you want to go? (e.g., Cox's Bazar, Sylhet)\n"
           "• What's your budget in BDT?\n\n"
           "Example: \"I want to visit Cox's Bazar with 15000 BDT budget\"";
     } else {
-      greeting = "Hi! I'm your AI Travel Assistant for Bangladesh. 🇧🇩\n\n"
+      greeting = "Hi! I'm your AI Travel Assistant for Bangladesh.\n\n"
           "Tell me about your trip! For example:\n"
           "• \"Cox's Bazar for 3 days with 15000 BDT\"\n"
           "• \"Weekend trip to Sylhet\"\n"
@@ -273,6 +284,7 @@ class _ChatScreenState extends ConsumerState<_ChatScreen> {
     _messages.add(_ChatMessage(text: greeting, isUser: false));
   }
 
+  // Dispose controllers when chat screen is closed
   @override
   void dispose() {
     _messageController.dispose();
@@ -280,6 +292,7 @@ class _ChatScreenState extends ConsumerState<_ChatScreen> {
     super.dispose();
   }
 
+  // Scroll chat to the bottom after new message
   void _scrollToBottom() {
     Future.delayed(const Duration(milliseconds: 100), () {
       if (_scrollController.hasClients) {
@@ -292,6 +305,7 @@ class _ChatScreenState extends ConsumerState<_ChatScreen> {
     });
   }
 
+  // Send user message to AI and handle response/errors
   Future<void> _sendMessage() async {
     final message = _messageController.text.trim();
     if (message.isEmpty || _isLoading) return;
@@ -312,13 +326,20 @@ class _ChatScreenState extends ConsumerState<_ChatScreen> {
       String errorMessage;
       final errorStr = e.toString().toLowerCase();
       
-      if (errorStr.contains('429') || errorStr.contains('quota')) {
-        errorMessage = "⏳ AI is taking a short break!\n\n"
-            "Free tier limit reached. Please wait a minute and try again. 😊";
-      } else if (errorStr.contains('network') || errorStr.contains('socket')) {
-        errorMessage = "📶 Connection issue! Please check your internet.";
+      // Debug: Print actual error
+      print('AI Error: $e');
+      
+      if (errorStr.contains('429') || errorStr.contains('quota') || errorStr.contains('rate limit')) {
+        errorMessage = "AI is taking a short break!\n\n"
+            "Rate limit reached. Please wait a minute and try again.";
+      } else if (errorStr.contains('network') || errorStr.contains('socket') || errorStr.contains('connection')) {
+        errorMessage = "Connection issue! Please check your internet.";
+      } else if (errorStr.contains('api key') || errorStr.contains('403') || errorStr.contains('invalid')) {
+        errorMessage = "API configuration issue.\n\nPlease check your API key in the .env file.";
+      } else if (errorStr.contains('400')) {
+        errorMessage = "Request error. Please try a simpler query.";
       } else {
-        errorMessage = "Sorry, something went wrong. Please try again.";
+        errorMessage = "Error: ${e.toString().replaceAll('Exception:', '').trim()}\n\nPlease try again.";
       }
       
       setState(() {
@@ -330,6 +351,7 @@ class _ChatScreenState extends ConsumerState<_ChatScreen> {
     _scrollToBottom();
   }
 
+  // Call provider to get AI response based on user message
   Future<String> _getAIResponse(String userMessage) async {
     final details = _parseUserMessage(userMessage);
     
@@ -345,6 +367,7 @@ class _ChatScreenState extends ConsumerState<_ChatScreen> {
     return state.suggestions ?? "I couldn't generate suggestions. Please try again.";
   }
 
+  // Parse user message for destination, budget, days, interests
   Map<String, dynamic> _parseUserMessage(String message) {
     final lower = message.toLowerCase();
     
@@ -385,6 +408,7 @@ class _ChatScreenState extends ConsumerState<_ChatScreen> {
     return {'destination': destination, 'budget': budget, 'days': days, 'interests': interests};
   }
 
+  // Build the chat UI with message list and input
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -414,6 +438,7 @@ class _ChatScreenState extends ConsumerState<_ChatScreen> {
     );
   }
 
+  // Build a chat message bubble (user or AI)
   Widget _buildMessageBubble(_ChatMessage message) {
     return Align(
       alignment: message.isUser ? Alignment.centerRight : Alignment.centerLeft,
@@ -440,6 +465,7 @@ class _ChatScreenState extends ConsumerState<_ChatScreen> {
     );
   }
 
+  // Show typing indicator while waiting for AI
   Widget _buildTypingIndicator() {
     return Align(
       alignment: Alignment.centerLeft,
@@ -462,6 +488,7 @@ class _ChatScreenState extends ConsumerState<_ChatScreen> {
     );
   }
 
+  // Build the message input field and send button
   Widget _buildMessageInput() {
     return Container(
       padding: const EdgeInsets.all(12),
@@ -504,6 +531,7 @@ class _ChatScreenState extends ConsumerState<_ChatScreen> {
 }
 
 // Simple chat message class
+// Simple chat message class for storing message text and sender
 class _ChatMessage {
   final String text;
   final bool isUser;
