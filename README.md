@@ -6,7 +6,7 @@ A comprehensive Flutter mobile application for travel planning with smart travel
 
 - **Browse & Discover**: Hotels, restaurants, and attractions with images, ratings, and pricing
 - **Smart Budget Management**: Add items to cart and calculate total trip costs with detailed breakdowns
-- **Smart Travel Guide**: Get personalized travel recommendations and planning assistance (Coming Soon)
+- **AI Travel Planner**: Generate personalized itineraries with Gemini AI - includes day trips, weekends, and custom plans
 - **Advanced Search & Filters**: Filter by category, price range, ratings, location, and more
 - **Favorites & Save**: Save favorite places across hotels, restaurants, and attractions
 - **Interactive Maps**: Google Maps integration for location display and navigation
@@ -56,6 +56,9 @@ flutter doctor
 ##  Recent Updates
 
 ###  Latest Improvements (January 2026)
+- **AI Travel Planner**: Full Gemini API integration for personalized itinerary generation
+- **Quick Planning**: Day Trip, Weekend, Week Long, and Custom trip options with AI
+- **Itinerary Display**: Beautiful UI showing day-by-day plans with activities, timing, and costs
 - **Expanded Bangladesh datasets**: Added more hotels, restaurants, and attractions for improved AI travel planning quality
 - **Removed unused sample data**: Deleted `sample_*.json` assets (non-Bangladesh demo data) to keep the dataset clean
 - **Improved Gemini prompt grounding**: Updated itinerary/recommendation prompts to better align with local datasets and app parsing
@@ -161,8 +164,10 @@ lib/
 - [x] Complete budget analysis system
 - [x] Working profile management
 
-### Phase 6: Ready for Integration
-- [ ] Google Gemini API for AI itineraries
+### Phase 6: AI Integration  COMPLETED
+- [x] Google Gemini API for AI itineraries
+- [x] AI-powered trip planning dialogs
+- [x] Personalized itinerary generation
 - [ ] Firebase Firestore data migration
 - [ ] Real-time data synchronization
 - [ ] User authentication system
