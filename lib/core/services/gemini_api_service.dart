@@ -470,8 +470,20 @@ ${jsonEncode(payload)}
     String currency,
   ) {
     try {
-      // Clean the response to ensure it's valid JSON
-      final cleanResponse = response.trim();
+      // Clean the response - strip markdown code blocks if present
+      String cleanResponse = response.trim();
+      
+      // Remove ```json and ``` markers
+      if (cleanResponse.startsWith('```json')) {
+        cleanResponse = cleanResponse.substring(7);
+      } else if (cleanResponse.startsWith('```')) {
+        cleanResponse = cleanResponse.substring(3);
+      }
+      if (cleanResponse.endsWith('```')) {
+        cleanResponse = cleanResponse.substring(0, cleanResponse.length - 3);
+      }
+      cleanResponse = cleanResponse.trim();
+      
       final jsonData = jsonDecode(cleanResponse);
       
       // Parse the JSON into an ItineraryModel
@@ -499,7 +511,19 @@ ${jsonEncode(payload)}
 
   List<String> _parseRecommendationsResponse(String response) {
     try {
-      final jsonData = jsonDecode(response.trim());
+      // Clean the response - strip markdown code blocks if present
+      String cleanResponse = response.trim();
+      if (cleanResponse.startsWith('```json')) {
+        cleanResponse = cleanResponse.substring(7);
+      } else if (cleanResponse.startsWith('```')) {
+        cleanResponse = cleanResponse.substring(3);
+      }
+      if (cleanResponse.endsWith('```')) {
+        cleanResponse = cleanResponse.substring(0, cleanResponse.length - 3);
+      }
+      cleanResponse = cleanResponse.trim();
+      
+      final jsonData = jsonDecode(cleanResponse);
       return List<String>.from(jsonData);
     } catch (e) {
       throw GeminiApiException('Failed to parse recommendations response: ${e.toString()}');
