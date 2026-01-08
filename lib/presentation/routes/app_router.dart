@@ -568,7 +568,13 @@ class _HotelsScreenState extends ConsumerState<HotelsScreen> {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () {
+            if (Navigator.of(context).canPop()) {
+              Navigator.of(context).pop();
+            } else {
+              context.go('/');
+            }
+          },
         ),
         title: const Text('Hotels in Bangladesh'),
         actions: [
@@ -1161,7 +1167,13 @@ class _RestaurantsScreenState extends ConsumerState<RestaurantsScreen> {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () {
+            if (Navigator.of(context).canPop()) {
+              Navigator.of(context).pop();
+            } else {
+              context.go('/');
+            }
+          },
         ),
         title: const Text('Restaurants'),
         backgroundColor: const Color(0xFF2E7D5A),
@@ -1841,7 +1853,13 @@ class _AttractionsScreenState extends ConsumerState<AttractionsScreen> {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () {
+            if (Navigator.of(context).canPop()) {
+              Navigator.of(context).pop();
+            } else {
+              context.go('/');
+            }
+          },
         ),
         title: const Text('Attractions'),
         backgroundColor: const Color(0xFF2E7D5A),
@@ -2494,7 +2512,13 @@ class CartScreen extends ConsumerWidget {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () {
+            if (Navigator.of(context).canPop()) {
+              Navigator.of(context).pop();
+            } else {
+              context.go('/');
+            }
+          },
         ),
         title: const Text('Budget Analysis'),
         backgroundColor: const Color(0xFF2E7D5A),
@@ -2853,7 +2877,13 @@ class FavoritesScreen extends ConsumerWidget {
         appBar: AppBar(
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () {
+              if (Navigator.of(context).canPop()) {
+                Navigator.of(context).pop();
+              } else {
+                context.go('/');
+              }
+            },
           ),
           title: const Text('Favorites'),
           backgroundColor: const Color(0xFF2E7D5A),
@@ -3130,7 +3160,13 @@ class ItineraryDetailScreen extends StatelessWidget {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () {
+            if (Navigator.of(context).canPop()) {
+              Navigator.of(context).pop();
+            } else {
+              context.go('/');
+            }
+          },
         ),
         title: const Text('Itinerary Details'),
         actions: [
@@ -3168,7 +3204,13 @@ class AttractionDetailScreen extends ConsumerWidget {
           appBar: AppBar(
             leading: IconButton(
               icon: const Icon(Icons.arrow_back),
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () {
+                if (Navigator.of(context).canPop()) {
+                  Navigator.of(context).pop();
+                } else {
+                  context.go('/');
+                }
+              },
             ),
             title: Text(attraction.name),
             backgroundColor: const Color(0xFF2E7D5A),

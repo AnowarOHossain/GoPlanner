@@ -22,7 +22,13 @@ class _TravelGuideScreenState extends ConsumerState<TravelGuideScreen> {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () {
+            if (Navigator.of(context).canPop()) {
+              Navigator.of(context).pop();
+            } else {
+              context.go('/');
+            }
+          },
         ),
         title: const Text('AI Travel Planner'),
         backgroundColor: const Color(0xFF2E7D5A),
