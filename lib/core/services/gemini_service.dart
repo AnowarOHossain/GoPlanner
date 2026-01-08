@@ -125,7 +125,16 @@ Keep it practical and achievable. Plain English, bullet points.
 
   // Private method to call Gemini API
   Future<String> _callGeminiAPI(String prompt) async {
-    final url = Uri.parse('$_baseUrl/gemini-2.0-flash:generateContent?key=$_apiKey');
+    // Use gemini-2.5-flash for current compatibility
+    final url = Uri.parse('$_baseUrl/gemini-2.5-flash:generateContent?key=$_apiKey');
+
+    // Debug: Print API key status (not the actual key)
+    print('API Key loaded: ${_apiKey.isNotEmpty ? "Yes (${_apiKey.length} chars)" : "NO - MISSING!"}');
+    print('API URL: $_baseUrl/gemini-2.5-flash:generateContent');
+    
+    if (_apiKey.isEmpty) {
+      throw Exception('API key is missing! Check your .env file.');
+    }
     
     final requestBody = {
       'contents': [
@@ -139,53 +148,57 @@ Keep it practical and achievable. Plain English, bullet points.
         'temperature': 0.7,
         'topK': 40,
         'topP': 0.95,
-        'maxOutputTokens': 2048, // Smaller for free tier
+        'maxOutputTokens': 1024, // Smaller for free tier
       },
-      'safetySettings': [
-        {
-          'category': 'HARM_CATEGORY_HARASSMENT',
-          'threshold': 'BLOCK_MEDIUM_AND_ABOVE'
-        },
-        {
-          'category': 'HARM_CATEGORY_HATE_SPEECH',
-          'threshold': 'BLOCK_MEDIUM_AND_ABOVE'
-        },
-        {
-          'category': 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
-          'threshold': 'BLOCK_MEDIUM_AND_ABOVE'
-        },
-        {
-          'category': 'HARM_CATEGORY_DANGEROUS_CONTENT',
-          'threshold': 'BLOCK_MEDIUM_AND_ABOVE'
-        }
-      ]
     };
 
-    final response = await http.post(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode(requestBody),
-    );
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(requestBody),
+      );
 
-    if (response.statusCode != 200) {
-      throw Exception('API request failed: ${response.statusCode} - ${response.body}');
-    }
-
-    final responseData = jsonDecode(response.body);
-    
-    // Extract text from response
-    if (responseData['candidates'] != null &&
-        responseData['candidates'].isNotEmpty) {
-      final candidate = responseData['candidates'][0];
-      if (candidate['content'] != null &&
-          candidate['content']['parts'] != null &&
-          candidate['content']['parts'].isNotEmpty) {
-        return candidate['content']['parts'][0]['text'] ?? '';
+      print('API Response Status: ${response.statusCode}');
+      
+      if (response.statusCode == 429) {
+        throw Exception('429: Rate limit exceeded. Please wait a moment.');
       }
-    }
+      
+      if (response.statusCode == 400) {
+        print('Bad Request: ${response.body}');
+        throw Exception('400: Invalid request - ${response.body}');
+      }
+      
+      if (response.statusCode == 403) {
+        print('Forbidden: ${response.body}');
+        throw Exception('403: API key invalid or disabled');
+      }
 
-    throw Exception('Invalid API response structure');
+      if (response.statusCode != 200) {
+        print('Error Response: ${response.body}');
+        throw Exception('API error ${response.statusCode}: ${response.body}');
+      }
+
+      final responseData = jsonDecode(response.body);
+      
+      // Extract text from response
+      if (responseData['candidates'] != null &&
+          responseData['candidates'].isNotEmpty) {
+        final candidate = responseData['candidates'][0];
+        if (candidate['content'] != null &&
+            candidate['content']['parts'] != null &&
+            candidate['content']['parts'].isNotEmpty) {
+          return candidate['content']['parts'][0]['text'] ?? '';
+        }
+      }
+
+      throw Exception('Invalid API response structure');
+    } catch (e) {
+      print('API Call Error: $e');
+      rethrow;
+    }
   }
 }
