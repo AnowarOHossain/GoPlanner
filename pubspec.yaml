@@ -29,6 +29,12 @@ dependencies:
   http: ^1.1.0
   dio: ^5.4.0
   
+  # Google Gemini AI
+  google_generative_ai: ^0.4.6
+  
+  # Environment Variables
+  flutter_dotenv: ^5.1.0
+  
   # Local Storage
   shared_preferences: ^2.2.2
   
@@ -69,6 +75,7 @@ flutter:
   uses-material-design: true
   
   assets:
+    - .env
     - assets/images/
     - assets/icons/
     - assets/animations/

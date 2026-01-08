@@ -16,7 +16,7 @@ import '../../data/models/attraction_model.dart';
 // This generates personalized travel itineraries using AI
 class GeminiApiService {
   static const String _baseUrl = AppConstants.geminiApiBaseUrl;
-  static const String _apiKey = AppConstants.geminiApiKey;
+  static String get _apiKey => AppConstants.geminiApiKey;
 
   /// Generate a personalized travel itinerary using Google Gemini AI
   /// Takes destination, dates, budget, and user preferences

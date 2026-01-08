@@ -48,6 +48,11 @@ app.*.map.json
 android/app/src/google-services.json
 ios/Runner/GoogleService-Info.plist
 ios/firebase_app_id_file.json
+
+# Environment variables (SECURITY: Contains API keys!)
+.env
+*.env
+!.env.example
 lib/firebase_options.dart
 
 # Environment files

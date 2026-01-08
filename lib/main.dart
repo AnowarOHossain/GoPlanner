@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 // Import Riverpod for state management
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+// Import dotenv for environment variables
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'core/services/firebase_bootstrap.dart';
 
@@ -18,6 +20,9 @@ import 'presentation/theme/app_theme.dart';
 void main() async {
   // Initialize Flutter engine before running the app
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // Load environment variables from .env file
+  await dotenv.load(fileName: ".env");
   
   // Initialize Firebase (required for Auth/Firestore)
   await FirebaseBootstrap.init();

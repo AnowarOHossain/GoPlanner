@@ -1,14 +1,16 @@
 // This file stores all constant values used throughout the app
 // Using constants makes it easy to change values in one place
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 class AppConstants {
   // App Information
   static const String appName = 'GoPlanner';
   static const String appVersion = '1.0.0';
   static const String appDescription = 'AI-Powered Travel Planning App';
 
-  // API Keys for external services
-  static const String geminiApiKey = 'YOUR_GEMINI_API_KEY_HERE'; // Google AI for travel suggestions
-  static const String googleMapsApiKey = 'YOUR_GOOGLE_MAPS_API_KEY_HERE'; // Google Maps
+  // API Keys loaded from .env file (SECURE - not in version control)
+  static String get geminiApiKey => dotenv.env['GEMINI_API_KEY'] ?? '';
+  static String get googleMapsApiKey => dotenv.env['GOOGLE_MAPS_API_KEY'] ?? '';
   
   // Firebase collection names (database tables)
   static const String hotelsCollection = 'hotels';
