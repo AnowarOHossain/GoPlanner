@@ -566,6 +566,10 @@ class _HotelsScreenState extends ConsumerState<HotelsScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         title: const Text('Hotels in Bangladesh'),
         actions: [
           IconButton(
@@ -1155,6 +1159,10 @@ class _RestaurantsScreenState extends ConsumerState<RestaurantsScreen> {
     
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         title: const Text('Restaurants'),
         backgroundColor: const Color(0xFF2E7D5A),
         foregroundColor: Colors.white,
@@ -1831,6 +1839,10 @@ class _AttractionsScreenState extends ConsumerState<AttractionsScreen> {
     
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         title: const Text('Attractions'),
         backgroundColor: const Color(0xFF2E7D5A),
         foregroundColor: Colors.white,
@@ -2480,6 +2492,10 @@ class CartScreen extends ConsumerWidget {
     
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         title: const Text('Budget Analysis'),
         backgroundColor: const Color(0xFF2E7D5A),
         foregroundColor: Colors.white,
@@ -2835,6 +2851,10 @@ class FavoritesScreen extends ConsumerWidget {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
           title: const Text('Favorites'),
           backgroundColor: const Color(0xFF2E7D5A),
           foregroundColor: Colors.white,
@@ -3108,6 +3128,10 @@ class ItineraryDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         title: const Text('Itinerary Details'),
         actions: [
           IconButton(
@@ -3142,6 +3166,10 @@ class AttractionDetailScreen extends ConsumerWidget {
         
         return Scaffold(
           appBar: AppBar(
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
             title: Text(attraction.name),
             backgroundColor: const Color(0xFF2E7D5A),
             foregroundColor: Colors.white,

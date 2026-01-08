@@ -30,6 +30,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         title: const Text('Profile'),
         backgroundColor: const Color(0xFF2E7D5A),
         foregroundColor: Colors.white,
@@ -714,6 +718,10 @@ class SettingsScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         title: const Text('Settings'),
         backgroundColor: const Color(0xFF2E7D5A),
         foregroundColor: Colors.white,

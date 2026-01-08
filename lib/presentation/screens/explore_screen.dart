@@ -43,6 +43,10 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         title: const Text('Explore'),
         backgroundColor: const Color(0xFF2E7D5A),
         foregroundColor: Colors.white,

@@ -20,6 +20,10 @@ class _TravelGuideScreenState extends ConsumerState<TravelGuideScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         title: const Text('AI Travel Planner'),
         backgroundColor: const Color(0xFF2E7D5A),
         foregroundColor: Colors.white,
