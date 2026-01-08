@@ -3790,6 +3790,16 @@ class _HotelDetailScreenState extends ConsumerState<HotelDetailScreen> with Tick
               SliverAppBar(
                 expandedHeight: 300.0,
                 pinned: true,
+                leading: IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () {
+                    if (Navigator.of(context).canPop()) {
+                      Navigator.of(context).pop();
+                    } else {
+                      context.go('/');
+                    }
+                  },
+                ),
                 actions: [
                   IconButton(
                     icon: const Icon(Icons.home),
@@ -4831,6 +4841,16 @@ class RestaurantDetailScreen extends ConsumerWidget {
               SliverAppBar(
                 expandedHeight: 250.0,
                 pinned: true,
+                leading: IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () {
+                    if (Navigator.of(context).canPop()) {
+                      Navigator.of(context).pop();
+                    } else {
+                      context.go('/');
+                    }
+                  },
+                ),
                 actions: [
                   IconButton(
                     icon: const Icon(Icons.home),
