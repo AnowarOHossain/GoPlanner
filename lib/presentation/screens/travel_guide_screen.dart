@@ -422,14 +422,8 @@ class _ChatScreenState extends ConsumerState<_ChatScreen> {
           Expanded(
             child: ListView.builder(
               controller: _scrollController,
-              padding: const EdgeInsets.all(16),
-              itemCount: _messages.length + (_isLoading ? 1 : 0),
-              itemBuilder: (context, index) {
-                if (_isLoading && index == _messages.length) {
-                  return _buildTypingIndicator();
-                }
-                return _buildMessageBubble(_messages[index]);
-              },
+              itemCount: _messages.length,
+              itemBuilder: (context, index) => _buildMessageBubble(_messages[index]),
             ),
           ),
           _buildMessageInput(),
@@ -455,38 +449,14 @@ class _ChatScreenState extends ConsumerState<_ChatScreen> {
         ),
         child: SelectableText(
           message.text,
-          style: TextStyle(
-            color: message.isUser ? Colors.white : Colors.black87,
-            fontSize: 15,
-            height: 1.4,
-          ),
+          style: const TextStyle(fontSize: 16),
+          maxLines: null,
         ),
       ),
     );
   }
 
   // Show typing indicator while waiting for AI
-  Widget _buildTypingIndicator() {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 12),
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: Colors.grey[100],
-          borderRadius: BorderRadius.circular(16).copyWith(bottomLeft: const Radius.circular(4)),
-        ),
-        child: const Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xFF2E7D5A))),
-            SizedBox(width: 10),
-            Text('Thinking...', style: TextStyle(color: Colors.grey)),
-          ],
-        ),
-      ),
-    );
-  }
 
   // Build the message input field and send button
   Widget _buildMessageInput() {
