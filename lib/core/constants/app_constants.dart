@@ -34,6 +34,7 @@ class AppConstants {
   static const int maxFavorites = 100; // Maximum favorite items
   static const int maxItineraryDays = 30; // Maximum days for trip
   static const double maxBudget = 1000000.0; // Maximum budget in taka
+  static const Duration apiTimeout = Duration(seconds: 60); // Timeout for AI generation
 
   // Animation speeds for smooth transitions
   static const Duration shortAnimation = Duration(milliseconds: 200);
