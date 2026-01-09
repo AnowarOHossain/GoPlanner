@@ -1,3 +1,4 @@
+// ignore_for_file: deprecated_member_use
 // Import Flutter widgets
 import 'package:flutter/material.dart';
 // Import Riverpod for state management
@@ -8,6 +9,7 @@ import 'package:go_router/go_router.dart';
 import '../providers/listings_provider.dart';
 import '../providers/auth_providers.dart';
 import '../providers/user_preferences_provider.dart';
+import '../../core/services/trip_suggestion_service.dart';
 
 // Profile screen showing user's favorites, budget, and settings
 // This is the main profile page with tabs for different sections
@@ -19,6 +21,19 @@ class ProfileScreen extends ConsumerStatefulWidget {
 }
 
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
+  String? tripPlan;
+  bool isLoadingTripPlan = false;
+
+  Future<void> _loadTripPlan(String city, double budget) async {
+    setState(() {
+      isLoadingTripPlan = true;
+    });
+    tripPlan = await TripSuggestionService.getTripPlan(city: city, budget: budget);
+    setState(() {
+      isLoadingTripPlan = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // Get all favorite items from providers
@@ -63,40 +78,69 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // User Info Card
-            _buildUserInfoCard(context),
-            const SizedBox(height: 24),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          // User Info Card
+          _buildUserInfoCard(context),
+          const SizedBox(height: 24),
 
-            // Statistics Cards
-            _buildStatisticsSection(
-              favoriteHotels.length,
-              favoriteRestaurants.length,
-              favoriteAttractions.length,
-              budgetItems.length,
+          // Statistics Cards
+          _buildStatisticsSection(
+            favoriteHotels.length,
+            favoriteRestaurants.length,
+            favoriteAttractions.length,
+            budgetItems.length,
+          ),
+          const SizedBox(height: 24),
+
+          // Quick Actions
+          _buildQuickActionsSection(context),
+          const SizedBox(height: 24),
+
+          // Favorites Summary
+          _buildFavoritesSummary(context),
+          const SizedBox(height: 24),
+
+          // Travel Preferences
+          _buildTravelPreferences(context),
+          const SizedBox(height: 24),
+
+          // Recent Activity
+          _buildRecentActivity(context),
+          ElevatedButton(
+            onPressed: () async {
+              await _loadTripPlan('Dhaka', 20000); // Example usage
+            },
+            child: const Text('Suggest a weekend trip for Dhaka'),
+          ),
+          if (isLoadingTripPlan)
+            const Center(child: CircularProgressIndicator()),
+          if (tripPlan != null)
+            Expanded(
+              child: SingleChildScrollView(
+                child: Container(
+                  margin: const EdgeInsets.only(top: 16),
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 4,
+                        offset: Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Text(
+                    tripPlan!,
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                ),
+              ),
             ),
-            const SizedBox(height: 24),
-
-            // Quick Actions
-            _buildQuickActionsSection(context),
-            const SizedBox(height: 24),
-
-            // Favorites Summary
-            _buildFavoritesSummary(context),
-            const SizedBox(height: 24),
-
-            // Travel Preferences
-            _buildTravelPreferences(context),
-            const SizedBox(height: 24),
-
-            // Recent Activity
-            _buildRecentActivity(context),
-          ],
-        ),
+        ],
       ),
     );
   }
@@ -1061,9 +1105,12 @@ class SettingsScreen extends ConsumerWidget {
                       selected: isSelected,
                       onSelected: (selected) {
                         ref.read(userPreferencesProvider.notifier).toggleInterest(interest);
+                        // Use mounted check and show selector after pop
                         Navigator.pop(context);
-                        Future.delayed(const Duration(milliseconds: 100), () {
-                          _showInterestsSelector(context, ref, ref.read(userPreferencesProvider).interests);
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          if (context.mounted) {
+                            _showInterestsSelector(context, ref, ref.read(userPreferencesProvider).interests);
+                          }
                         });
                       },
                       selectedColor: const Color(0xFF2E7D5A).withValues(alpha: 0.3),
@@ -1098,6 +1145,7 @@ class SettingsScreen extends ConsumerWidget {
     String currentValue,
     Function(String) onSelect,
   ) {
+    // Use standard Radio widgets for compatibility with Flutter stable
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Column(
