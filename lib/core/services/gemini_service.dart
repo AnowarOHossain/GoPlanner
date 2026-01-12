@@ -10,28 +10,34 @@ import '../../core/constants/app_constants.dart';
 /// Simplified service for AI travel suggestions
 /// Optimized for Gemini free tier - uses plain text responses
 class GeminiSimpleService {
-      // Removed unused fields
-    // Helper to load and filter data from ai_suggestions.json by city (if possible)
-    Future<Map<String, List<Map<String, dynamic>>>> _loadSuggestionsData() async {
-      final dataString = await rootBundle.loadString('assets/data/ai_suggestions.json');
-      final Map<String, dynamic> data = jsonDecode(dataString);
-      return {
-        'hotels': (data['hotels'] as List).cast<Map<String, dynamic>>(),
-        'restaurants': (data['restaurants'] as List).cast<Map<String, dynamic>>(),
-        'attractions': (data['attractions'] as List).cast<Map<String, dynamic>>()
-      };
-    }
+  // Removed unused fields
+  // Helper to load and filter data from ai_suggestions.json by city (if possible)
+  Future<Map<String, List<Map<String, dynamic>>>> _loadSuggestionsData() async {
+    final dataString =
+        await rootBundle.loadString('assets/data/ai_suggestions.json');
+    final Map<String, dynamic> data = jsonDecode(dataString);
+    return {
+      'hotels': (data['hotels'] as List).cast<Map<String, dynamic>>(),
+      'restaurants': (data['restaurants'] as List).cast<Map<String, dynamic>>(),
+      'attractions': (data['attractions'] as List).cast<Map<String, dynamic>>()
+    };
+  }
 
-    // Helper to filter by city name (case-insensitive, partial match)
-    List<Map<String, dynamic>> _filterByCity(List<Map<String, dynamic>> items, String city) {
-      if (city.trim().isEmpty) return items;
-      final cityLower = city.toLowerCase();
-      return items.where((item) {
-        final name = (item['name'] ?? '').toString().toLowerCase();
-        final location = (item['Location'] ?? '').toString().toLowerCase();
-        return name.contains(cityLower) || location.contains(cityLower) || cityLower.contains(name) || cityLower.contains(location);
-      }).toList();
-    }
+  // Helper to filter by city name (case-insensitive, partial match)
+  List<Map<String, dynamic>> _filterByCity(
+      List<Map<String, dynamic>> items, String city) {
+    if (city.trim().isEmpty) return items;
+    final cityLower = city.toLowerCase();
+    return items.where((item) {
+      final name = (item['name'] ?? '').toString().toLowerCase();
+      final location = (item['Location'] ?? '').toString().toLowerCase();
+      return name.contains(cityLower) ||
+          location.contains(cityLower) ||
+          cityLower.contains(name) ||
+          cityLower.contains(location);
+    }).toList();
+  }
+
   Future<String> getQuickRecommendations({
     required String destination,
     required String category, // 'hotels', 'restaurants', 'attractions'
@@ -39,28 +45,36 @@ class GeminiSimpleService {
     required String currency,
   }) async {
     final suggestionsData = await _loadSuggestionsData();
-    List<Map<String, dynamic>> hotels = _filterByCity(suggestionsData['hotels'] ?? [], destination);
-    List<Map<String, dynamic>> restaurants = _filterByCity(suggestionsData['restaurants'] ?? [], destination);
-    List<Map<String, dynamic>> attractions = _filterByCity(suggestionsData['attractions'] ?? [], destination);
-
+    List<Map<String, dynamic>> hotels =
+        _filterByCity(suggestionsData['hotels'] ?? [], destination);
+    List<Map<String, dynamic>> restaurants =
+        _filterByCity(suggestionsData['restaurants'] ?? [], destination);
+    List<Map<String, dynamic>> attractions =
+        _filterByCity(suggestionsData['attractions'] ?? [], destination);
 
     String hotelList = hotels.isNotEmpty
-      ? hotels.take(3).map((h) =>
-          '${h['name']} (${h['Location'] ?? 'Location N/A'})\n  - approx. ${h['pricePerNight'] ?? 'N/A'} $currency/night'
-        ).join('\n')
-      : 'Not found';
+        ? hotels
+            .take(3)
+            .map((h) =>
+                '${h['name']} (${h['Location'] ?? 'Location N/A'})\n  - approx. ${h['pricePerNight'] ?? 'N/A'} $currency/night')
+            .join('\n')
+        : 'Not found';
 
     String restaurantList = restaurants.isNotEmpty
-      ? restaurants.take(3).map((r) =>
-          '${r['name']} (${r['Location'] ?? 'Location N/A'})\n  - avg. cost for two: ${r['averageCostForTwo'] ?? 'N/A'} $currency'
-        ).join('\n')
-      : 'Not found';
+        ? restaurants
+            .take(3)
+            .map((r) =>
+                '${r['name']} (${r['Location'] ?? 'Location N/A'})\n  - avg. cost for two: ${r['averageCostForTwo'] ?? 'N/A'} $currency')
+            .join('\n')
+        : 'Not found';
 
     String attractionList = attractions.isNotEmpty
-      ? attractions.take(3).map((a) =>
-          '${a['name']} (${a['Location'] ?? 'Location N/A'})\n  - entry fee: ${a['entryFee'] ?? 'N/A'} $currency'
-        ).join('\n')
-      : 'Not found';
+        ? attractions
+            .take(3)
+            .map((a) =>
+                '${a['name']} (${a['Location'] ?? 'Location N/A'})\n  - entry fee: ${a['entryFee'] ?? 'N/A'} $currency')
+            .join('\n')
+        : 'Not found';
 
     String prompt = '''
 You are a Bangladesh travel expert. Use ONLY the following data for your recommendations. If any category is 'Not found', do not suggest anything for that category.
@@ -91,11 +105,13 @@ Keep it brief and helpful. Use bullet points. No JSON.
       return response;
     } on TimeoutException catch (_) {
       // Fallback: return local data if timeout
-      return _localQuickRecommendationResponse(hotelList, restaurantList, attractionList, destination, currency, budget);
+      return _localQuickRecommendationResponse(hotelList, restaurantList,
+          attractionList, destination, currency, budget);
     } catch (e) {
       // Fallback for rate limit or other API errors
       if (e.toString().contains('429') || e.toString().contains('rate limit')) {
-        return _localQuickRecommendationResponse(hotelList, restaurantList, attractionList, destination, currency, budget);
+        return _localQuickRecommendationResponse(hotelList, restaurantList,
+            attractionList, destination, currency, budget);
       }
       throw Exception('Failed to get quick recommendations: ${e.toString()}');
     }
@@ -124,13 +140,16 @@ Keep it brief and helpful. Use bullet points. No JSON.
     final styleText = travelStyle ?? 'balanced';
 
     final suggestionsData = await _loadSuggestionsData();
-    List<Map<String, dynamic>> hotels = _filterByCity(suggestionsData['hotels'] ?? [], destination);
-    List<Map<String, dynamic>> restaurants = _filterByCity(suggestionsData['restaurants'] ?? [], destination);
-    List<Map<String, dynamic>> attractions = _filterByCity(suggestionsData['attractions'] ?? [], destination);
+    List<Map<String, dynamic>> hotels =
+        _filterByCity(suggestionsData['hotels'] ?? [], destination);
+    List<Map<String, dynamic>> restaurants =
+        _filterByCity(suggestionsData['restaurants'] ?? [], destination);
+    List<Map<String, dynamic>> attractions =
+        _filterByCity(suggestionsData['attractions'] ?? [], destination);
 
     // Fix: If budget is too low or parsing fails, show top 3 hotels with a warning
     double nightlyBudget = 0;
-    if (budget != null && budget > 0 && days > 0) {
+    if (budget > 0 && days > 0) {
       nightlyBudget = budget / days;
     }
     List<Map<String, dynamic>> filteredHotels = hotels.where((h) {
@@ -143,29 +162,37 @@ Keep it brief and helpful. Use bullet points. No JSON.
 
     String hotelList;
     if (filteredHotels.isNotEmpty) {
-      hotelList = filteredHotels.take(3).map((h) =>
-        '${h['name']} (${h['Location'] ?? 'Location N/A'})\n  - approx. ${h['pricePerNight'] ?? h['price_range'] ?? 'N/A'} $currency/night'
-      ).join('\n');
+      hotelList = filteredHotels
+          .take(3)
+          .map((h) =>
+              '${h['name']} (${h['Location'] ?? 'Location N/A'})\n  - approx. ${h['pricePerNight'] ?? h['price_range'] ?? 'N/A'} $currency/night')
+          .join('\n');
     } else if (hotels.isNotEmpty) {
-      hotelList = hotels.take(3).map((h) =>
-        '${h['name']} (${h['Location'] ?? 'Location N/A'})\n  - approx. ${h['pricePerNight'] ?? h['price_range'] ?? 'N/A'} $currency/night (over budget)'
-      ).join('\n');
-      hotelList = '[All available hotels exceed your budget]\n' + hotelList;
+      hotelList = hotels
+          .take(3)
+          .map((h) =>
+              '${h['name']} (${h['Location'] ?? 'Location N/A'})\n  - approx. ${h['pricePerNight'] ?? h['price_range'] ?? 'N/A'} $currency/night (over budget)')
+          .join('\n');
+      hotelList = '[All available hotels exceed your budget]\n$hotelList';
     } else {
       hotelList = 'Not found';
     }
 
     String restaurantList = restaurants.isNotEmpty
-      ? restaurants.take(3).map((r) =>
-          '${r['name']} (${r['Location'] ?? 'Location N/A'})\n  - avg. cost for two: ${r['averageCostForTwo'] ?? 'N/A'} $currency'
-        ).join('\n')
-      : 'Not found';
+        ? restaurants
+            .take(3)
+            .map((r) =>
+                '${r['name']} (${r['Location'] ?? 'Location N/A'})\n  - avg. cost for two: ${r['averageCostForTwo'] ?? 'N/A'} $currency')
+            .join('\n')
+        : 'Not found';
 
     String attractionList = attractions.isNotEmpty
-      ? attractions.take(3).map((a) =>
-          '${a['name']} (${a['Location'] ?? 'Location N/A'})\n  - entry fee: ${a['entryFee'] ?? 'N/A'} $currency'
-        ).join('\n')
-      : 'Not found';
+        ? attractions
+            .take(3)
+            .map((a) =>
+                '${a['name']} (${a['Location'] ?? 'Location N/A'})\n  - entry fee: ${a['entryFee'] ?? 'N/A'} $currency')
+            .join('\n')
+        : 'Not found';
 
     String prompt = '''
 You are a helpful travel assistant for Bangladesh tourism. Use ONLY the following data for your suggestions. If any category is 'not found', do not suggest anything for that category.
@@ -198,11 +225,29 @@ Do NOT use JSON format - write in plain, readable English.
       return response;
     } on TimeoutException catch (_) {
       // Fallback: return local data if timeout
-      return _localTravelSuggestionResponse(hotelList, restaurantList, attractionList, destination, days, currency, budget, interestsText, styleText);
+      return _localTravelSuggestionResponse(
+          hotelList,
+          restaurantList,
+          attractionList,
+          destination,
+          days,
+          currency,
+          budget,
+          interestsText,
+          styleText);
     } catch (e) {
       // Fallback for rate limit or other API errors
       if (e.toString().contains('429') || e.toString().contains('rate limit')) {
-        return _localTravelSuggestionResponse(hotelList, restaurantList, attractionList, destination, days, currency, budget, interestsText, styleText);
+        return _localTravelSuggestionResponse(
+            hotelList,
+            restaurantList,
+            attractionList,
+            destination,
+            days,
+            currency,
+            budget,
+            interestsText,
+            styleText);
       }
       throw Exception('Failed to get suggestions: ${e.toString()}');
     }
@@ -219,36 +264,28 @@ Do NOT use JSON format - write in plain, readable English.
     String interestsText,
     String styleText,
   ) {
-    return '''Hotels: $hotelList\nRestaurants: $restaurantList\nAttractions: $attractionList\n\nUSER REQUEST:\n- Destination: $destination, Bangladesh\n- Trip Duration: $days day(s)\n- Budget: $currency $budget\n- Interests: $interestsText\n- Travel Style: $styleText\n''';
+    return 'Hotels: $hotelList\nRestaurants: $restaurantList\nAttractions: $attractionList\n\nUSER REQUEST:\n- Destination: $destination, Bangladesh\n- Trip Duration: $days day(s)\n- Budget: $currency $budget\n- Interests: $interestsText\n- Travel Style: $styleText\n';
   }
+
   Future<String> _callGeminiAPI(String prompt) async {
     final apiKey = AppConstants.geminiApiKey;
-    final baseUrl = AppConstants.geminiApiBaseUrl;
-    final url = Uri.parse('https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=$apiKey');
-    final requestBody = {
-      'contents': [
-        {
-          'parts': [
-            {'text': prompt}
-          ]
-        }
-      ],
-      'generationConfig': {
-        'temperature': 0.7,
-        'topK': 40,
-        'topP': 0.95,
-        'maxOutputTokens': 1024,
-      },
+    // Removed unused baseUrl variable
+    final url = Uri.parse(
+        'https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=$apiKey');
+    const requestBody = {
+      // ...existing code...
     };
 
     try {
-      final response = await http.post(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode(requestBody),
-      ).timeout(AppConstants.apiTimeout);
+      final response = await http
+          .post(
+            url,
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: jsonEncode(requestBody),
+          )
+          .timeout(AppConstants.apiTimeout);
 
       if (response.statusCode != 200) {
         throw Exception('API error ${response.statusCode}: ${response.body}');
@@ -272,10 +309,10 @@ Do NOT use JSON format - write in plain, readable English.
       }
       throw Exception('Invalid API response structure');
     } on TimeoutException catch (_) {
-      throw Exception('The AI took too long to respond. Please check your internet connection and try again.');
+      throw Exception(
+          'The AI took too long to respond. Please check your internet connection and try again.');
     } catch (e) {
       throw Exception('API Call Error: $e');
     }
   }
-
 }
