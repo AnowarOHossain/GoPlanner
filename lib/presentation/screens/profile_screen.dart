@@ -149,7 +149,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     final user = ref.watch(currentUserProvider);
     
     // Get display name, or extract name from email, or use default
-    String displayName = 'Hello, Traveler! 👋';
+    String displayName = 'Hello, Traveler!';
     if (user != null) {
       if (user.displayName != null && user.displayName!.isNotEmpty) {
         displayName = user.displayName!;
