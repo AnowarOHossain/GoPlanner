@@ -23,6 +23,8 @@ void main() async {
   
   // Load environment variables from .env file
   await dotenv.load(fileName: ".env");
+  // Debug: Print Gemini API key to verify loading
+  print('Gemini API Key: [32m${AppConstants.geminiApiKey}[0m');
   
   // Initialize Firebase (required for Auth/Firestore)
   await FirebaseBootstrap.init();
