@@ -269,11 +269,16 @@ Do NOT use JSON format - write in plain, readable English.
 
   Future<String> _callGeminiAPI(String prompt) async {
     final apiKey = AppConstants.geminiApiKey;
-    // Removed unused baseUrl variable
     final url = Uri.parse(
         'https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=$apiKey');
-    const requestBody = {
-      // ...existing code...
+    final requestBody = {
+      "contents": [
+        {
+          "parts": [
+            {"text": prompt}
+          ]
+        }
+      ]
     };
 
     try {
