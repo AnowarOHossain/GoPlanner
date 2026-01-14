@@ -77,28 +77,28 @@ class GeminiSimpleService {
         : 'Not found';
 
     String prompt = '''
-You are a Bangladesh travel expert. Use ONLY the following data for your recommendations. If any category is 'Not found', do not suggest anything for that category.
+      You are a Bangladesh travel expert. Use ONLY the following data for your recommendations. If any category is 'Not found', do not suggest anything for that category.
 
-Hotels:
-$hotelList
+      Hotels:
+      $hotelList
 
-Restaurants:
-$restaurantList
+      Restaurants:
+      $restaurantList
 
-Attractions:
-$attractionList
+      Attractions:
+      $attractionList
 
-Destination: $destination, Bangladesh
-Budget: $currency $budget
+      Destination: $destination, Bangladesh
+      Budget: $currency $budget
 
-Provide up to 3 options per category with:
-- Name and brief description
-- Approximate cost
-- Why it's recommended (if available)
+      Provide up to 3 options per category with:
+      - Name and brief description
+      - Approximate cost
+      - Why it's recommended (if available)
 
-If 'Not found', say 'Not found'.
-Keep it brief and helpful. Use bullet points. No JSON.
-''';
+      If 'Not found', say 'Not found'.
+      Keep it brief and helpful. Use bullet points. No JSON.
+      ''';
 
     try {
       final response = await _callGeminiAPI(prompt);
@@ -195,30 +195,30 @@ Keep it brief and helpful. Use bullet points. No JSON.
         : 'Not found';
 
     String prompt = '''
-You are a helpful travel assistant for Bangladesh tourism. Use ONLY the following data for your suggestions. If any category is 'not found', do not suggest anything for that category.
+      You are a helpful travel assistant for Bangladesh tourism. Use ONLY the following data for your suggestions. If any category is 'not found', do not suggest anything for that category.
 
-Hotels: $hotelList
-Restaurants: $restaurantList
-Attractions: $attractionList
+      Hotels: $hotelList
+      Restaurants: $restaurantList
+      Attractions: $attractionList
 
-USER REQUEST:
-- Destination: $destination, Bangladesh
-- Trip Duration: $days day(s)
-- Budget: $currency $budget
-- Interests: $interestsText
-- Travel Style: $styleText
+      USER REQUEST:
+      - Destination: $destination, Bangladesh
+      - Trip Duration: $days day(s)
+      - Budget: $currency $budget
+      - Interests: $interestsText
+      - Travel Style: $styleText
 
-INSTRUCTIONS:
-1. Suggest 2-3 hotels within budget (name, approx. price per night) if available, otherwise say 'not found'.
-2. Suggest 3-4 restaurants (name, cuisine type, avg. cost for two) if available, otherwise say 'not found'.
-3. Suggest 4-5 attractions/activities (name, entry fee if any) if available, otherwise say 'not found'.
-4. Provide a simple day-wise outline using only the above data.
-5. Calculate estimated total cost if possible.
-6. If budget is insufficient, clearly state:\n   - What can be done within budget\n   - How much additional budget is recommended for a complete experience
+      INSTRUCTIONS:
+      1. Suggest 2-3 hotels within budget (name, approx. price per night) if available, otherwise say 'not found'.
+      2. Suggest 3-4 restaurants (name, cuisine type, avg. cost for two) if available, otherwise say 'not found'.
+      3. Suggest 4-5 attractions/activities (name, entry fee if any) if available, otherwise say 'not found'.
+      4. Provide a simple day-wise outline using only the above data.
+      5. Calculate estimated total cost if possible.
+      6. If budget is insufficient, clearly state:\n   - What can be done within budget\n   - How much additional budget is recommended for a complete experience
 
-Keep your response concise and practical. Use bullet points.
-Do NOT use JSON format - write in plain, readable English.
-''';
+      Keep your response concise and practical. Use bullet points.
+      Do NOT use JSON format - write in plain, readable English.
+      ''';
 
     try {
       final response = await _callGeminiAPI(prompt);
