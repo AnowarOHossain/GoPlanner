@@ -10,6 +10,8 @@ dependencies:
   flutter:
     sdk: flutter
   
+  # Cupertino Icons
+  cupertino_icons: ^1.0.2
   # State Management
   flutter_riverpod: ^2.4.9
   
@@ -43,6 +45,7 @@ dependencies:
   intl: ^0.19.0
   equatable: ^2.0.5
   json_annotation: ^4.8.1
+  collection: ^1.18.0
   
   # Image handling
   image_picker: ^1.0.4
@@ -58,6 +61,7 @@ dependencies:
 
   # Auth Providers
   google_sign_in: ^6.2.1
+  flutter_osm_plugin: ^1.4.3
 
 dev_dependencies:
   flutter_test:
