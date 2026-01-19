@@ -81,6 +81,18 @@ class _MapsScreenState extends ConsumerState<MapsScreen>
 
   @override
   Widget build(BuildContext context) {
+    // Synchronize filter chips and tabs
+    int tabIndex = 0;
+    switch (_selectedCategory) {
+      case 'Hotels': tabIndex = 1; break;
+      case 'Restaurants': tabIndex = 2; break;
+      case 'Attractions': tabIndex = 3; break;
+      default: tabIndex = 0;
+    }
+    if (_tabController.index != tabIndex) {
+      _tabController.animateTo(tabIndex);
+    }
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -120,20 +132,25 @@ class _MapsScreenState extends ConsumerState<MapsScreen>
             Tab(text: 'Restaurants', icon: Icon(Icons.restaurant, size: 16)),
             Tab(text: 'Attractions', icon: Icon(Icons.place, size: 16)),
           ],
+          onTap: (index) {
+            setState(() {
+              switch (index) {
+                case 1: _selectedCategory = 'Hotels'; break;
+                case 2: _selectedCategory = 'Restaurants'; break;
+                case 3: _selectedCategory = 'Attractions'; break;
+                default: _selectedCategory = 'All';
+              }
+            });
+          },
         ),
       ),
       body: Column(
         children: [
-          // Location Status Bar
           _buildLocationStatusBar(),
-          
-          // Map Container (Placeholder for Google Maps)
           Expanded(
             flex: 3,
             child: _buildMapContainer(),
           ),
-          
-          // Bottom Sheet with Places List
           Expanded(
             flex: 2,
             child: Container(
@@ -153,7 +170,6 @@ class _MapsScreenState extends ConsumerState<MapsScreen>
               ),
               child: Column(
                 children: [
-                  // Handle
                   Container(
                     margin: const EdgeInsets.symmetric(vertical: 8),
                     width: 40,
@@ -163,20 +179,21 @@ class _MapsScreenState extends ConsumerState<MapsScreen>
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
-                  
-                  // Category Filter
                   _buildCategoryFilter(),
-                  
-                  // Places List
                   Expanded(
-                    child: TabBarView(
-                      controller: _tabController,
-                      children: [
-                        _buildAllPlacesList(),
-                        _buildHotelsList(),
-                        _buildRestaurantsList(),
-                        _buildAttractionsList(),
-                      ],
+                    child: Builder(
+                      builder: (context) {
+                        switch (_selectedCategory) {
+                          case 'Hotels':
+                            return _buildHotelsList();
+                          case 'Restaurants':
+                            return _buildRestaurantsList();
+                          case 'Attractions':
+                            return _buildAttractionsList();
+                          default:
+                            return _buildAllPlacesList();
+                        }
+                      },
                     ),
                   ),
                 ],
@@ -254,45 +271,92 @@ class _MapsScreenState extends ConsumerState<MapsScreen>
   }
 
   Widget _buildMapContainer() {
-    // Generate markers for current tab
+    // Generate markers from real data based on selected category
     List<MapMarker> markers = [];
-    
-    // Sample markers for demonstration
-    markers.addAll([
-      MapMarker(
-        id: 'hotel_1',
-        title: 'Sample Hotel',
-        subtitle: 'Luxury accommodation',
-        latitude: 23.8103,
-        longitude: 90.4125,
-        color: Colors.blue,
-        icon: Icons.hotel,
-        position: const Offset(100, 150),
-        onTap: () => _showPinInfo('Sample Hotel', 'hotel'),
-      ),
-      MapMarker(
-        id: 'restaurant_1',
-        title: 'Sample Restaurant',
-        subtitle: 'Local cuisine',
-        latitude: 23.8203,
-        longitude: 90.4225,
-        color: Colors.orange,
-        icon: Icons.restaurant,
-        position: const Offset(200, 100),
-        onTap: () => _showPinInfo('Sample Restaurant', 'restaurant'),
-      ),
-      MapMarker(
-        id: 'attraction_1',
-        title: 'Sample Attraction',
-        subtitle: 'Historic site',
-        latitude: 23.8003,
-        longitude: 90.4025,
-        color: Colors.green,
-        icon: Icons.place,
-        position: const Offset(150, 200),
-        onTap: () => _showPinInfo('Sample Attraction', 'attraction'),
-      ),
-    ]);
+
+    final hotels = ref.watch(bangladeshHotelsProvider).maybeWhen(
+      data: (data) => data,
+      orElse: () => [],
+    );
+    final restaurants = ref.watch(bangladeshRestaurantsProvider).maybeWhen(
+      data: (data) => data,
+      orElse: () => [],
+    );
+    final attractions = ref.watch(bangladeshAttractionsProvider).maybeWhen(
+      data: (data) => data,
+      orElse: () => [],
+    );
+
+    void addHotelMarkers() {
+      for (final hotel in hotels) {
+        markers.add(MapMarker(
+          id: 'hotel_${hotel.id}',
+          title: hotel.name,
+          subtitle: hotel.location.address,
+          latitude: hotel.location.latitude,
+          longitude: hotel.location.longitude,
+          color: Colors.blue,
+          icon: Icons.hotel,
+          position: const Offset(0, 0),
+          onTap: () => _showPinInfo(hotel.name, 'hotel',
+              id: hotel.id,
+              lat: hotel.location.latitude,
+              lng: hotel.location.longitude),
+        ));
+      }
+    }
+    void addRestaurantMarkers() {
+      for (final restaurant in restaurants) {
+        markers.add(MapMarker(
+          id: 'restaurant_${restaurant.id}',
+          title: restaurant.name,
+          subtitle: restaurant.location.address,
+          latitude: restaurant.location.latitude,
+          longitude: restaurant.location.longitude,
+          color: Colors.orange,
+          icon: Icons.restaurant,
+          position: const Offset(0, 0),
+          onTap: () => _showPinInfo(restaurant.name, 'restaurant',
+              id: restaurant.id,
+              lat: restaurant.location.latitude,
+              lng: restaurant.location.longitude),
+        ));
+      }
+    }
+    void addAttractionMarkers() {
+      for (final attraction in attractions) {
+        markers.add(MapMarker(
+          id: 'attraction_${attraction.id}',
+          title: attraction.name,
+          subtitle: attraction.location.address,
+          latitude: attraction.location.latitude,
+          longitude: attraction.location.longitude,
+          color: Colors.green,
+          icon: Icons.place,
+          position: const Offset(0, 0),
+          onTap: () => _showPinInfo(attraction.name, 'attraction',
+              id: attraction.id,
+              lat: attraction.location.latitude,
+              lng: attraction.location.longitude),
+        ));
+      }
+    }
+
+    switch (_selectedCategory) {
+      case 'Hotels':
+        addHotelMarkers();
+        break;
+      case 'Restaurants':
+        addRestaurantMarkers();
+        break;
+      case 'Attractions':
+        addAttractionMarkers();
+        break;
+      default:
+        addHotelMarkers();
+        addRestaurantMarkers();
+        addAttractionMarkers();
+    }
 
     return GoogleMapWidget(
       markers: markers,
@@ -737,7 +801,7 @@ class _MapsScreenState extends ConsumerState<MapsScreen>
     );
   }
 
-  void _showPinInfo(String name, String type) {
+  void _showPinInfo(String name, String type, {String? id, double? lat, double? lng}) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -759,7 +823,16 @@ class _MapsScreenState extends ConsumerState<MapsScreen>
                 ElevatedButton.icon(
                   onPressed: () {
                     Navigator.pop(context);
-                    // Navigate to details
+                    // Navigate to details page
+                    if (id != null) {
+                      if (type == 'hotel') {
+                        context.go('/hotel/$id');
+                      } else if (type == 'restaurant') {
+                        context.go('/restaurant/$id');
+                      } else if (type == 'attraction') {
+                        context.go('/attraction/$id');
+                      }
+                    }
                   },
                   icon: const Icon(Icons.info),
                   label: const Text('Details'),
@@ -767,7 +840,9 @@ class _MapsScreenState extends ConsumerState<MapsScreen>
                 ElevatedButton.icon(
                   onPressed: () {
                     Navigator.pop(context);
-                    _navigateToPlace(0, 0, name); // Sample coordinates
+                    if (lat != null && lng != null) {
+                      _navigateToPlace(lat, lng, name);
+                    }
                   },
                   icon: const Icon(Icons.directions),
                   label: const Text('Navigate'),
